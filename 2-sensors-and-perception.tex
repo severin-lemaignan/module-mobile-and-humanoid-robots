@@ -15,14 +15,11 @@
 \usepackage{multirow}
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
 
 \usetheme{hri}
 
 \usepackage{tikz}
-\usetikzlibrary{mindmap,backgrounds,positioning}
+\usetikzlibrary{mindmap,backgrounds,positioning,patterns}
 
 \graphicspath{{figs/}}
 
@@ -52,7 +49,7 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 \textbf{Proprioceptive} sensors
 
 \begin{itemize}
-\tightlist
+
 \item
   measure values internally to the system (robot),
 \item
@@ -62,7 +59,7 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 \textbf{Exteroceptive} sensors
 
 \begin{itemize}
-\tightlist
+
 \item
   information from the robots environment
 \item
@@ -72,7 +69,7 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 \textbf{Passive} sensors
 
 \begin{itemize}
-\tightlist
+
 \item
   energy coming from the environment
 \end{itemize}
@@ -80,7 +77,7 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 \textbf{Active} sensors
 
 \begin{itemize}
-\tightlist
+
 \item
   emit their proper energy and measure the reaction
 \item
@@ -142,148 +139,150 @@ PC: proprioceptive; EC: exteroceptive; A: active; P: passive; A/P: active/passiv
 
 \end{frame}
 
-\section{Characterizing Sensor
-Performance}\label{characterizing-sensor-performance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Characterizing Performance]{Characterizing Sensor Performance}\label{characterizing-sensor-performance}
 
-\begin{frame}{Characterizing Sensor Performance}
-
-Basic sensor response ratings
-
-Dynamic range: ratio between lower and upper limits, sometimes expressed
-usually in decibels (dB, power)
+\begin{frame}{Basic sensor response ratings (1/2)}
 
 \begin{itemize}
-\tightlist
-\item
-  \eg current measurement from 1 milliamp to 20 amps
-\item
-  \eg voltage measurement from 1 millivolt to 20 volt
-\end{itemize}
+    \item {\bf Dynamic range}: ratio between lower and upper limits, sometimes expressed
+    in decibels (dB, power)
+\[
+\bubblemark{decibel}10\cdot \log_{10}\frac{P_{upper}}{P_{lower}}
+\]
 
-Range
+\bubble<1>[30]{decibel}{Multiplied by 10 to make the number a bit larger. That's why it's called
+\emph{deci}Bel.}
 
-\begin{itemize}
-\tightlist
-\item
-  upper and lower limit
-\end{itemize}
+        \begin{itemize}
+        
+        \item<3->
+        \eg current measurement from 1 milliamp to 30 amps
+        \[
+            \bubblemark{twenty}20\cdot\log_{10}\frac{I_{upper}}{I_{lower}}=20\cdot\log_{10}\frac{30A}{0.001A}=90dB
+        \]
+    \bubble<3>[30][0.7cm]{twenty}{20 instead of 10 because square of current or voltage is proportional to power.}
 
-Multiplied by 10 to make the number a bit larger. That's why it's called
-\emph{deci}Bel.
+        \item<4->
+        \eg voltage measurement from 1 millivolt to 20 volt
+        \[
+            20\cdot\log_{10}\frac{I_{upper}}{I_{lower}}=20\cdot\log_{10}\frac{20V}{0.001V}=86dB
+        \]
+        \end{itemize}
 
-20 instead of 10 because square of current or voltage is proportional to
-power.
+    \item<5-> {\bf Range}
+        \begin{itemize}
+        
+        \item upper and lower limits
+        \end{itemize}
 
-\end{frame}
 
-\begin{frame}{Characterizing Sensor Performance}
 
-Basic sensor response ratings (cont.)
-
-Resolution
-
-minimum difference between two values
-
-usually: lower limit of dynamic range = resolution
-
-for digital sensors it is usually the A/D resolution.
-
-\begin{itemize}
-\tightlist
-\item
-  \eg 5V / 255 (8 bit)
-\end{itemize}
-
-Linearity
-
-\begin{itemize}
-\tightlist
-\item
-  variation of output signal as function of the input signal
-\item
-  linearity is less important when signal is after treated with a
-  computer
-\end{itemize}
-
-Bandwidth or Frequency
-
-\begin{itemize}
-\tightlist
-\item
-  the speed with which a sensor can provide a stream of readings
-\item
-  usually there is an upper limit depending on the sensor and the
-  sampling rate
-\item
-  Lower limit is also possible, \eg acceleration sensor
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{\emph{In Situ} Sensor Performance}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Characteristics that are especially relevant for real
-world environments
+\begin{frame}{Basic sensor response ratings (2/2)}
 
-Sensitivity
+    \begin{itemize}
+        \item {\bf Resolution}
+            \begin{itemize}
+                \item minimum difference between two values
+                \item usually: lower limit of dynamic range = resolution
+                \item for digital sensors it is usually the A/D resolution,\\ \eg $ 5V / 255 $ (8 bit) 
 
-\begin{itemize}
-\tightlist
-\item
-  ratio of output change to input change
-\item
-  in real world environments, the sensor often has a high sensitivity to
-  other environmental changes, \eg illumination
-\end{itemize}
+            \end{itemize}
 
-Cross-sensitivity
+        \item {\bf Linearity}
 
-\begin{itemize}
-\tightlist
-\item
-  sensitivity to environmental parameters that are orthogonal to the
-  target parameters
-\end{itemize}
+            \begin{itemize}
+                \item
+                    variation of output signal as function of the input signal
+                \item
+                    linearity is less important when signal is after treated with a
+                    computer
+            \end{itemize}
 
-Error / Accuracy
+        \item {\bf Bandwidth or Frequency}
 
-\begin{itemize}
-\tightlist
-\item
-  difference between the sensor's output and the true value
-\end{itemize}
+            \begin{itemize}
+                \item the speed with which a sensor can provide a stream of readings
+                \item usually there is an upper limit depending on the sensor and the
+                    sampling rate
+                \item Lower limit is also possible, \eg acceleration sensor
+            \end{itemize}
 
-\emph{error}
-
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{\emph{In Situ} Sensor Performance}
 
-Characteristics that are especially relevant for real
-world environments
+    Characteristics that are especially relevant for real
+    world environments
 
-Systematic error -\textgreater{} \textbf{deterministic} errors
+    \begin{itemize}
+        \item {\bf Sensitivity}
+
+            \begin{itemize}
+                    
+                \item
+                    ratio of output change to input change
+                \item
+                    in real world environments, the sensor often has a high sensitivity to
+                    other environmental changes, \eg illumination
+            \end{itemize}
+
+        \item {\bf Cross-sensitivity}
+
+            \begin{itemize}
+                    
+                \item
+                    sensitivity to environmental parameters that are orthogonal to the
+                    target parameters
+            \end{itemize}
+
+        \item {\bf Error / Accuracy}
+
+            \begin{itemize}
+                    
+                \item
+                    difference between the sensor's output and the true value
+            \end{itemize}
+            \[
+                accuracy =  1 - \frac{|m-v|\bubblemark{error}}{v}
+            \]
+            $m$: measured value; $v$: true value
+            \bubble<1>[160]{error}{= error}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{\emph{In Situ} Sensor Performance}
+
+
+Systematic error \Rightarrow \textbf{deterministic} errors
 
 \begin{itemize}
-\tightlist
 \item
-  caused by factors that can (in theory) be modeled -\textgreater{}
+  caused by factors that can (in theory) be modeled \rightarrow
   prediction
 \item
-  \eg calibration of a laser sensor or of the distortion cause by the
-  optic of a camera
+  \eg calibration of a laser sensor or of the distortion caused by the
+  optics of a camera
 \end{itemize}
 
-Random error -\textgreater{} \textbf{non-deterministic}
+Random error \Rightarrow \textbf{non-deterministic}
 
 \begin{itemize}
-\tightlist
+
 \item
   no prediction possible
 \item
   however, they can be described probabilistically
 \item
-  \eg hue instability of camera, black level noise of camera ..
+  \eg hue instability of camera, black level noise of camera\ldots
 \end{itemize}
 
 \end{frame}
@@ -293,57 +292,76 @@ Random error -\textgreater{} \textbf{non-deterministic}
 \textbf{Nyquist theorem}
 
 \begin{itemize}
-\tightlist
-\item
-  The sampling rate has to be at least \textbf{twice as high} as the
-  fastest changes. If not, you are going to miss relevant information.
-\item
-  E.g. If sound signal changes at 3 kHz, you have to sample at at least
-  6 kHz to not miss anything of the signal.
+
+    \item The sampling rate has to be at least \textbf{twice as high} as the
+        fastest changes. If not, you are going to miss relevant information.
+        \begin{center}
+            \includegraphics[width=0.8\linewidth]{nyquist}
+        \end{center}
+
+    \item \eg if sound signal changes at 3kHz, you have to sample at at least
+        6kHz to not miss anything of the signal.
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Nyquist: example}
 
-Original
+    \begin{center}
 
-Under sampled
+        \begin{tikzpicture}[rectangle/.style={fill=black}]
 
+            \node at (-2,-0.5) [anchor=center] {Original};
+            \node at (3,-0.5) [anchor=center] {Under sampled};
+            \foreach \x in {-4,...,-1} {
+                \foreach \y in {0,...,3} {
+                    \fill (\x,\y) rectangle (\x+0.5,\y+0.5);
+                    \fill (\x+0.5,\y+0.5) rectangle (\x+1,\y+1);
+                }
+            }
+            \draw[help lines] (1,0) grid (5,4);
+            \draw (-4,0) rectangle (0,4);
+            \draw (1,0) rectangle (5,4);
+
+        \end{tikzpicture}
+    \end{center}
 Under sampling results in \emph{aliasing} (in computer imaging this is
 tackled by anti-aliasing).
 
 \end{frame}
 
-\begin{frame}{Characterizing Error: The Challenges in Mobile Robotics}
+\begin{frame}{Characterizing Error in Mobile Robotics}
+    \begin{itemize}
+        \item Mobile Robot has to perceive, analyze and interpret the state of the
+            surrounding
 
-Mobile Robot has to perceive, analyze and interpret the state of the
-surrounding
+        \item Measurements in real world environment are dynamically changing and
+            error prone.
 
-Measurements in real world environment are dynamically changing and
-error prone.
+        \item Examples:
 
-Examples:
+            \begin{itemize}
+                \item  changing illuminations
 
-changing illuminations
+                \item specular reflections
 
-specular reflections
+                \item light or sound absorbing surfaces
 
-light or sound absorbing surfaces
+                \item cross-sensitivity of robot sensor to robot pose and robot-environment
+                    dynamics
 
-cross-sensitivity of robot sensor to robot pose and robot-environment
-dynamics
+                    \begin{itemize}
 
-\begin{itemize}
-\tightlist
-\item
-  rarely possible to model -\textgreater{} appear as random errors
-\item
-  systematic errors and random errors might be well defined in
-  controlled environment. \emph{This is not the case for mobile robots
-  !!}
-\end{itemize}
+                        \item
+                            rarely possible to model \rightarrow appear as random errors
+                        \item
+                            systematic errors and random errors might be well defined in
+                            controlled environment.\\\emph{This is not the case for mobile robots
+                            !!}
+                    \end{itemize}
 
+            \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Multi-Modal Error Distributions: The Challenges in
@@ -364,7 +382,7 @@ Sonar (ultrasonic) sensor might overestimate the distance in real
 environment and is therefore not symmetric
 
 \begin{itemize}
-\tightlist
+
 \item
   Thus the sonar sensor might be best modeled by two modes: - mode for
   the case that the signal returns directly - mode for the case that the
@@ -376,9 +394,10 @@ results that make no sense at all.
 
 \end{frame}
 
-\begin{frame}{Overview of sensors often used on mobile robots}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section[Sensors Overview]{Overview of sensors often used on mobile robots}
 
-\end{frame}
 
 \begin{frame}{Wheel / Motor Encoders}
 
@@ -390,7 +409,7 @@ position -\textgreater{} odometry.
 Optical encoders are proprioceptive sensors
 
 \begin{itemize}
-\tightlist
+
 \item
   Due to errors (slippage etc.) the position estimate in relation to a
   fixed reference frame is only valuable for short movements.
@@ -399,7 +418,7 @@ Optical encoders are proprioceptive sensors
 Typical resolutions: 2000 increments per revolution.
 
 \begin{itemize}
-\tightlist
+
 \item
   For high resolution: interpolation.
 \end{itemize}
@@ -407,7 +426,7 @@ Typical resolutions: 2000 increments per revolution.
 Quadrature encoder (two emittor/detector pairs)
 
 \begin{itemize}
-\tightlist
+
 \item
   Gives direction and 4 times higher resolution.
 \end{itemize}
@@ -445,7 +464,7 @@ Allow, together with an appropriate velocity information, to integrate
 the movement to an position estimate.
 
 \begin{itemize}
-\tightlist
+
 \item
   This procedure is called dead reckoning (from ship navigation).
 \end{itemize}
@@ -457,7 +476,7 @@ the movement to an position estimate.
 Since over 2000 B.C.
 
 \begin{itemize}
-\tightlist
+
 \item
   when Chinese suspended a piece of naturally magnetite from a silk
   thread and used it to guide a chariot over land.
@@ -466,7 +485,7 @@ Since over 2000 B.C.
 Magnetic field on earth
 
 \begin{itemize}
-\tightlist
+
 \item
   absolute measure for orientation.
 \end{itemize}
@@ -474,7 +493,7 @@ Magnetic field on earth
 Large variety of solutions to measure the earth magnetic field
 
 \begin{itemize}
-\tightlist
+
 \item
   mechanical magnetic compass
 \item
@@ -485,7 +504,7 @@ Large variety of solutions to measure the earth magnetic field
 Major drawback
 
 \begin{itemize}
-\tightlist
+
 \item
   weakness of the earth field
 \item
@@ -499,7 +518,7 @@ Major drawback
 \begin{frame}{Compass}
 
 \begin{itemize}
-\tightlist
+
 \item
   Solid state compass, \eg Honeywell HMR3100
 \end{itemize}
@@ -513,7 +532,7 @@ Major drawback
 Reports an acceleration of rotation to a relative frame of reference.
 
 \begin{itemize}
-\tightlist
+
 \item
   Unlike a compass, that keep the orientation to a fixed frame, that
   keeps a reference to an absolute frame of reference.
@@ -524,7 +543,7 @@ Two categories, the mechanical and the optical gyroscopes
 Mechanical Gyroscopes
 
 \begin{itemize}
-\tightlist
+
 \item
   Standard gyro
 \item
@@ -534,7 +553,7 @@ Mechanical Gyroscopes
 Optical Gyroscopes
 
 \begin{itemize}
-\tightlist
+
 \item
   Rated gyro
 \end{itemize}
@@ -546,7 +565,7 @@ Optical Gyroscopes
 Concept: inertial properties of a fast spinning rotor.
 
 \begin{itemize}
-\tightlist
+
 \item
   \emph{gyroscopic precession.}
 \end{itemize}
@@ -561,7 +580,7 @@ inertia \emph{I}.
 No torque can be transmitted from the outer pivot to the wheel axis
 
 \begin{itemize}
-\tightlist
+
 \item
   spinning axis will therefore be space-stable
 \end{itemize}
@@ -588,7 +607,7 @@ Same basic arrangement shown as regular mechanical gyros
 But: gimble(s) are restrained by a torsional spring
 
 \begin{itemize}
-\tightlist
+
 \item
   enables to measure angular speeds instead of the orientation.
 \end{itemize}
@@ -609,7 +628,7 @@ a cylinder (older setups use a ring of mirrors). Based on Sagnac effect.
 Laser beam traveling in direction of rotation
 
 \begin{itemize}
-\tightlist
+
 \item
   slightly shorter path -\textgreater{} shows a higher frequency
 \item
@@ -624,7 +643,7 @@ Hitachi fibre optical gyroscope
 \begin{frame}{Optical gyros: Sagnac effect}
 
 \begin{itemize}
-\tightlist
+
 \item
   A beam of light is split, both beams follow a trajectory in opposite
   directions.
@@ -642,7 +661,7 @@ Hitachi fibre optical gyroscope
 A small vibrating element replaces the spinning wheel.
 
 \begin{itemize}
-\tightlist
+
 \item
   Measures angular acceleration (= rate gyroscope).
 \end{itemize}
@@ -650,7 +669,7 @@ A small vibrating element replaces the spinning wheel.
 Small due to MEMS technology (Micro Electro Mechanical System)
 
 \begin{itemize}
-\tightlist
+
 \item
   Lithographic etching of mechanical structure of mm (or smaller) size.
 \end{itemize}
@@ -658,7 +677,7 @@ Small due to MEMS technology (Micro Electro Mechanical System)
 Many different ways of implementing this
 
 \begin{itemize}
-\tightlist
+
 \item
   Vibrating wheel gyroscope.
 \item
@@ -677,7 +696,7 @@ Many different ways of implementing this
 Vibrating wheel gyroscope
 
 \begin{itemize}
-\tightlist
+
 \item
   Relies on gyroscopic effect, but executed in MEMS technology.
 \end{itemize}
@@ -693,7 +712,7 @@ when, change detected by chance in capacitance.
 \begin{frame}{Technology: Coriolis effect}
 
 \begin{itemize}
-\tightlist
+
 \item
   Mass moving in one direction at speed v, when rotated at speed
   experiences a Coriolis force
@@ -702,7 +721,7 @@ when, change detected by chance in capacitance.
 \end{itemize}
 
 \begin{itemize}
-\tightlist
+
 \item
   ~
 \end{itemize}
@@ -717,7 +736,7 @@ when, change detected by chance in capacitance.
 STMicroElectronics
 
 \begin{itemize}
-\tightlist
+
 \item
   low-power three-axis angular rate sensor
 \item
@@ -738,7 +757,7 @@ In depth information on gyroscopes see
 Most gyroscopes return angular velocity {[}rad/s{]}
 
 \begin{itemize}
-\tightlist
+
 \item
   Angular velocity can be converted to angle (``attitude'' of the gyro)
   through integrating readings over time:
@@ -748,7 +767,7 @@ While classic optical or mechanical gyroscopes do not suffer from drift,
 MEMS gyroscopes do.
 
 \begin{itemize}
-\tightlist
+
 \item
   Example, 30º drift over 12 seconds!!
 \end{itemize}
@@ -770,14 +789,14 @@ gyroscopes are very noisy
 Filtering needed to get rid of noise.
 
 \begin{itemize}
-\tightlist
+
 \item
   Runge-Kutta filter, implements a ``running average'', smoothing out
   the noise.
 \end{itemize}
 
 \begin{itemize}
-\tightlist
+
 \item
   ~
 \end{itemize}
@@ -797,7 +816,7 @@ Blue line is raw output from gyro, red is low pass filtered.
 Accelerometers measure acceleration of the device
 
 \begin{itemize}
-\tightlist
+
 \item
   Single axis: only measure a in one direction.
 \item
@@ -810,7 +829,7 @@ Principle: a damped mass on a spring, when mass accelerates,
 displacement is measured and translated to acceleration.
 
 \begin{itemize}
-\tightlist
+
 \item
   Modern accelerometers are \emph{micro electro- mechanical
   systems}~(\href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{MEMS}).
@@ -835,7 +854,7 @@ An accelerometer always senses the Earth's gravitational vector
 As such an accelerometer can be used to measure rotation.
 
 \begin{itemize}
-\tightlist
+
 \item
   However, it cannot measure rotation around the z-axis, for that a
   gyroscope is still needed.
@@ -873,7 +892,7 @@ As such an accelerometer can be used to measure rotation.
 \begin{frame}{Global Positioning System (GPS)}
 
 \begin{itemize}
-\tightlist
+
 \item
   Developed for military use (since 1978).
 \item
@@ -895,7 +914,7 @@ As such an accelerometer can be used to measure rotation.
 \begin{frame}{Position of satellites}
 
 \begin{itemize}
-\tightlist
+
 \item
   Earth diameter ≈ 12,756km, height of GPS satellites ≈ 20,190km.
 \item
@@ -907,7 +926,7 @@ As such an accelerometer can be used to measure rotation.
 \begin{frame}{GPS - summary}
 
 \begin{itemize}
-\tightlist
+
 \item
   Location of any GPS receiver is determined through a time of flight
   measurement.
@@ -926,7 +945,7 @@ As such an accelerometer can be used to measure rotation.
 \begin{frame}{GPS -- calculating position}
 
 \begin{itemize}
-\tightlist
+
 \item
   Suppose the time of flight to three satellites is known: \emph{t1, t2,
   t3}.
@@ -949,7 +968,7 @@ A deviation in the receivers clock, results a error on the distance to
 the satellite.
 
 \begin{itemize}
-\tightlist
+
 \item
   For example, satellite at 25,000km from receiver, 0.1ms deviation
   between clocks, results in an error of 30m in the distance to the
@@ -961,7 +980,7 @@ the satellite.
 \begin{frame}{GPS -- calculating position}
 
 \begin{itemize}
-\tightlist
+
 \item
   Assume time difference between atomic clocks and receiver clock is
   Δ\emph{t}. The distance to the satellites is now erroneously estimated
@@ -980,7 +999,7 @@ which is an error of ≈ 3m.
 Sources of error on the distance to satellite estimate
 
 \begin{itemize}
-\tightlist
+
 \item
   Ionospheric effects: ± 5 meter
 \item
@@ -1004,7 +1023,7 @@ Typical accuracy is 15 m, but this varies a lot.
 L1 and L2 frequency.
 
 \begin{itemize}
-\tightlist
+
 \item
   Same time information is transmitted on two frequencies, these
   frequencies will experience noise in a different way. Can be used to
@@ -1014,7 +1033,7 @@ L1 and L2 frequency.
 Differential GPS (DGPS)
 
 \begin{itemize}
-\tightlist
+
 \item
   Stationary receiver, with known position, read GPS position and
   calculate the error. This error is broadcast over an FM band to
@@ -1024,7 +1043,7 @@ Differential GPS (DGPS)
 Satellite Based Augmentation System (SBAS)
 
 \begin{itemize}
-\tightlist
+
 \item
   Ground based receivers calculate ionospheric delays and clock drift,
   this is relayed to geosynchronous satellites which then broadcast it
@@ -1043,7 +1062,7 @@ Europe's response to GPS (or GLONASS, the Russian global positioning
 system).
 
 \begin{itemize}
-\tightlist
+
 \item
   30 spacecraft
 \item
@@ -1058,7 +1077,7 @@ system).
 Better
 
 \begin{itemize}
-\tightlist
+
 \item
   Free access: 1m accuracy.
 \item
@@ -1074,7 +1093,7 @@ Better
 \textbf{SparkFun - 20 channel EM-406A SIRF III receiver}
 
 \begin{itemize}
-\tightlist
+
 \item
   16g including cable
 \item
@@ -1100,7 +1119,7 @@ Better
 \textbf{Sparkfun 54 Channel USB stick receiver}
 
 \begin{itemize}
-\tightlist
+
 \item
   \$80 (in 2008)
 \end{itemize}
@@ -1112,7 +1131,7 @@ Better
 GPS only works \textbf{outdoors}
 
 \begin{itemize}
-\tightlist
+
 \item
   Due to limited energy (--163 dBw~or 5 x 10--17~watts) and high
   frequency (1.57542~GHz for L1 signal and 1.2276~GHz for L2 signal) of
@@ -1122,7 +1141,7 @@ GPS only works \textbf{outdoors}
 Limited accuracy when relying on GPS and DGPS
 
 \begin{itemize}
-\tightlist
+
 \item
   Accuracy several meters up to tens of meters. Autonomous vehicles will
   need to rely on other localisation methods.
@@ -1131,7 +1150,7 @@ Limited accuracy when relying on GPS and DGPS
 Accuracy can be dramatically improved using a local DGPS antenna.
 
 \begin{itemize}
-\tightlist
+
 \item
   \url{http://www.racelogic.co.uk/}
 \end{itemize}
@@ -1143,7 +1162,7 @@ Accuracy can be dramatically improved using a local DGPS antenna.
 \begin{frame}{Examples}
 
 \begin{itemize}
-\tightlist
+
 \item
   Positioning of outdoor service robots:
   \href{http://www.robotera.eu/}{www.robotera.eu}
@@ -1152,7 +1171,7 @@ Accuracy can be dramatically improved using a local DGPS antenna.
 Agricultural robots
 
 \begin{itemize}
-\tightlist
+
 \item
   Sowing, weeding, harvesting with cm precision
 \end{itemize}
@@ -1166,7 +1185,7 @@ Mainly used in mobile phones and mobile devices.
 GSM base triangulation.
 
 \begin{itemize}
-\tightlist
+
 \item
   Uses strength of GSM signal of different GSM base stations to estimate
   position.
@@ -1177,7 +1196,7 @@ GSM base triangulation.
 WiFi based localisation.
 
 \begin{itemize}
-\tightlist
+
 \item
   If a device connects to a WiFi router, it knows the IP address of the
   router. Some internet providers know at which address a router is and
@@ -1198,7 +1217,7 @@ Large range distance measurement -\textgreater{} called range sensors
 Range information:
 
 \begin{itemize}
-\tightlist
+
 \item
   key element for localization and environment modeling
 \end{itemize}
@@ -1211,7 +1230,7 @@ traveled distance of a sound or electromagnetic wave is given by \emph{d
 Where
 
 \begin{itemize}
-\tightlist
+
 \item
   d = distance traveled (usually round-trip)
 \item
@@ -1231,7 +1250,7 @@ Propagation speed \emph{v} of sound: 0.3 m/ms
 Propagation speed \emph{v} of of electromagnetic signals: 0.3 m/ns,
 
 \begin{itemize}
-\tightlist
+
 \item
   one million times faster.
 \end{itemize}
@@ -1239,7 +1258,7 @@ Propagation speed \emph{v} of of electromagnetic signals: 0.3 m/ns,
 3 meters
 
 \begin{itemize}
-\tightlist
+
 \item
   is 10 ms ultrasonic system
 \item
@@ -1253,7 +1272,7 @@ Propagation speed \emph{v} of of electromagnetic signals: 0.3 m/ns,
 The quality of time of flight range sensors mainly depends on:
 
 \begin{itemize}
-\tightlist
+
 \item
   Uncertainties about the exact time of arrival of the reflected signal,
   due to reflections, multiple echo's, \ldots{}
@@ -1275,7 +1294,7 @@ The quality of time of flight range sensors mainly depends on:
 \begin{frame}{Ultrasonic Sensor (sonar)}
 
 \begin{itemize}
-\tightlist
+
 \item
   Transmit a packet of (ultrasonic) pressure waves.
 \item
@@ -1294,7 +1313,7 @@ Can be approximated by with the air temperature in Celcius.
 If no correction for temperature would be done, what would the error be?
 
 \begin{itemize}
-\tightlist
+
 \item
   Assume obstacle at 1m, and T = 15°C.
 \end{itemize}
@@ -1332,7 +1351,7 @@ Typically a frequency: 40 - 180 kHz
 Generation of sound wave: piezo transducer
 
 \begin{itemize}
-\tightlist
+
 \item
   transmitter and receiver separated or not separated.
 \end{itemize}
@@ -1340,7 +1359,7 @@ Generation of sound wave: piezo transducer
 Sound beam propagates in a cone like manner
 
 \begin{itemize}
-\tightlist
+
 \item
   opening angles around 20 to 40 degrees
 \item
@@ -1354,7 +1373,7 @@ Sound beam propagates in a cone like manner
 \begin{frame}{Problems with reflection}
 
 \begin{itemize}
-\tightlist
+
 \item
   Soft surfaces absorb most of the acoustic energy.
 \item
@@ -1374,7 +1393,7 @@ When emitter and receiver are one and the same piece of hardware, the
 sensor has a \emph{blanking time}.
 
 \begin{itemize}
-\tightlist
+
 \item
   Time after the ping in which the sensor is blind.
 \item
@@ -1384,7 +1403,7 @@ sensor has a \emph{blanking time}.
 Cycle time is rather low.
 
 \begin{itemize}
-\tightlist
+
 \item
   In a moderately sized room where obstacles are 3m away, the time of
   flight is about 20ms. The sensor refresh rate is 50Hz.
@@ -1401,7 +1420,7 @@ Cycle time is rather low.
 LV-MaxSonar
 
 \begin{itemize}
-\tightlist
+
 \item
   \url{http://www.maxbotix.com/}
 \item
@@ -1429,7 +1448,7 @@ Receiver detects the time needed for round-trip.
 A mechanical mechanism with a mirror sweeps
 
 \begin{itemize}
-\tightlist
+
 \item
   2 or 3D measurement
 \end{itemize}
@@ -1445,7 +1464,7 @@ Diffuse reflection, resulting in near isotropic reflection.
 Pulsed laser.
 
 \begin{itemize}
-\tightlist
+
 \item
   measurement of elapsed time directly.
 \item
@@ -1456,7 +1475,7 @@ Indirectly: the time of flight can be measured using a phase shift
 measurement to produce range estimation.
 
 \begin{itemize}
-\tightlist
+
 \item
   technically easier than the above two methods.
 \end{itemize}
@@ -1478,7 +1497,7 @@ modulating frequency; \emph{D'} covered by the emitted light is,
 \emph{θ} is phase shift.}
 
 \begin{itemize}
-\tightlist
+
 \item
   for f = 5 Mhz (as in the AT\&T sensor), l = 60 meters
 \end{itemize}
@@ -1497,7 +1516,7 @@ difference between the transmitted and received beam.
 Theoretically ambiguous range estimates
 
 \begin{itemize}
-\tightlist
+
 \item
   since for example if  = 60 meters, a target at a range of 5 meters =
   target at 35 meters
@@ -1510,7 +1529,7 @@ Theoretically ambiguous range estimates
 Laser range scanners in outdoor robotics application point down.
 
 \begin{itemize}
-\tightlist
+
 \item
   If they would look at the horizon, they would return ambiguous
   measurements.
@@ -1524,7 +1543,7 @@ Confidence in the range (phase estimate) is inversely proportional to
 the square of the received signal amplitude.
 
 \begin{itemize}
-\tightlist
+
 \item
   Hence dark, distant objects will not produce such good range estimated
   as closer brighter objects \ldots{}
@@ -1535,7 +1554,7 @@ the square of the received signal amplitude.
 \begin{frame}{2D laser range scanner}
 
 \begin{itemize}
-\tightlist
+
 \item
   Typical range image of a 2D laser range sensor with a rotating mirror.
   The length of the lines through the measurement points indicate the
@@ -1549,7 +1568,7 @@ the square of the received signal amplitude.
 Hokuyo URG-04LX
 
 \begin{itemize}
-\tightlist
+
 \item
   240° field of view.
 \item
@@ -1578,7 +1597,7 @@ Project a well defined light pattern (\eg point, line) onto the
 environment.
 
 \begin{itemize}
-\tightlist
+
 \item
   reflected light is then captured by a photo-sensitive line or matrix
   sensor device (camera).
@@ -1617,7 +1636,7 @@ Size of an captured object can be known.
 Principle of 1D laser triangulation.
 
 \begin{itemize}
-\tightlist
+
 \item
   distance is proportional to the 1/x
 \end{itemize}
@@ -1627,7 +1646,7 @@ Principle of 1D laser triangulation.
 \begin{frame}{Sharp GP series distance sensors}
 
 \begin{itemize}
-\tightlist
+
 \item
   Cheap (≈ £6).
 \item
@@ -1646,7 +1665,7 @@ Principle of 1D laser triangulation.
 \begin{frame}{Structured light (vision, 2D, 3D)}
 
 \begin{itemize}
-\tightlist
+
 \item
   Eliminate the correspondence problem of stereo vision by projecting
   structured light on the scene.
@@ -1672,7 +1691,7 @@ Principle of 1D laser triangulation.
 \begin{frame}{Structured light -- 1D illustration}
 
 \begin{itemize}
-\tightlist
+
 \item
   One dimensional schematic of the principle
 \item
@@ -1688,7 +1707,7 @@ Range resolution is defined as the triangulation gain \emph{Gp.}
 Baseline length \emph{b}
 
 \begin{itemize}
-\tightlist
+
 \item
   the smaller \textbf{\emph{b}} is the more compact the sensor can be.
 \item
@@ -1700,7 +1719,7 @@ Focal length \emph{f}
 larger focal length \emph{f} gives
 
 \begin{itemize}
-\tightlist
+
 \item
   a smaller field of view
 \item
@@ -1728,7 +1747,7 @@ Small, low-power and cheap.
 Prices anything between 40p and £3000.
 
 \begin{itemize}
-\tightlist
+
 \item
   Cameras have dropped significantly in price, and are the cheapest
   high-tech sensor around.
@@ -1741,7 +1760,7 @@ Prices anything between 40p and £3000.
 Most cameras provide digital output.
 
 \begin{itemize}
-\tightlist
+
 \item
   USB1.0, USB1.1, USB2.0, Firewire (aka IEEE 1394 or i.Link, ethernet),
   or any hardware bus or proprietary bus.
@@ -1751,7 +1770,7 @@ Some --mostly older- camera designs do not, and provide an analog (RGB
 or composite) signal instead.
 
 \begin{itemize}
-\tightlist
+
 \item
   A \textbf{frame grabber} is needed to digitise the signal.
 \item
@@ -1765,7 +1784,7 @@ or composite) signal instead.
 Shutter speed
 
 \begin{itemize}
-\tightlist
+
 \item
   Rate at which an image is refreshed, \eg 25ms, 1/400 s.
 \end{itemize}
@@ -1773,7 +1792,7 @@ Shutter speed
 Iris position (aka aperture)
 
 \begin{itemize}
-\tightlist
+
 \item
   Size of the lens opening, mechanically operated. Allows more or less
   light in.
@@ -1782,7 +1801,7 @@ Iris position (aka aperture)
 Camera gain
 
 \begin{itemize}
-\tightlist
+
 \item
   Amplification of the camera signal. \textbf{Noise is amplified as
   well.}
@@ -1791,7 +1810,7 @@ Camera gain
 White balance (aka color temperature)
 
 \begin{itemize}
-\tightlist
+
 \item
   Mixture of blue, red and green components that define white. Often
   needed to cancel out influences of illumination.
@@ -1804,7 +1823,7 @@ White balance (aka color temperature)
 Charge-coupled device (CCD).
 
 \begin{itemize}
-\tightlist
+
 \item
   Each pixel has a photodiode and a capacitor, the capacitor is charged
   or discharged as photons hit the light-sensitive silicon.
@@ -1824,7 +1843,7 @@ Charge-coupled device (CCD).
 Some sort of shutter is needed to prevent smear in the camera image.
 
 \begin{itemize}
-\tightlist
+
 \item
   Mechanical shutter: expensive and high power consumption.
 \item
@@ -1842,7 +1861,7 @@ Some sort of shutter is needed to prevent smear in the camera image.
 Sensitive to wavelengths 400nm to 1000nm.
 
 \begin{itemize}
-\tightlist
+
 \item
   Human visual spectrum from 380nm to 780nm, so less sensitive to blue
   light and oversensitive to red and \textbf{infrared}.
@@ -1857,7 +1876,7 @@ High quality, relatively low noise images.
 High quantum efficiency
 
 \begin{itemize}
-\tightlist
+
 \item
   70 to 80\% of photons are converted into a charge, ideal for low light
   conditions.
@@ -1866,7 +1885,7 @@ High quantum efficiency
 Integrating function of pixels.
 
 \begin{itemize}
-\tightlist
+
 \item
   Can be used to measure for prolonged times in very dim settings.
 \end{itemize}
@@ -1878,7 +1897,7 @@ Integrating function of pixels.
 Large silicon size
 
 \begin{itemize}
-\tightlist
+
 \item
   Due to circuitry to read out pixels.
 \end{itemize}
@@ -1886,7 +1905,7 @@ Large silicon size
 Interfacing between CCD and CMOS technology is not straight-forward
 
 \begin{itemize}
-\tightlist
+
 \item
   Hinders cheap hardware.
 \end{itemize}
@@ -1898,7 +1917,7 @@ Large dissipation.
 Integrating light measurement
 
 \begin{itemize}
-\tightlist
+
 \item
   In bright light, capacitors can become saturated. This causes blooming
   the image.
@@ -1911,7 +1930,7 @@ Integrating light measurement
 Complementary metal oxide semiconductor (CMOS)
 
 \begin{itemize}
-\tightlist
+
 \item
   Photodiode with circuitry that reads out light intensity.
 \item
@@ -1928,7 +1947,7 @@ Complementary metal oxide semiconductor (CMOS)
 CMOS technology is mature and simple
 
 \begin{itemize}
-\tightlist
+
 \item
   Production costs are a fraction of that of CCD.
 \end{itemize}
@@ -1940,7 +1959,7 @@ Low power consumption.
 Proportional measurement
 
 \begin{itemize}
-\tightlist
+
 \item
   No saturation of pixels.
 \end{itemize}
@@ -1952,7 +1971,7 @@ Random access to pixels (just like RAM).
 Easy interfacing to CMOS technology.
 
 \begin{itemize}
-\tightlist
+
 \item
   CMOS circuitry, \eg for bus, can be integrated on the same silicon
   area.
@@ -1966,7 +1985,7 @@ Each photodiode has CMOS circuitry which takes up silicon real estate,
 but is not sensitive to incoming light.
 
 \begin{itemize}
-\tightlist
+
 \item
   CMOS camera is less sensitive than CCD.
 \end{itemize}
@@ -1974,7 +1993,7 @@ but is not sensitive to incoming light.
 CMOS has a larger pixel mismatch and is typically more noisy than CCD.
 
 \begin{itemize}
-\tightlist
+
 \item
   This has improved considerably over the years, see CMOS in high-end
   \#\# digital cameras.
@@ -1988,7 +2007,7 @@ With one CCD or CMOS sensor, a filter is placed in front of the sensor
 surface.
 
 \begin{itemize}
-\tightlist
+
 \item
   Resolution, relative to monochrome camera, is reduced by 75\%.
 \item
@@ -2008,7 +2027,7 @@ Bayer filter
 Three sensor cameras.
 
 \begin{itemize}
-\tightlist
+
 \item
   In expensive and professional colour cameras, the images is optically
   split in three.
@@ -2026,7 +2045,7 @@ No problem of misalignment of filter.
 \begin{frame}{Omnidirectional camera}
 
 \begin{itemize}
-\tightlist
+
 \item
   Most robots need 360° vision, this can be provided by a
   \textbf{omnidirectional camera}.
@@ -2037,7 +2056,7 @@ No problem of misalignment of filter.
 \begin{frame}{Image processing and computer vision}
 
 \begin{itemize}
-\tightlist
+
 \item
   See Phil Culverhouse's lectures.
 \item
@@ -2053,7 +2072,7 @@ Stereo cameras.
 3D single lens cameras.
 
 \begin{itemize}
-\tightlist
+
 \item
   Swissranger
 \item
@@ -2065,7 +2084,7 @@ Stereo cameras.
 \begin{frame}{Stereo cameras}
 
 \begin{itemize}
-\tightlist
+
 \item
   A camera typically forms a 2D mapping of a 3D environment.
 \item
@@ -2089,7 +2108,7 @@ Stereo cameras.
 Each camera gives slightly shifted view of the scene
 
 \begin{itemize}
-\tightlist
+
 \item
   Depending on the size of the shift one can determine how far obstacles
   are.
@@ -2098,7 +2117,7 @@ Each camera gives slightly shifted view of the scene
 The challenge of finding corresponding pixels in the two images.
 
 \begin{itemize}
-\tightlist
+
 \item
   It often is very hard to find pixels that correspond in the two
   images.
@@ -2113,7 +2132,7 @@ The challenge of finding corresponding pixels in the two images.
 Disadvantages
 
 \begin{itemize}
-\tightlist
+
 \item
   Two calibrated cameras needed.
 \item
@@ -2132,7 +2151,7 @@ More at
 MESA SR3000
 
 \begin{itemize}
-\tightlist
+
 \item
   Uses TOF measured as phase difference of IR light.
 \item
@@ -2161,7 +2180,7 @@ Infrared laser light pattern projected onto scene and filmed with CMOS
 camera.
 
 \begin{itemize}
-\tightlist
+
 \item
   Class 1 laser device: safe for eyes.
 \item
@@ -2182,7 +2201,7 @@ The hardware is only one aspect of the sensor.
 The software is equally important.
 
 \begin{itemize}
-\tightlist
+
 \item
   Matching a cloud of points in 3D space to 2 body models is a very hard
   problem in artificial intelligence.
@@ -2200,7 +2219,7 @@ The software is equally important.
 Principles
 
 \begin{itemize}
-\tightlist
+
 \item
   Dot pattern (speckles) is projected in near IR light.
 \item
@@ -2221,7 +2240,7 @@ Patent}
 \begin{frame}{Kinect skeleton tracking}
 
 \begin{itemize}
-\tightlist
+
 \item
   Reading depth image is only one part what the Kinect does.
 \item
@@ -2241,7 +2260,7 @@ Patent}
 truth'' from a motion capture system.
 
 \begin{itemize}
-\tightlist
+
 \item
   Different body types, different clothes.
 \end{itemize}
@@ -2250,7 +2269,7 @@ Using machine learning (\emph{randomised decision forest} algorithm) to
 find body parts
 
 \begin{itemize}
-\tightlist
+
 \item
   A farm of computers required a day to arrive at a solution to separate
   body parts from background images.
@@ -2266,7 +2285,7 @@ Kinect One.
 The same, but better!
 
 \begin{itemize}
-\tightlist
+
 \item
   Faster full HD video stream
 \item
@@ -2292,7 +2311,7 @@ The same, but better!
 \begin{frame}{360 vs One Technology}
 
 \begin{itemize}
-\tightlist
+
 \item
   Kinect 360 project speckle pattern into environment, uses
   triangulation (structured light) from near-IR
@@ -2312,7 +2331,7 @@ Take 2 measurements -- eliminate ambiguity if light is absorbed
 Ambient light rejection
 
 \begin{itemize}
-\tightlist
+
 \item
   Allows outdoor operation!
 \end{itemize}
@@ -2327,7 +2346,7 @@ Excellent explanation
 2 main options:
 
 \begin{itemize}
-\tightlist
+
 \item
   1. Microsoft SDK
 \item
@@ -2347,7 +2366,7 @@ Lots of cables -- plug the Kinect into the power adapter, then the USB
 to your computer
 
 \begin{itemize}
-\tightlist
+
 \item
   Make sure the power is on before you plug it in to a PC, or it will
   see it only as a microphone
@@ -2360,7 +2379,7 @@ to your computer
 The Microsoft SDK can be programmed with C\#.Net, VB.Net or VC++
 
 \begin{itemize}
-\tightlist
+
 \item
   We recommend C\#, but C++ is possible as well
 \end{itemize}
@@ -2368,7 +2387,7 @@ The Microsoft SDK can be programmed with C\#.Net, VB.Net or VC++
 Or if you want to try, there are other options as well
 
 \begin{itemize}
-\tightlist
+
 \item
   \href{https://processing.org/}{Processing} is a language for
   non-programmers with excellent support for Kinect (see
@@ -2380,7 +2399,7 @@ Or if you want to try, there are other options as well
 \begin{frame}{Programming principles}
 
 \begin{itemize}
-\tightlist
+
 \item
   SDK provides interface to find and use sensor in just a few lines
 \item
@@ -2402,7 +2421,7 @@ Or if you want to try, there are other options as well
 \textbf{Tele-operation:}
 
 \begin{itemize}
-\tightlist
+
 \item
   Plymouth: \url{https://www.youtube.com/watch?v=wf4waMhPHmc}
 \item
