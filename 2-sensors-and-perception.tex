@@ -12,6 +12,7 @@
 
 \usepackage{tabularx,ragged2e}
 \usepackage{booktabs}
+\usepackage{multirow}
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
@@ -63,7 +64,7 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 \begin{itemize}
 \tightlist
 \item
-  \bf information from the robots environment
+  information from the robots environment
 \item
   distances to objects, intensity of the ambient light, unique features.
 \end{itemize}
@@ -88,7 +89,56 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 
 \end{frame}
 
-\begin{frame}{Examples of classification}
+\begin{frame}{Examples of classification (1/2)}
+
+\scriptsize
+
+\begin{tabular}{@{}p{4cm}p{4cm}ll@{}}
+\toprule
+{\bf General classification}\newline(typical use)                                                                                  & \bf Sensor\newline Sensor system & PC or EC & A or P \\ \midrule
+\multirow{3}{\linewidth}{{\it Tactile sensors} \newline \tiny detection of physical contact or closeness; security switches}               & Contact switches, bumpers                                      & EC       & P      \\
+                                                                                                                                                         & Optical barriers                                               & EC       & A      \\
+                                                                                                                                                         & Noncontact proximity sensors                                   & EC       & A      \\ \midrule
+\multirow{7}{\linewidth}{{\it Wheel/motor sensors} \newline \tiny wheel/motor speed and position}                                          & Brush encoders                                                 & PC       & P      \\
+                                                                                                                                                         & Potentiometers                                                 & PC       & P      \\
+                                                                                                                                                         & Synchros, resolvers                                            & PC       & A      \\
+                                                                                                                                                         & Optical encoders                                               & PC       & A      \\
+                                                                                                                                                         & Magnetic encoders                                              &          & A      \\
+                                                                                                                                                         & Inductive encoders                                             & PC       & A      \\
+                                                                                                                                                         & Capacitive encoders                                            & PC       & A      \\ \midrule
+\multirow{3}{\linewidth}{{\it Heading sensors}\newline \tiny orientation of the robot in relation to a fixed reference frame}             & Compass                                                        & EC       & P      \\
+                                                                                                                                                         & Gyroscopes                                                     & PC       & P      \\
+                                                                                                                                                         & Inclinometers                                                  & EC       & A/P    \\ \bottomrule
+\end{tabular}
+
+PC: proprioceptive; EC: exteroceptive; A: active; P: passive; A/P: active/passive
+\end{frame}
+
+\begin{frame}{Examples of classification (2/2)}
+
+\scriptsize
+
+\begin{tabular}{@{}p{4cm}p{4cm}ll@{}}
+\toprule
+{\bf General classification}\newline(typical use)                                                                                  & \bf Sensor\newline Sensor system & PC or EC & A or P \\ \midrule
+\multirow{4}{\linewidth}{{\it Ground-based beacons}\newline\tiny localization in a fixed reference frame}                                & GPS                                                            & EC       & A      \\
+                                                                                                                                                         & Active optical of RF beacons                                   & EC       & A      \\
+                                                                                                                                                         & Active ultrasonic beacons                                      & EC       & A      \\
+                                                                                                                                                         & Reflective beacons                                             & EC       & A      \\ \midrule
+
+
+\multirow{5}{\linewidth}{{\it Active ranging}\newline\tiny reflectivity, time-of-flight, geometric triangulation}                        & Reflectivity sensors                                           & EC       & A      \\
+                                                                                                                                                         & Ultrasonic sensor                                              & EC       & A      \\
+                                                                                                                                                         & Laser range finder                                             & EC       & A      \\
+                                                                                                                                                         & Optical triangulation (1D)                                     & EC       & A      \\
+                                                                                                                                                         & Structured light (2D)                                          & EC       & A      \\ \midrule
+\multirow{2}{\linewidth}{{\it Motion/speed sensors}\newline\tiny speed relative to fixed or moving objects}                              & Doppler radar                                                  & EC       & A      \\
+                                                                                                                                                         & Doppler sound                                                  & EC       & A      \\ \midrule
+\multirow{3}{\linewidth}{{\it Vision-based sensors}\newline \tiny visual ranging, whole image analysis, segmentation, object recognition} & CCD/CMOS camera(s)                                             & EC       & P      \\
+                                                                                                                                                         & Visual ranging packages                                        &          &        \\
+                                                                                                                                                         & Object tracking packages                                       &          &        \\ \bottomrule
+\end{tabular}
+
 
 \end{frame}
 
