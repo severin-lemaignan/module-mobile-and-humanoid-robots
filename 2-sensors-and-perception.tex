@@ -365,33 +365,38 @@ tackled by anti-aliasing).
 \end{frame}
 
 \begin{frame}{Multi-Modal Error Distributions: The Challenges in
-\ldots{}}
+    \ldots{}}
 
-Behavior of sensors modeled by probability distribution (random errors)
+    Behavior of sensors modeled by probability distribution (random errors)
 
-usually very little knowledge about the causes of random errors
+    \begin{itemize}
+        \item usually very little knowledge about the causes of random errors
 
-often probability distribution is assumed to be symmetric or even
-Gaussian
+        \item often probability distribution is assumed to be symmetric or even
+            Gaussian
 
-however, it is important to realize how wrong this can be!
+        \item however, it is important to realize how wrong this can be!
 
-Examples:
+        \item Examples:
+            \begin{itemize}
+                \item Sonar (ultrasonic) sensor might overestimate the distance in real
+                    environment and is therefore not symmetric.
+                            \footnotesize Thus the sonar sensor might be best modeled by two
+                            modes:
 
-Sonar (ultrasonic) sensor might overestimate the distance in real
-environment and is therefore not symmetric
+                    \begin{itemize}
 
-\begin{itemize}
+                        \item mode for
+                            the case that the signal returns directly 
+                        \item mode for the case that the
+                            signals returns after multi-path reflections.
+                    \end{itemize}
 
-\item
-  Thus the sonar sensor might be best modeled by two modes: - mode for
-  the case that the signal returns directly - mode for the case that the
-  signals returns after multi-path reflections.
-\end{itemize}
+                \item Stereo vision system might correlate to images incorrectly, thus causing
+                    results that make no sense at all.
+            \end{itemize}
 
-Stereo vision system might correlate to images incorrectly, thus causing
-results that make no sense at all.
-
+    \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -401,12 +406,13 @@ results that make no sense at all.
 
 \begin{frame}{Wheel / Motor Encoders}
 
-Measures position or speed of the wheels or steering.
+\begin{itemize}
+    \item Measures position or speed of the wheels or steering.
 
-Wheel movements can be integrated to get an estimate of the robots
-position -\textgreater{} odometry.
+\item Wheel movements can be integrated to get an estimate of the robots
+position \rightarrow odometry.
 
-Optical encoders are proprioceptive sensors
+\item Optical encoders are proprioceptive sensors
 
 \begin{itemize}
 
@@ -415,7 +421,7 @@ Optical encoders are proprioceptive sensors
   fixed reference frame is only valuable for short movements.
 \end{itemize}
 
-Typical resolutions: 2000 increments per revolution.
+\item Typical resolutions: 2000 increments per revolution.
 
 \begin{itemize}
 
@@ -423,7 +429,7 @@ Typical resolutions: 2000 increments per revolution.
   For high resolution: interpolation.
 \end{itemize}
 
-Quadrature encoder (two emittor/detector pairs)
+\item Quadrature encoder (two emittor/detector pairs)
 
 \begin{itemize}
 
@@ -431,44 +437,59 @@ Quadrature encoder (two emittor/detector pairs)
   Gives direction and 4 times higher resolution.
 \end{itemize}
 
+\end{itemize}
+
+    \begin{center}
+        \includegraphics[width=0.9\linewidth]{encoders1}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Wheel / Motor Encoders}
+    \centering
 
-scanning reticle fields
+        \includegraphics[width=0.45\columnwidth]{encoders2}
+        \includegraphics[width=0.45\columnwidth]{encoders}
 
-scale slits
 
-Notice what happens when the direction changes:
 
 \end{frame}
 
 \begin{frame}{Wheel / motor encoders}
 
-Home-made encoder
+    \centering
+    \begin{multicols}{2}
+        \includegraphics[width=0.6\linewidth]{encoders3}
 
-Commercial encoder
+        Home-made encoder
 
-Absolute encoder disk
+        \includegraphics[width=0.6\linewidth]{encoders5}
+
+        Commercial encoder
+
+        \begin{center}
+            \includegraphics[width=0.9\linewidth]{encoders4}
+        \end{center}
+
+        Absolute encoder disk
+
+    \end{multicols}
 
 \end{frame}
 
 \begin{frame}{Heading sensors}
 
-Heading sensors can be proprioceptive (gyroscope, inclinometer) or
-exteroceptive (compass).
+    \begin{itemize}
+        \item Heading sensors can be proprioceptive (gyroscope, inclinometer) or
+            exteroceptive (compass).
 
-Used to determine the robots orientation and inclination.
+        \item Used to determine the robots orientation and inclination.
 
-Allow, together with an appropriate velocity information, to integrate
-the movement to an position estimate.
+        \item Allow, together with an appropriate velocity information, to integrate the
+            movement to an position estimate. This {\bf odometry} procedure is called
+            {\bf dead reckoning} (from ship navigation).
 
-\begin{itemize}
-
-\item
-  This procedure is called dead reckoning (from ship navigation).
-\end{itemize}
-
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Compass}
@@ -630,7 +651,7 @@ Laser beam traveling in direction of rotation
 \begin{itemize}
 
 \item
-  slightly shorter path -\textgreater{} shows a higher frequency
+  slightly shorter path \rightarrow shows a higher frequency
 \item
   difference in frequency Df of the two beams is proportional to the
   angular velocity W of the cylinder
@@ -1212,7 +1233,7 @@ WiFi based localisation.
 
 \begin{frame}{Range sensors (time of flight)}
 
-Large range distance measurement -\textgreater{} called range sensors
+Large range distance measurement \rightarrow called range sensors
 
 Range information:
 
@@ -1468,7 +1489,7 @@ Pulsed laser.
 \item
   measurement of elapsed time directly.
 \item
-  resolving picoseconds -\textgreater{} expensive hardware.
+  resolving picoseconds \rightarrow expensive hardware.
 \end{itemize}
 
 Indirectly: the time of flight can be measured using a phase shift
