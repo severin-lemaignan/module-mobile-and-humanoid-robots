@@ -705,29 +705,26 @@ instead of absolute orientation.
 
 \begin{frame}{Technology: Coriolis effect}
 
-\begin{itemize}
+    Mass $m$ moving in one direction at speed $\vec{v}$, when rotated at speed $\vec\Omega$,
+    experiences a {\bf Coriolis} force $\vec{F}_{coriolis}$:
 
-\item
-  Mass moving in one direction at speed v, when rotated at speed
-  experiences a Coriolis force
-\item
-  Displacement measured as change in capacitance.
-\end{itemize}
+        \begin{center}
+            \includegraphics[width=0.5\linewidth]{coriolis}
+        \end{center}
+    Displacement measured as change in capacitance.
 
-\begin{itemize}
 
-\item
-  ~
-\end{itemize}
-
-(From
-\href{http://electroiq.com/blog/2010/11/introduction-to-mems-gyroscopes/}{STM})
+    (reference: \href{http://electroiq.com/blog/2010/11/introduction-to-mems-gyroscopes/}{STM})
 
 \end{frame}
 
 \begin{frame}{Example}
 
 STMicroElectronics
+
+    \begin{center}
+        \includegraphics[width=0.3\linewidth]{stm_gyro}
+    \end{center}
 
 \begin{itemize}
 
@@ -741,68 +738,68 @@ STMicroElectronics
   \href{http://www.st.com/web/en/resource/technical/document/datasheet/CD00265057.pdf}{Datasheet}
 \end{itemize}
 
-In depth information on gyroscopes see
-\url{http://ieee-sensors2013.org/sites/ieee-sensors2013.org/files/Serrano_Slides_Gyros2.pdf}
+\small
+    In depth information on gyroscopes see \url{http://ieee-sensors2013.org/sites/ieee-sensors2013.org/files/Serrano_Slides_Gyros2.pdf}
 
 \end{frame}
 
 \begin{frame}{Use of gyroscopes (1)}
 
-Most gyroscopes return angular velocity {[}rad/s{]}
+Most gyroscopes return angular velocity: $rad\cdot s^{-1}$.
 
-\begin{itemize}
+    Angular velocity can be converted to angle $a$ ({\it attitude} of the gyro) through integrating reading $\dot{a}$\bubblemark{derivative} over time:
 
-\item
-  Angular velocity can be converted to angle (``attitude'' of the gyro)
-  through integrating readings over time:
-\end{itemize}
+    \[
+        a = \int_{0}^{t} \dot{a}dt
+    \]
 
-While classic optical or mechanical gyroscopes do not suffer from drift,
-MEMS gyroscopes do.
+    \bubble<1>{derivative}{A variable with a dot on top is that variable at a particular point in time}
 
-\begin{itemize}
+    \begin{multicols}{2}
+    While classic optical or mechanical gyroscopes do not suffer from drift,
+    MEMS gyroscopes do. Example, 30º drift over 12 seconds!!
 
-\item
-  Example, 30º drift over 12 seconds!!
-\end{itemize}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{gyro-drift}
+    \end{center}
 
-(source
-\href{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom
-Pycke})
+    \end{multicols}
 
-Just so know: a variable with a dot on top is that variable at a
-particular moment in time\ldots{}
+    (source: \href{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom
+    Pycke})
 
 \end{frame}
 
 \begin{frame}{Use of gyroscopes (2)}
 
-\href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{MEMS}
-gyroscopes are very noisy
+    \only<1>{
+        \href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{MEMS}
+        gyroscopes are very noisy:
 
-Filtering needed to get rid of noise.
 
-\begin{itemize}
+        \begin{center}
+            \includegraphics[width=0.6\linewidth]{mems-noise}\bubblemark{gyronoise}
+        \end{center}
+        Filtering needed to get rid of noise.
+    \bubble<1>{gyronoise}{Gyro rotates 90º clockwise and then 90º counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
+}
+        \only<2>{
 
-\item
-  Runge-Kutta filter, implements a ``running average'', smoothing out
-  the noise.
-\end{itemize}
 
-\begin{itemize}
+            {\bf Runge-Kutta filter}, implements a ``running average'', smoothing out
+        the noise.
 
-\item
-  ~
-\end{itemize}
+        \[
+            a_t = a_{t-1} + \frac{1}{6}(\dot{a}_{t-3} + 2\dot{a}_{t-2} + 2\dot{a}_{t-1} + \dot{a}_t)
+            \]
 
-(source
-\href{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom
-Pycke})
+        \begin{center}
+            \includegraphics[width=0.6\linewidth]{mems-filtering}
+        \end{center}
 
-Gyro rotates 90º clockwise and then 90º counter clockwise and back.
+        (source: \href{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom Pycke})
 
-Blue line is raw output from gyro, red is low pass filtered.
-
+    }
 \end{frame}
 
 \begin{frame}{Accelerometers}
