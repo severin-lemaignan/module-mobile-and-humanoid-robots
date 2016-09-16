@@ -486,7 +486,7 @@ position \rightarrow odometry.
         \item Used to determine the robots orientation and inclination.
 
         \item Allow, together with an appropriate velocity information, to integrate the
-            movement to an position estimate. This {\bf odometry} procedure is called
+            movement to an position estimate. This procedure is called
             {\bf dead reckoning} (from ship navigation).
 
     \end{itemize}
@@ -494,90 +494,67 @@ position \rightarrow odometry.
 
 \begin{frame}{Compass}
 
-Since over 2000 B.C.
+    Since over 2000 B.C., when Chinese suspended a piece of naturally magnetite from a silk
+    thread and used it to guide a chariot over land.
 
-\begin{itemize}
+    Magnetic field on earth: {\bf absolute measure for orientation}
 
-\item
-  when Chinese suspended a piece of naturally magnetite from a silk
-  thread and used it to guide a chariot over land.
-\end{itemize}
+    Large variety of solutions to measure the earth magnetic field:
+    \begin{itemize}
+        \item mechanical magnetic compass
+        \item direct measure of the magnetic field (Hall-effect, magnetoresistive
+            sensors)
+    \end{itemize}
 
-Magnetic field on earth
+    Major drawbacks:
 
-\begin{itemize}
-
-\item
-  absolute measure for orientation.
-\end{itemize}
-
-Large variety of solutions to measure the earth magnetic field
-
-\begin{itemize}
-
-\item
-  mechanical magnetic compass
-\item
-  direct measure of the magnetic field (Hall-effect, magnetoresistive
-  sensors)
-\end{itemize}
-
-Major drawback
-
-\begin{itemize}
-
-\item
-  weakness of the earth field
-\item
-  easily disturbed by magnetic objects or other sources
-\item
-  not feasible for indoor environments
-\end{itemize}
+    \begin{itemize}
+        \item weakness of the earth field
+        \item easily disturbed by magnetic objects or other sources
+        \item not feasible for indoor environments
+    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Compass}
 
-\begin{itemize}
+  Solid state compass, \eg Honeywell HMR3100:
 
-\item
-  Solid state compass, \eg Honeywell HMR3100
-\end{itemize}
-
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{compass}
+    \end{center}
+\small
 \url{http://datasheet.digchip.com/197/197-01540-0-HMR3100.pdf}
 
 \end{frame}
 
 \begin{frame}{Gyroscope}
 
-Reports an acceleration of rotation to a relative frame of reference.
+    Reports an acceleration of rotation to a relative frame of reference.
 
-\begin{itemize}
+    \begin{beamercolorbox}{block body example}
 
-\item
-  Unlike a compass, that keep the orientation to a fixed frame, that
-  keeps a reference to an absolute frame of reference.
-\end{itemize}
+        Unlike a compass, that keeps the orientation to a fixed frame: reference to an
+        absolute frame of reference.
 
-Two categories, the mechanical and the optical gyroscopes
+    \end{beamercolorbox}
 
-Mechanical Gyroscopes
+    Two categories, the mechanical and the optical gyroscopes
 
-\begin{itemize}
+    {\bf Mechanical Gyroscopes}
 
-\item
-  Standard gyro
-\item
-  Rated gyro
-\end{itemize}
+    \begin{itemize}
 
-Optical Gyroscopes
+        \item Standard gyro
+        \item Rated gyro
+    \end{itemize}
 
-\begin{itemize}
+    {\bf Optical Gyroscopes}
 
-\item
-  Rated gyro
-\end{itemize}
+    \begin{itemize}
+
+        \item Rated gyro
+    \end{itemize}
 
 \end{frame}
 
@@ -594,32 +571,27 @@ Concept: inertial properties of a fast spinning rotor.
 Angular momentum associated with a spinning wheel keeps the axis of the
 gyroscope inertially stable.
 
-Reactive torque \emph{τ} (tracking stability) is proportional to the
-spinning speed \emph{ω}, the precession speed \emph{Ω} and the wheels
-inertia \emph{I}.
+Reactive torque $\tau$ (tracking stability) is proportional to the
+spinning speed $\omega$, the precession speed $\Omega$ and the wheels
+inertia $\mathcal{I}$:
 
-No torque can be transmitted from the outer pivot to the wheel axis
+\[
+    \tau = \mathcal{I}\cdot\omega CHECK THAT
+\]
 
-\begin{itemize}
-
-\item
-  spinning axis will therefore be space-stable
-\end{itemize}
+No torque can be transmitted from the outer pivot to the wheel axis: {\bf
+    spinning axis will therefore be space-stable}
 
 Quality: 0.1° in 6 hours
 
 If the spinning axis is aligned with the north-south meridian, the
 earth's rotation has no effect on the gyro's horizontal axis
 
+If it points east-west, the horizontal axis reads the
+earth rotation
 \end{frame}
 
-\begin{frame}{If it points east-west, the horizontal axis reads the
-earth rotation}
-
-Mechanical gyroscope of ballistic missile (French IRBM S3, 1970s, from
-Wikimedia)
-
-\end{frame}
+\imageframe[caption=Mechanical gyroscope of ballistic missile (French IRBM S3 -- 1970s -- Wikimedia)]{gyro-example}
 
 \begin{frame}{Rate gyros}
 
@@ -627,106 +599,107 @@ Same basic arrangement shown as regular mechanical gyros
 
 But: gimble(s) are restrained by a torsional spring
 
-\begin{itemize}
-
-\item
+\begin{beamercolorbox}{block body example}
   enables to measure angular speeds instead of the orientation.
-\end{itemize}
+\end{beamercolorbox}
 
 \end{frame}
 
 \begin{frame}{Optical gyroscopes}
 
+\begin{multicols}{2}
+
+    \begin{center}
+        \includegraphics[width=0.9\linewidth]{optical-gyro}
+    \end{center}
+
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{optical-gyro2}
+    \end{center}
+
+Hitachi fibre optical gyroscope
+\vfill
+\columnbreak
+
 First commercial use started only in the early 1980 when they where
 first installed in airplanes.
 
-Optical gyroscopes sensitive to only one plane. Report angular speed
+Optical gyroscopes sensitive to only one plane. Report {\bf angular speed}
 instead of absolute orientation.
 
-One is traveling in a fiber clockwise, the other counterclockwise around
-a cylinder (older setups use a ring of mirrors). Based on Sagnac effect.
 
-Laser beam traveling in direction of rotation
-
-\begin{itemize}
-
-\item
-  slightly shorter path \rightarrow shows a higher frequency
-\item
-  difference in frequency Df of the two beams is proportional to the
-  angular velocity W of the cylinder
-\end{itemize}
-
-Hitachi fibre optical gyroscope
+\end{multicols}
 
 \end{frame}
 
 \begin{frame}{Optical gyros: Sagnac effect}
 
-\begin{itemize}
+    \begin{multicols}{2}
 
-\item
-  A beam of light is split, both beams follow a trajectory in opposite
-  directions.
-\item
-  On return to the point of entry both beams form an interference
-  pattern.
-\item
-  Rotating the apparatus results in a changing interference pattern.
-\end{itemize}
+        A beam of light is split, both beams follow a trajectory in opposite
+        directions.
 
+        \begin{center}
+            \includegraphics[width=0.6\linewidth]{sagnac-effect}
+        \end{center}
+
+        One is traveling in a fiber clockwise, the other counterclockwise
+        around a cylinder (older setups use a ring of mirrors).
+
+        Laser beam traveling in direction of rotation
+
+            \begin{itemize}
+
+                \item slightly shorter path \rightarrow shows a higher frequency
+                \item difference in frequency $D_f$ of the two beams is proportional to the angular velocity $\omega$ of the cylinder
+            \end{itemize}
+
+        On return to the point of entry both beams form an {\bf interference
+        pattern}. Rotating the apparatus results in a {\bf changing
+        interference pattern}.
+
+    \end{multicols}
 \end{frame}
 
 \begin{frame}{Vibrating structure gyroscopes}
 
-A small vibrating element replaces the spinning wheel.
+    A small vibrating element replaces the spinning wheel.
 
-\begin{itemize}
+    {\bf Measures angular acceleration (= rate gyroscope)}
 
-\item
-  Measures angular acceleration (= rate gyroscope).
-\end{itemize}
+    \begin{itemize}
 
-Small due to MEMS technology (Micro Electro Mechanical System)
+        \item {\bf Small} due to {\bf MEMS} technology (Micro Electro
+            Mechanical System): lithographic etching of mechanical structure of
+            mm (or smaller) size.
 
-\begin{itemize}
+    \end{itemize}
 
-\item
-  Lithographic etching of mechanical structure of mm (or smaller) size.
-\end{itemize}
+    Many different ways of implementing this:
 
-Many different ways of implementing this
+    \begin{itemize}
 
-\begin{itemize}
-
-\item
-  Vibrating wheel gyroscope.
-\item
-  \href{http://en.wikipedia.org/wiki/Piezoelectric_effect}{Piezoelectric}
-  element gyroscope.
-\item
-  Tuning forks manufactured using MEMS technology.
-\item
-  \ldots{}
-\end{itemize}
+        \item Vibrating wheel gyroscope
+        \item \href{http://en.wikipedia.org/wiki/Piezoelectric_effect}{Piezoelectric} element gyroscope
+        \item Tuning forks manufactured using MEMS technology
+        \item \ldots{}
+    \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Technology: vibrating wheel}
+\begin{frame}{Vibrating wheel gyroscope}
 
-Vibrating wheel gyroscope
-
-\begin{itemize}
-
-\item
   Relies on gyroscopic effect, but executed in MEMS technology.
-\end{itemize}
 
-Wheel vibrates (equivalent to rotating), tilt due to gyropscopic effect
-when, change detected by chance in capacitance.
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{vibratingwheel}\bubblemark{wheel}
+        \includegraphics[width=0.4\linewidth]{vibratingwheel2}
+    \end{center}
 
-(from
-\href{https://www.quora.com/How-does-a-MEMS-gyroscope-work}{Quora})
+    \bubble<1>{wheel}{Wheel vibrates (equivalent to rotating), tilt due to gyropscopic effect
+    when, change detected by chance in capacitance}
+
+(reference: \href{https://www.quora.com/How-does-a-MEMS-gyroscope-work}{Quora})
 
 \end{frame}
 
