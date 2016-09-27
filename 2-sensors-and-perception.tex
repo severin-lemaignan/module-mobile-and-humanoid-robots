@@ -1188,116 +1188,125 @@ WiFi-based localisation.
 
 \begin{frame}{Range sensors (time of flight)}
 
-Large range distance measurement \rightarrow called range sensors
+\only<1>{
 
-Range information:
+Large range distance measurement \rightarrow {\bf range sensors}
+
+    Range information: key element for {\bf localisation} and {\bf environment modeling}
+
+Ultrasonic sensors as well as laser range sensors make use of propagation speed
+of sound or electromagnetic waves respectively. The traveled distance of a
+sound or electromagnetic wave is given by $d = c \cdot t$, where:
 
 \begin{itemize}
 
 \item
-  key element for localization and environment modeling
+  $d$: distance traveled (usually round-trip)
+\item
+  $c$: speed of wave propagation
+\item
+  $t$: time of flight
 \end{itemize}
+}
 
-Ultrasonic sensors as well as laser range sensors make use of
-propagation speed of sound or electromagnetic waves respectively. The
-traveled distance of a sound or electromagnetic wave is given by \emph{d
-= c . t}
+    \only<2>{
+It is important to point out that:
 
-Where
+    \begin{itemize}
+        \item Propagation speed $\nu$ of sound: $0.3 \frac{m}{ms}$
+        \item Propagation speed $\nu$ of of electromagnetic signals: $0.3 \frac{m}{ns}$ \\
+            $\Rightarrow$ one million times faster
+    \end{itemize}
 
-\begin{itemize}
+    \pause
 
-\item
-  d = distance traveled (usually round-trip)
-\item
-  c = speed of wave propagation
-\item
-  t = time of flight.
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Range sensors (time of flight)}
-
-It is important to point out
-
-Propagation speed \emph{v} of sound: 0.3 m/ms
-
-Propagation speed \emph{v} of of electromagnetic signals: 0.3 m/ns,
+3 meters is:
 
 \begin{itemize}
 
 \item
-  one million times faster.
-\end{itemize}
-
-3 meters
-
-\begin{itemize}
-
-\item
-  is 10 ms ultrasonic system
+  10 ms for an ultrasonic system
 \item
   only 10 ns for a laser range sensor
-\item
-  time of flight t with electromagnetic signals is not an easy task
-\item
-  laser range sensors expensive and delicate
 \end{itemize}
+
+Measuring the time of flight $t$ with electromagnetic signals is not an easy task; laser range sensors are expensive and delicate
+
+}
+
+    \only<3>{
 
 The quality of time of flight range sensors mainly depends on:
 
 \begin{itemize}
 
-\item
-  Uncertainties about the exact time of arrival of the reflected signal,
+\item Uncertainties about the exact time of arrival of the reflected signal,
   due to reflections, multiple echo's, \ldots{}
-\item
-  Internal sensor inaccuracies in the time of flight measure (laser
+\item Internal sensor inaccuracies in the time of flight measure (laser
   range sensors)
-\item
-  Opening angle of transmitted beam (ultrasonic range sensors)
-\item
-  Interaction with the target (surface, specular reflections)
-\item
-  Variation of propagation speed
-\item
-  Speed of mobile robot and target (if not at standing still)
+\item Opening angle of transmitted beam (ultrasonic range sensors)
+\item Interaction with the target (surface, specular reflections)
+\item Variation of propagation speed
+\item Speed of mobile robot and target (if not at standing still)
 \end{itemize}
+}
 
 \end{frame}
 
 \begin{frame}{Ultrasonic Sensor (sonar)}
 
-\begin{itemize}
 
-\item
   Transmit a packet of (ultrasonic) pressure waves.
-\item
-  Distance d of the echoing object can be calculated based on the
-  propagation speed of sound \emph{c} and the time of flight \emph{t}.
-\item
-  The speed of sound \emph{c}gas in a gas is given by
-\end{itemize}
+
+  The distance $d$ of the echoing object can be calculated based on the
+  propagation speed of sound $c$ and the time of flight $t$:
+        \[
+            d = \frac{c_{gas}\cdot t}{2}
+        \]
+
+    The speed of sound $c_{gas}$ in a gas is given by:
+        \[
+            c_{gas} = \sqrt{g\cdot R\cdot T}
+        \]
+
+    where:
+
+    \begin{itemize}
+        \item  $g$: adiabatic index, 1.40 for air
+        \item $R$: gas constant, 287.053072 $\frac{J}{kg\cdot K}$ for air
+        \item $T$: temperature in degree Kelvin
+
+    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Speed of sound in air}
 
-Can be approximated by with the air temperature in Celcius.
+Can be approximated by:
+    \[
+        c_{air} = 331.3 \sqrt{1+\frac{J}{273.15}}
+        \]
+    with $J$ the air temperature in Celsius.
 
 If no correction for temperature would be done, what would the error be?
 
-\begin{itemize}
+    \begin{multicols}{2}
+        Assume obstacle at 1m, and $T = 15^{\circ}C$.
 
-\item
-  Assume obstacle at 1m, and T = 15°C.
-\end{itemize}
+        \begin{center}
+            \includegraphics[width=\linewidth]{sound_speed_error}
+        \end{center}
+    \end{multicols}
+
 
 \end{frame}
 
 \begin{frame}{Signals of ultrasonic sensor}
 
+\begin{center}
+    \includegraphics[width=0.8\linewidth]{us_signals}
+
+\end{center}
 Transmitted sound
 
 Analog echo signal
