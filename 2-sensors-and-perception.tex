@@ -18,20 +18,22 @@
 
 \usetheme{hri}
 
+\newcommand{\source}[2]{\tiny\it Source: \href{#1}{#2}}
+
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,patterns}
 
 \graphicspath{{figs/}}
 
-\title{ROCO318 \newline Mobile and humanoid robots}
-\subtitle{Part 2 -- Sensors and perception}
+\title{ROCO318 \newline Mobile and Humanoid Robots}
+\subtitle{Part 2 -- Sensors and Perception}
 \date{}
 \author{Séverin Lemaignan}
 \institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
 
 \begin{document}
 
-\licenseframe{github.com/severin-lemaignan/[REPO]}
+\licenseframe{github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
 
 \maketitle
 
@@ -781,7 +783,7 @@ Most gyroscopes return angular velocity: $rad\cdot s^{-1}$.
             \includegraphics[width=0.6\linewidth]{mems-noise}\bubblemark{gyronoise}
         \end{center}
         Filtering needed to get rid of noise.
-    \bubble<1>{gyronoise}{Gyro rotates 90º clockwise and then 90º counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
+    \bubble<1>{gyronoise}{Gyro rotates 90$^{\circ}$ clockwise and then 90$^{\circ}$ counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
 }
         \only<2>{
 
@@ -808,75 +810,60 @@ Accelerometers measure acceleration of the device
 
 \begin{itemize}
 
-\item
-  Single axis: only measure a in one direction.
-\item
-  Multi axis: measures in multiple direction, 3 axis is sufficient.
-\item
-  Measured in m/s2 or in g = 9.81 m/s2.
+\item Single axis: only measure a in one direction.
+\item Multi axis: measures in multiple direction, 3 axis is sufficient.
+\item Measured in $\frac{m}{s^2}$ or in $g = 9.81\cdot\frac{m}{s^2}$.
 \end{itemize}
 
-Principle: a damped mass on a spring, when mass accelerates,
+{\bf Principle}: damped mass on a spring; when mass accelerates,
 displacement is measured and translated to acceleration.
 
+\begin{multicols}{2}
 \begin{itemize}
 
-\item
-  Modern accelerometers are \emph{micro electro- mechanical
-  systems}~(\href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{MEMS}).
-\item
-  Displacement is often indirectly measured using capacitive,
-  peizoelectric or
-  \href{http://en.wikipedia.org/wiki/Piezoresistive_effect}{piezoresistive}
-  sensors.
+\item Modern accelerometers are MEMS
+
+\item Displacement is often indirectly measured using capacitive, peizoelectric
+    or \href{http://en.wikipedia.org/wiki/Piezoresistive_effect}{piezo\bubblemark{piezoresistive}resistive}
+    sensors.
+
+    \vfill
+    \columnbreak
+
 \end{itemize}
 
-Crystalline material changes resistance when under pressure
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{accelero}
 
-(\href{http://research.et.byu.edu/llhwww/intro/memsintro.html}{BYU})
+\source{http://research.et.byu.edu/llhwww/intro/memsintro.html}{BYU}
+    \end{center}
+\end{multicols}
+
+\bubble<1>[90][0.3cm][4.5cm]{piezoresistive}{Crystalline material changes resistance when under pressure}
+
 
 \end{frame}
 
 \begin{frame}{Accelerometer as tilt sensor}
 
-An accelerometer always senses the Earth's gravitational vector
-(\emph{g} = 9.81 m/s2).
+An accelerometer always senses the Earth's gravitational vector $\vec{g} = 9.81\cdot\frac{m}{s^2}$.
 
 As such an accelerometer can be used to measure rotation.
 
-\begin{itemize}
+    \begin{itemize}
+        \item Gravity vector will be sensed on all three axes as $\vec{g_x}$, $\vec{g_y}$, $\vec{g_z}$.
 
-\item
-  However, it cannot measure rotation around the z-axis, for that a
-  gyroscope is still needed.
-\item
-  Gravity vector will be sensed on all three axes as \emph{gx, gy, gz}.
-\item
-  The gravitation vector can be decomposed in three components, which
-  need to vector sum to \emph{g}.
-\end{itemize}
+        \item The gravitation vector can be decomposed in three components, which
+            need to vector sum to $\vec{g}$.
 
-\emph{z}
+        \item However, it cannot measure rotation around the z-axis, for that a
+            gyroscope is still needed.
 
-\emph{y}
+    \end{itemize}
 
-\emph{x}
-
-\emph{g=}9.81\emph{m/s2}
-
-\emph{z}
-
-\emph{y}
-
-\emph{x}
-
-\emph{g=}9.81\emph{m/s2}
-
-\emph{gz}
-
-\emph{gx}
-
-\emph{gy}
+    \begin{center}
+        \includegraphics[width=0.5\linewidth]{accelero_tilt}
+    \end{center}
 
 \end{frame}
 
@@ -885,32 +872,31 @@ As such an accelerometer can be used to measure rotation.
 \begin{itemize}
 
 \item
-  Developed for military use (since 1978).
+  Developed for military use (since 1978)
 \item
-  Cost of maintenance estimated at \$400M per year.
+  Cost of maintenance estimated at \$400M per year
 \item
   Recently it became accessible for commercial applications
 \item
   24 satellites (excluding five spares) orbit the earth every 12 hours
-  at a height of 20,190 km.
+  at a height of 20,190 km
 \item
   4 satellites are located in each of six planes inclined 55 degrees
-  with respect to the plane of the earth's equators.
+  with respect to the plane of the earth's equators
 \item
-  From any location on the planet at least 4 satellites can be seen.
+  From any location on the planet at least 4 satellites can be seen
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Position of satellites}
 
-\begin{itemize}
+    \begin{center}
+        \video[1]{6cm}{figs/gps.mp4}
 
-\item
-  Earth diameter ≈ 12,756km, height of GPS satellites ≈ 20,190km.
-\item
-  From \url{http://www.kowoma.de/en/gps/orbits.htm}
-\end{itemize}
+    \source{https://en.wikipedia.org/wiki/File:GPS24goldenSML.gif}{Wikipedia}
+    \end{center}
+
 
 \end{frame}
 
@@ -918,202 +904,191 @@ As such an accelerometer can be used to measure rotation.
 
 \begin{itemize}
 
-\item
-  Location of any GPS receiver is determined through a time of flight
-  measurement.
-\item
-  Two forms of clock information: Coarse / Acquisition code which is
-  public and Precise code which is for military apps. The code also
+    \item Location of any GPS receiver is determined through a {\bf time of flight
+        measurement}
+\item Two forms of clock information: {\bf Coarse/Acquisition} (C/A) code which is
+    public and {\bf Precise} code which is for military apps. The code also
   carries the identifier of the satellite.
-\item
-  Satellites carry high-precision atomic clocks, while GPS receivers
+\item Satellites carry {\bf high-precision atomic clocks}, while GPS receivers
   have low precision crystal oscillator clocks (updated by the atomic
-  clocks).
+  clocks)
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}{GPS -- calculating position}
 
+    \only<1> {
 \begin{itemize}
 
 \item
-  Suppose the time of flight to three satellites is known: \emph{t1, t2,
-  t3}.
+  Suppose the time of flight to three satellites is known: $t_1$, $t_2$, $t_3$.
 \item
-  The distance to each satellite is
+    The distance to each satellite is $r_i = v_{air}\cdot t_i$
 \item
-  If the receivers position is \emph{(x,y,z)}, and the satellites
-  position is \emph{(x1, y1, z1)}, \emph{(x2, y2, z2)} and \emph{(x3,
-  y3, z3)}, the following relations hold
+  If the receivers position is $(x,y,z)$, and the satellites
+  position are $(x_i, y_i, z_i)$, the following relations hold:
+
+        \[
+            r_i = \sqrt{(x-x_i)^2 + (y - y_i)^2 + (z - z_i)^2}
+        \]
 \end{itemize}
+}
 
-\end{frame}
+    \only<2>{
 
-\begin{frame}{GPS -- calculating position}
-
-Three spheres, intersection results in two solutions for \emph{(x,y,z)}.
+Three spheres, intersection results in two solutions for $(x,y,z)$.
 One is above the earth's surface, the other below.
 
-A deviation in the receivers clock, results a error on the distance to
+    \begin{center}
+        \includegraphics[width=0.3\linewidth]{gps_pos}
+    \end{center}
+
+}
+    \only<3-4>{
+        
+
+    \begin{beamercolorbox}{block body example}
+A deviation in the receivers clock results an error on the distance to
 the satellite.
+    \end{beamercolorbox}
 
-\begin{itemize}
 
-\item
   For example, satellite at 25,000km from receiver, 0.1ms deviation
   between clocks, results in an error of 30m in the distance to the
   satellite.
-\end{itemize}
+}
 
-\end{frame}
+\only<4>{
 
-\begin{frame}{GPS -- calculating position}
+  Assume the time difference between the atomic clocks of two satellites' atomic clocks is
+  $\Delta_t$. The distance to the satellites is now erroneously estimated
+  at $r_i = v_{air}\cdot (t_i + \Delta_t)$
 
-\begin{itemize}
+  }
+\only<5>{
+  $\Delta_t$ can be calculated by taking an extra satellite into account.
 
-\item
-  Assume time difference between atomic clocks and receiver clock is
-  Δ\emph{t}. The distance to the satellites is now erroneously estimated
-  at
-\item
-  Δ\emph{t} can be calculated by taking an extra satellite into account.
-\end{itemize}
+        \[
+            r_1 = \sqrt{(x-x_1)^2 + (y - y_1)^2 + (z - z_1)^2} + K\cdot\Delta_t
+        \]\[
+            r_2 = \sqrt{(x-x_2)^2 + (y - y_2)^2 + (z - z_2)^2} + K\cdot\Delta_t
+        \]\[
+            r_3 = \sqrt{(x-x_3)^2 + (y - y_3)^2 + (z - z_3)^2} + K\cdot\Delta_t
+        \]\[
+            r_4 = \sqrt{(x-x_4)^2 + (y - y_4)^2 + (z - z_4)^2} + K\cdot\Delta_t
+        \]
 
+    }
 \end{frame}
 
 \begin{frame}{GPS - accuracy}
 
 With the C/A code, the time of flight can be measured to within 10ns,
-which is an error of ≈ 3m.
+which is an error of $\approx$ 3m.
 
-Sources of error on the distance to satellite estimate
+Sources of error on the distance to satellite estimate:
 
 \begin{itemize}
 
-\item
-  Ionospheric effects: ± 5 meter
-\item
-  Ephemeris errors: ± 2.5 meter
-\item
-  Satellite clock errors: ± 2 meter
-\item
-  Multipath distortion: ± 1 meter
-\item
-  Tropospheric effects: ± 0.5 meter
-\item
-  Numerical errors± 1 meter or less
+\item Ionospheric effects: $\pm$ 5m
+\item Ephemeris errors: $\pm$ 2.5m
+\item Satellite clock errors: $\pm$ 2m
+\item Multipath distortion: $\pm$ 1m
+\item Tropospheric effects: $\pm$ 0.5m
+\item Numerical errors $\pm$ 1m or less
 \end{itemize}
 
-Typical accuracy is 15 m, but this varies a lot.
+    $\Rightarrow$ {\bf typical accuracy is 15m}, but this varies a lot
 
 \end{frame}
 
 \begin{frame}{GPS - improvements}
 
-L1 and L2 frequency.
+    {\bf L1 and L2 frequency}
 
-\begin{itemize}
+    Same time information is transmitted on two frequencies, these
+    frequencies will experience noise in a different way. Can be used to
+    cancel noise.
 
-\item
-  Same time information is transmitted on two frequencies, these
-  frequencies will experience noise in a different way. Can be used to
-  cancel noise.
-\end{itemize}
+    \pause
 
-Differential GPS (DGPS)
+    {\bf Differential GPS (DGPS)}
 
-\begin{itemize}
+    Stationary receiver, with known position, read GPS position and
+    calculate the error. This error is broadcast over an FM band to
+    receiver in the neighbourhood. Accuracy is 1 to 3 meters.
 
-\item
-  Stationary receiver, with known position, read GPS position and
-  calculate the error. This error is broadcast over an FM band to
-  receiver in the neighbourhood. Accuracy is 1 to 3 meters.
-\end{itemize}
+    \pause
 
-Satellite Based Augmentation System (SBAS)
+     {\bf Satellite Based Augmentation System (SBAS)}
 
-\begin{itemize}
+    Ground based receivers calculate ionospheric delays and clock drift,
+    this is relayed to geosynchronous satellites which then broadcast it
+    to all receivers in its view.
 
-\item
-  Ground based receivers calculate ionospheric delays and clock drift,
-  this is relayed to geosynchronous satellites which then broadcast it
-  to all receivers in its view.
-\item
-  The American Federal Aviation Administration~ has a system which works
-  in the Western hemisphere, called Wide Area Augmentation
-  System~(WAAS)~.
-\end{itemize}
+    The American FAA has a system which works
+    in the Western hemisphere, called Wide Area Augmentation
+    System~(WAAS).
 
 \end{frame}
 
 \begin{frame}{Galileo}
 
-Europe's response to GPS (or GLONASS, the Russian global positioning
-system).
+    Europe's response to GPS (or GLONASS, the Russian global positioning
+    system).
 
-\begin{itemize}
+    \begin{itemize}
 
-\item
-  30 spacecraft
-\item
-  orbital altitude: 23,222 km
-\item
-  3 orbital planes, 56° inclination (9 operational satellites and one
-  active spare per orbital plane)
-\item
-  satellite lifetime: \textgreater{}12 years
-\end{itemize}
+        \item 30 spacecraft
+        \item orbital altitude: 23,222 km
+        \item 3 orbital planes, 56$^{\circ}$ inclination (9 operational satellites and one
+            active spare per orbital plane)
+        \item satellite lifetime: $>$12 years
+    \end{itemize}
 
-Better
+    \pause
 
-\begin{itemize}
+    \begin{itemize}
 
-\item
-  Free access: 1m accuracy.
-\item
-  Subscription access: up to 10cm accuracy.
-\item
-  Better high altitude positioning.
-\end{itemize}
+        \item Free access: 1m accuracy
+        \item Subscription access: up to 10cm accuracy
+        \item Better high altitude positioning
+    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{GPS - Receivers}
 
-\textbf{SparkFun - 20 channel EM-406A SIRF III receiver}
+    \begin{multicols}{2}
 
-\begin{itemize}
+        {\bf Adafruit GPS Module - MTK3339 chipset}
 
-\item
-  16g including cable
-\item
-  20-Channel Receiver
-\item
-  Extremely high sensitivity : -159dBm
-\item
-  10m Positional Accuracy / 5m with WAAS
-\item
-  Hot Start : 8s
-\item
-  Cold Start : 42s
-\item
-  70mA at 4.5-6.5V
-\item
-  Outputs NMEA 0183 and SiRF binary protocol
-\item
-  Smallest complete module available: 30mm x 30mm x 10.5mm
-\item
-  £43.80 (in 2008)
-\end{itemize}
+        \begin{center}
+            \includegraphics[width=0.8\linewidth]{adafruit_receiver}
+        \end{center}
 
-\textbf{Sparkfun 54 Channel USB stick receiver}
+        \source{https://www.adafruit.com/product/790}{Adafruit}
+        \vfill
+        \columnbreak
 
-\begin{itemize}
+        \begin{itemize}
+            \item -165 dBm sensitivity, 10 Hz updates, \textbf<2-3>{66 channels}
+            \item Ultra low power usage: 20mA current draw while tracking
+            \item 3.3V operation,
+            \item 16mm x 16mm x 5mm and 4 grams
+            \item $\approx$ £23
+        \end{itemize}
 
-\item
-  \$80 (in 2008)
-\end{itemize}
+        \only<2>{
+            {\bf Why 66 channels when only max. 12 satellites are visible?}
+        }
+        \only<3>{
+            Improved correlation time $\rightarrow$ faster acquisition; lower power consumption
+        }
+        \vfill
+
+    \end{multicols}
 
 \end{frame}
 
@@ -1129,74 +1104,84 @@ GPS only works \textbf{outdoors}
   signal, GPS packets do not penetrate buildings.
 \end{itemize}
 
-Limited accuracy when relying on GPS and DGPS
+Limited accuracy
 
 \begin{itemize}
 
-\item
-  Accuracy several meters up to tens of meters. Autonomous vehicles will
+\item Accuracy several meters up to tens of meters. Autonomous vehicles will
   need to rely on other localisation methods.
 \end{itemize}
 
-Accuracy can be dramatically improved using a local DGPS antenna.
+\pause
 
-\begin{itemize}
+    \begin{multicols}{2}
 
-\item
-  \url{http://www.racelogic.co.uk/}
-\end{itemize}
+        \vfill
+    Accuracy can be dramatically improved using a local DGPS antenna.
 
-\url{http://www.youtube.com/watch?v=FATVNEB1_BY}
+    \vfill
+    \columnbreak
+    \begin{center}
+        \video{5cm}{figs/dgps_demo.webm?start=13}\\
+        \source{http://www.youtube.com/watch?v=FATVNEB1_BY}{youtube}
+    \end{center}
+
+    \end{multicols}
+\end{frame}
+
+\begin{frame}{GPS -- Examples}
+    \begin{multicols}{2}
+
+        Positioning of outdoor service robots
+
+        \begin{center}
+            \includegraphics[width=0.8\linewidth]{gps-example1}\\
+        \source{http://www.robotera.eu/}{www.robotera.eu}
+        \end{center}
+
+        \columnbreak
+        Agricultural robots
+
+
+        \begin{center}
+            \includegraphics[width=0.9\linewidth]{gps-example2}
+        \end{center}
+
+        Sowing, weeding, harvesting with cm precision
+    \end{multicols}
 
 \end{frame}
 
-\begin{frame}{Examples}
-
-\begin{itemize}
-
-\item
-  Positioning of outdoor service robots:
-  \href{http://www.robotera.eu/}{www.robotera.eu}
-\end{itemize}
-
-Agricultural robots
-
-\begin{itemize}
-
-\item
-  Sowing, weeding, harvesting with cm precision
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Other localisation methods}
+\begin{frame}{Other radio localisation methods}
 
 Mainly used in mobile phones and mobile devices.
 
-GSM base triangulation.
+GSM-based triangulation.
 
 \begin{itemize}
 
 \item
   Uses strength of GSM signal of different GSM base stations to estimate
-  position.
+  position
 \item
-  Works indoors, but accuracy limited to a radius of about 1km.
+  Works indoors, but accuracy limited to a radius of about 1km
 \end{itemize}
 
-WiFi based localisation.
+\pause
+
+WiFi-based localisation.
 
 \begin{itemize}
-
 \item
   If a device connects to a WiFi router, it knows the IP address of the
   router. Some internet providers know at which address a router is and
-  provide this.
-\item
-  Google Gears supports this service.
-\item
-  More accurate as range of WiFi router is limited, radius of about 50m.
-  But not all IP provide network locations.
+  provide this
+\item More accurate as range of WiFi router is limited, radius of about 50m.
+  But not all IP can be geo-coded
+\item Alternatively, positionning via databases that associate unique IDs (MAC
+    addresses) of WiFi routers with their position. For example,
+        \href{https://location.services.mozilla.com/}{Mozilla Location Service}
+
 \end{itemize}
 
 \end{frame}

@@ -50,6 +50,8 @@
 \newcommand{\etc}{\textit{etc.}\xspace}
 \newcommand{\vs}{\textit{vs.}\xspace}
 
+\RequirePackage{xstring}
+
 %---------------------------------------------------------------------
 % Itemize
 %---------------------------------------------------------------------
@@ -508,7 +510,7 @@
         
         \normalsize\vspace{1em}
         You can download the sources of this presentation here:\\
-        {\bf\url{#1}}
+        {\bf\footnotesize\IfBeginWith{#1}{http}{\url{#1}}{\href{https://#1}{#1}}}
     \end{frame}
 }
 
@@ -527,11 +529,11 @@
     },
 }
 
-\NewDocumentCommand{\bubble}{r<> O{230} O{0.5cm} m m}{%
-\tikz[remember picture, overlay]\node[align=center, fill=hriSec3Comp!60,font=\small, text width=2cm,
+\NewDocumentCommand{\bubble}{r<> O{230} O{0.5cm} O{2cm} m m}{%
+\tikz[remember picture, overlay]\node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=#4,
 opacity=0.8,text opacity=1,visible on=<#1>, rounded corners,
 draw,rectangle callout,anchor=pointer,callout relative pointer={(#2:#3)}]
-at (#4) {#5};
+at (#5) {#6};
 }
 
 \newcommand{\bubblemark}[1]{\tikz[overlay,remember picture,baseline=-0.5ex] \node (#1) {};}
