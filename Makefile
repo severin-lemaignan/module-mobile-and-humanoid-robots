@@ -18,13 +18,13 @@ $(SVG:.svg=.pdf): %.pdf: %.svg
 %.svg: %.dot
 	twopi -Tsvg -o$(@) $(<)
 
-thumbs:
-	./make_video_preview.py ${TARGET}
+%.thumbs: %.tex
+	./make_video_preview.py $<
 
 bib: $(TARGET:.tex=.aux)
 	BSTINPUTS=:./style bibtex $(TARGET:.tex=.aux)
 
-%.pdf: %.tex
+%.pdf: %.tex %.thumbs
 	TEXINPUTS=:./style $(LATEX) -shell-escape $<
 
 paper: $(TARGET) $(SVG:.svg=.pdf) $(DOT:.dot=.pdf)
