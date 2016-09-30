@@ -24,6 +24,16 @@
 
 \usetheme{hri}
 
+% Display the navigation bullet even without subsections
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning}
 
@@ -84,12 +94,12 @@ $endif$
 \begin{frame}{}
     \begin{center}
         \Large
-        That's all, folk!\\[2em]
+        That's all, folks!\\[2em]
         \normalsize
         Questions:\\
         Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
 
-        Slides:\\ \url{github.com/severin-lemaignan/[REPO]}
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
 
     \end{center}
 \end{frame}
