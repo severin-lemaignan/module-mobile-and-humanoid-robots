@@ -23,7 +23,15 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 
-\usetheme{hri}
+\usetheme[nosectionpages]{hri}
+
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning}
@@ -44,6 +52,21 @@
 
 \imageframe[scale=1]{pepper-robot}
 \videoframe[0.56]{figs/NISSAN-ProPILOT-chair.mp4}
+
+\section{Module Overview}
+\begin{frame}{This module}
+
+\begin{itemize}
+\item Sensors for mobile and humanoid robots
+\item Computer vision
+\item Localisation
+\item Robot control
+\item Planning and navigation
+\item Bipedal robots
+\end{itemize}
+
+\end{frame}
+
 
 \begin{frame}{This module}
 
@@ -69,18 +92,7 @@
 
 \end{frame}
 
-\begin{frame}{Topics}
-
-\begin{itemize}
-\item Sensors for mobile and humanoid robots
-\item Computer vision
-\item Localisation
-\item Robot control
-\item Planning and navigation
-\item Bipedal robots
-\end{itemize}
-
-\end{frame}
+\section{How Widespread?}
 
 \imageframe{industrial-robots-statistics}
 
@@ -91,6 +103,7 @@
 \imageframe{service-robots-stats}
 
 
+\section{Domains of Robotics}
 
 \begin{frame}{Service/domestic robots}
 
@@ -114,7 +127,6 @@
         \end{center}
     \end{multicols}
 
-    \pause
 
     \begin{multicols}{2}
 
@@ -202,62 +214,98 @@ energy autonomy, robustness.
     \end{multicols}
 \end{frame}
 
-\begin{frame}{Defence robots}
+\begin{frame}{Military robots}
 
 Best selling ``professional service'' robot: 6500 units in 2011, 6100 in
 2012, 9500 in 2013.
 
-\begin{itemize}
-\item
-  ``This robot has no fear''.
-\end{itemize}
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{defence-robot}
 
-See IEEE Spectrum
-\href{http://spectrum.ieee.org/robotics/military-robots/autonomous-robots-in-the-fog-of-war/0}{Autonomous
-Robots in the Fog of War}
+        \footnotesize \href{https://en.wikipedia.org/wiki/Modular_Advanced_Armed_Robotic_System}{Modular Advanced Armed Robotic System (MAARS)}
+    \end{center}
 
-Videos
-
-\begin{itemize}
-\item
-  \href{http://youtu.be/eaP0waiz43w}{iRobot packbot}
-\end{itemize}
+    Video: \href{http://youtu.be/eaP0waiz43w}{iRobot packbot}
 
 \end{frame}
 
 \begin{frame}{Autonomous cars}
 
-Self-driving cars
+    \centering
+    \only<1>{
+        \textbf{2005}: Darpa Grand Challenge; $>$200km race in Mojave/Nevada desert
 
-From a \textgreater{}200km race for autonomous ground vehicles across
-the Mojave/Nevada desert (DARPA grand challenge) to the
-Google/BMW/Mercedes/Audi/\ldots{} car.
+        \includegraphics[width=0.8\linewidth]{darpa-grand-challenge}
 
-Video
+        \source{https://commons.wikimedia.org/wiki/File:DARPA-2005.jpg}{Wikipedia}
+    }
+    \only<2>{
+        \textbf{2007}: Darpa Urban Challenge; 100km in urban environment, must obey all traffic regulations
 
-\begin{itemize}
-\item
-  \href{http://youtu.be/M2AcMnfzpNg}{Overview of 2nd DARPA Grand
-  Challenge 2005}
-\item
-  \href{http://youtu.be/cdgQpa1pUUE}{Google Car promo video}
-\end{itemize}
+        \includegraphics[height=4cm]{darpa-urban-challenge}
+        \includegraphics[height=4cm]{darpa-urban-challenge2}
+
+        \source{https://en.wikipedia.org/wiki/File:UrbanChallenge_StandfordRacingandVictorTango.JPG}{Wikipedia}
+        \hspace{15em}
+        \source{https://en.wikipedia.org/wiki/File:ElementBlack2.jpg}{Wikipedia}
+    }
+    \only<3>{
+
+        \textbf{Google Driverless cars} 
+
+        \includegraphics[height=3cm]{google-selfdriving-cars}
+        \includegraphics[height=3cm]{google-selfdriving-cars-3dview}
+
+        \source{https://www.engadget.com/2015/07/07/google-self-driving-tests-austin-texas/}{Engadget}
+        \hspace{15em}
+        \source{http://spectrum.ieee.org/automaton/robotics/artificial-intelligence/how-google-self-driving-car-works}{IEEE Spectrum}
+
+    24 Lexus + 34 'Google Cars'; between 2009 and August 2016, autonomously driven $\approx$ 2 000 000 miles
+}
+    \only<4>{
+
+        \textbf{Uber autonomous taxis} 
+
+        \includegraphics[width=0.7\linewidth]{uber-autonomous-cars}
+
+        \source{http://www.bloomberg.com/news/features/2016-08-18/uber-s-first-self-driving-fleet-arrives-in-pittsburgh-this-month-is06r7on}{Bloomberg}
+
+        100 Volvo cars ...already driving in Pittsburg's streets! (with human supervision)
+
+}
+
+
+
+%
+%Video
+%
+%\begin{itemize}
+%\item
+%  \href{http://youtu.be/M2AcMnfzpNg}{Overview of 2nd DARPA Grand
+%  Challenge 2005}
+%\item
+%  \href{http://youtu.be/cdgQpa1pUUE}{Google Car promo video}
+%\end{itemize}
 
 \end{frame}
+
+{\fullbackground{nao}
 
 \begin{frame}{Humanoids}
 
 Human-like robots.
 
-Tremendously challenging
+Tremendously challenging:
 
-\begin{itemize}
-\item
-  Power, actuations, artificial intelligence, perception, control,
-  walking, \ldots{}
-\end{itemize}
+    \begin{itemize}
+        \item Power, 
+        \item actuations, 
+        \item artificial intelligence, 
+        \item perception, 
+        \item control,
+        \item walking, \ldots{}
+    \end{itemize}
 
-Videos
 
 \begin{itemize}
 \item
@@ -271,39 +319,40 @@ Videos
 \end{itemize}
 
 \end{frame}
+}
 
 \begin{frame}{And what do I do?}
 
-Cognitive robotics
+\begin{multicols}{2}
 
-\begin{itemize}
-\item
+    \textbf{Cognitive robotics}
+
   Building robots and their artificial intelligence inspired on natural
   systems, such as developing children
-\end{itemize}
 
-Human-Robot Interaction
+    \textbf{Human-Robot Interaction}
 
-\begin{itemize}
-\item
   Building robots that can work alongside people, using social cues that
   people use to communicate
-\item
-  \href{http://tedxtalks.ted.com/video/The-power-of-robots-with-a-face}{TEDxTalk}
-\end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{cowriter}
+    \end{center}
+
+\end{multicols}
 \end{frame}
 
 
 \begin{frame}{}
     \begin{center}
         \Large
-        That's all, folk!\\[2em]
+        That's all, folks!\\[2em]
         \normalsize
+        See you on Friday, 13:00, for the first lab\\[1em]
         Questions:\\
         Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
 
-        Slides:\\ \url{github.com/severin-lemaignan/[REPO]}
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
 
     \end{center}
 \end{frame}
