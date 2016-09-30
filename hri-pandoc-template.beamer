@@ -33,7 +33,7 @@ $if(subtitle)$
 $endif$
 \date{$date$}
 \author{Séverin Lemaignan}
-\institute{Centre for Neural Systems and Robotics\\{\Medium Plymouth University}}
+\institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
 
 \begin{document}
 
