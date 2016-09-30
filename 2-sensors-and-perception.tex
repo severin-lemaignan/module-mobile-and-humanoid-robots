@@ -20,8 +20,36 @@
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 
 \usetheme{hri}
+%% Display the navigation bullet even without subsections
+%\usepackage{remreset}% tiny package containing just the \@removefromreset command
+%\makeatletter
+%\@removefromreset{subsection}{section}
+%\makeatother
+%\setcounter{subsection}{1}
 
-\newcommand{\source}[2]{\tiny\it Source: \href{#1}{#2}}
+%% Neat trick to have only one navigation bullet per subsection
+%% http://tex.stackexchange.com/questions/64333/one-navigation-bullet-per-subsection-with-subsection-false-in-custom-beamer-them
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\slideentry}{\advance\beamer@xpos by1\relax}{}{}{}
+\def\beamer@subsectionentry#1#2#3#4#5{\advance\beamer@xpos by1\relax}%
+\makeatother
+
+%% Neat trick to have only display the navigation bullets for the current subsection
+%% http://tex.stackexchange.com/questions/23151/beamer-infolines-outer-theme-with-miniframe-bullets-only-for-the-current-section/45152#45152
+%\setbeamertemplate{mini frame in other section}{}
+%\usepackage{etoolbox}
+%\makeatletter
+%\let\beamer@section@set@min@width=\relax
+%\patchcmd{\insertnavigation}{\hskip-1.875ex plus-1fill}{}{}{}
+%\patchcmd{\sectionentry}{\hskip1.875ex plus 1fill}{}{}{}
+%\patchcmd{\sectionentry}{\hyperlink{Navigation#3}{{\usebeamertemplate{section in head/foot shaded}}}}{}{}{}
+%\patchcmd{\slideentry}{\usebeamertemplate{mini frame in other subsection}}{\usebeamertemplate{mini frame in other subsection of current section}}{}{}
+%\patchcmd{\slideentry}{\usebeamertemplate{mini frame in other subsection}}{\usebeamertemplate{mini frame in other section}}{}{}
+%\patchcmd{\slideentry}{\usebeamertemplate{mini frame in other subsection of current section}}{\usebeamertemplate{mini frame in other subsection}}{}{}
+%\makeatother
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,patterns}
@@ -407,8 +435,9 @@ tackled by anti-aliasing).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section[Sensors Overview]{Overview of sensors often used on mobile robots}
-
-
+\tableofcontents[currentsection]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Encoders}
 \begin{frame}{Wheel / Motor Encoders}
 
 \begin{itemize}
@@ -482,6 +511,8 @@ position \rightarrow odometry.
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Heading}
 \begin{frame}{Heading sensors}
 
     \begin{itemize}
@@ -532,6 +563,9 @@ position \rightarrow odometry.
 \url{http://datasheet.digchip.com/197/197-01540-0-HMR3100.pdf}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Gyroscopes}
 
 \begin{frame}{Gyroscope}
 
@@ -748,8 +782,9 @@ STMicroElectronics
 
 \end{frame}
 
-\begin{frame}{Use of gyroscopes (1)}
+\begin{frame}{Use of gyroscopes}
 
+    \only<1>{
 Most gyroscopes return angular velocity: $rad\cdot s^{-1}$.
 
     Angular velocity can be converted to angle $a$ ({\it attitude} of the gyro) through integrating reading $\dot{a}$\bubblemark{derivative} over time:
@@ -766,18 +801,14 @@ Most gyroscopes return angular velocity: $rad\cdot s^{-1}$.
 
     \begin{center}
         \includegraphics[width=0.8\linewidth]{gyro-drift}
+
+    \source{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom Pycke}
     \end{center}
 
     \end{multicols}
 
-    (source: \href{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom
-    Pycke})
-
-\end{frame}
-
-\begin{frame}{Use of gyroscopes (2)}
-
-    \only<1>{
+    }
+    \only<2>{
         \href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{MEMS}
         gyroscopes are very noisy:
 
@@ -786,9 +817,9 @@ Most gyroscopes return angular velocity: $rad\cdot s^{-1}$.
             \includegraphics[width=0.6\linewidth]{mems-noise}\bubblemark{gyronoise}
         \end{center}
         Filtering needed to get rid of noise.
-    \bubble<1>{gyronoise}{Gyro rotates 90$^{\circ}$ clockwise and then 90$^{\circ}$ counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
+    \bubble<2>{gyronoise}{Gyro rotates 90$^{\circ}$ clockwise and then 90$^{\circ}$ counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
 }
-        \only<2>{
+        \only<3>{
 
 
             {\bf Runge-Kutta filter}, implements a ``running average'', smoothing out
@@ -800,13 +831,15 @@ Most gyroscopes return angular velocity: $rad\cdot s^{-1}$.
 
         \begin{center}
             \includegraphics[width=0.6\linewidth]{mems-filtering}
-        \end{center}
 
-        (source: \href{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom Pycke})
+        \source{http://tom.pycke.be/mav/70/gyroscope-to-roll-pitch-and-yaw}{Tom Pycke}
+        \end{center}
 
     }
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Accelerometers}
 \begin{frame}{Accelerometers}
 
 Accelerometers measure acceleration of the device
@@ -870,6 +903,8 @@ As such an accelerometer can be used to measure rotation.
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{GPS}
 \begin{frame}{Global Positioning System (GPS)}
 
 \begin{itemize}
@@ -1155,6 +1190,9 @@ Limited accuracy
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Other radio localisation methods}
+
 \begin{frame}{Other radio localisation methods}
 
 Mainly used in mobile phones and mobile devices.
@@ -1188,6 +1226,9 @@ WiFi-based localisation.
 \end{itemize}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Range sensors}
 
 \begin{frame}{Range sensors (time of flight)}
 
@@ -1472,17 +1513,13 @@ measurement to produce range estimation.
 
 \begin{frame}{Phase-shift measurement of TOF}
 
+\only<1>{
 Phase-shift Measurement
 
-\end{frame}
 
-\begin{frame}{****}
-
-\end{frame}
-
-\begin{frame}{Where \emph{c}: is the speed of light; \emph{f} the
+Where \emph{c}: is the speed of light; \emph{f} the
 modulating frequency; \emph{D'} covered by the emitted light is,
-\emph{θ} is phase shift.}
+\emph{θ} is phase shift.
 
 \begin{itemize}
 
@@ -1493,10 +1530,9 @@ modulating frequency; \emph{D'} covered by the emitted light is,
 l = \emph{c/f}
 
 Θ in radians, θ/2π is {[}0..1{]}
+}
+    \only<2>{
 
-\end{frame}
-
-\begin{frame}{Phase-shift measurement of TOF}
 
 Distance D, between the beam splitter and the target where  phase
 difference between the transmitted and received beam.
@@ -1509,7 +1545,7 @@ Theoretically ambiguous range estimates
   since for example if  = 60 meters, a target at a range of 5 meters =
   target at 35 meters
 \end{itemize}
-
+}
 \end{frame}
 
 \begin{frame}{Example}
@@ -1650,8 +1686,12 @@ Principle of 1D laser triangulation.
 
 \end{frame}
 
-\begin{frame}{Structured light (vision, 2D, 3D)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Structured Light}
 
+
+\begin{frame}{Structured light (vision, 2D, 3D)}
+    \only<1>{
 \begin{itemize}
 
 \item
@@ -1665,19 +1705,18 @@ Principle of 1D laser triangulation.
 \item
   Range to an illuminated point can be determined from simple geometry.
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Structured light (vision, 2D, 3D)}
+}
+    \only<2>{
 
 \emph{b}
 
 \emph{u}
-
+    }
 \end{frame}
 
 \begin{frame}{Structured light -- 1D illustration}
 
+    \only<1>{
 \begin{itemize}
 
 \item
@@ -1686,10 +1725,9 @@ Principle of 1D laser triangulation.
   From the figure, simple geometry shows that:
 \end{itemize}
 
-\end{frame}
+}
 
-\begin{frame}{Structured light -- 1D illustration}
-
+    \only<2>{
 Range resolution is defined as the triangulation gain \emph{Gp.}
 
 Baseline length \emph{b}
@@ -1717,8 +1755,11 @@ larger focal length \emph{f} gives
 \end{itemize}
 
 however, large focal length means a larger sensor head.
-
+}
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cameras}
 
 \begin{frame}{Camera}
 
@@ -1808,6 +1849,7 @@ White balance (aka color temperature)
 
 \begin{frame}{CCD technology}
 
+    \only<1>{
 Charge-coupled device (CCD).
 
 \begin{itemize}
@@ -1824,9 +1866,8 @@ Charge-coupled device (CCD).
   ``bucket brigade''.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}{CCD technology}
+}
+    \only<2>{
 
 Some sort of shutter is needed to prevent smear in the camera image.
 
@@ -1842,9 +1883,8 @@ Some sort of shutter is needed to prevent smear in the camera image.
   speeds possible. Less sensitive to light.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}{CCD technology}
+}
+    \only<3>{
 
 Sensitive to wavelengths 400nm to 1000nm.
 
@@ -1855,9 +1895,10 @@ Sensitive to wavelengths 400nm to 1000nm.
   light and oversensitive to red and \textbf{infrared}.
 \end{itemize}
 
-\end{frame}
+}
+    \only<4>{
 
-\begin{frame}{CCD - advantages}
+        \textbf{CCD - advantages}
 
 High quality, relatively low noise images.
 
@@ -1877,10 +1918,12 @@ Integrating function of pixels.
 \item
   Can be used to measure for prolonged times in very dim settings.
 \end{itemize}
+}
 
-\end{frame}
+\only<5>{
 
-\begin{frame}{CCD- disadvantages}
+
+    \textbf{CCD- disadvantages}
 
 Large silicon size
 
@@ -1911,10 +1954,12 @@ Integrating light measurement
   the image.
 \end{itemize}
 
+}
 \end{frame}
 
 \begin{frame}{CMOS technology}
 
+    \only<1>{
 Complementary metal oxide semiconductor (CMOS)
 
 \begin{itemize}
@@ -1928,9 +1973,9 @@ Complementary metal oxide semiconductor (CMOS)
   Pixel values are read out much like in RAM memory.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}{CMOS - advantages}
+    }
+    \only<2>{
+    \textbf{CMOS - advantages}
 
 CMOS technology is mature and simple
 
@@ -1965,9 +2010,9 @@ Easy interfacing to CMOS technology.
   area.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}{CMOS - disadvantages}
+}
+    \only<3>{
+        \textbf{CMOS - disadvantages}
 
 Each photodiode has CMOS circuitry which takes up silicon real estate,
 but is not sensitive to incoming light.
@@ -1987,10 +2032,14 @@ CMOS has a larger pixel mismatch and is typically more noisy than CCD.
   \#\# digital cameras.
 \end{itemize}
 
+}
+
 \end{frame}
 
-\begin{frame}{Colour cameras}
+\imageframe{ccd-vs-cmos}
 
+\begin{frame}{Colour cameras}
+    \only<1>{
 With one CCD or CMOS sensor, a filter is placed in front of the sensor
 surface.
 
@@ -2004,13 +2053,13 @@ surface.
 
 Bayer filter
 
-\end{frame}
+}
+    \only<2>{
 
-\begin{frame}{RGBE filter}
+RGBE filter
 
-\end{frame}
-
-\begin{frame}{Colour cameras}
+}
+    \only<3>{
 
 Three sensor cameras.
 
@@ -2028,6 +2077,7 @@ No resolution loss due to Bayer or RGBE filter.
 
 No problem of misalignment of filter.
 
+}
 \end{frame}
 
 \begin{frame}{Omnidirectional camera}
@@ -2053,6 +2103,9 @@ No problem of misalignment of filter.
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Depth cameras}
+
 \begin{frame}{Depth camera technologies}
 
 Stereo cameras.
@@ -2071,6 +2124,7 @@ Stereo cameras.
 
 \begin{frame}{Stereo cameras}
 
+\only<1>{
 \begin{itemize}
 
 \item
@@ -2089,9 +2143,8 @@ Stereo cameras.
 
 (JPL)
 
-\end{frame}
-
-\begin{frame}{Stereo cameras (2)}
+}
+    \only<2>{
 
 Each camera gives slightly shifted view of the scene
 
@@ -2113,9 +2166,8 @@ The challenge of finding corresponding pixels in the two images.
 
 (Wikipedia)
 
-\end{frame}
-
-\begin{frame}{Stereo cameras (3)}
+}
+    \only<3>{
 
 Disadvantages
 
@@ -2132,6 +2184,7 @@ Disadvantages
 More at
 \href{http://campar.in.tum.de/twiki/pub/Chair/TeachingSs11Kinect/2011-DSensors_LabCourse_Kinect.pdf}{TUM}
 
+}
 \end{frame}
 
 \begin{frame}{Swissranger 3D camera}
@@ -2331,6 +2384,7 @@ Excellent explanation
 
 \begin{frame}{How do we use it?}
 
+\only<1>{
 2 main options:
 
 \begin{itemize}
@@ -2346,10 +2400,8 @@ Microsoft SDK needs specific versions of Visual Studio
 Microsoft SDK is best complemented with the Developer Tools (which has
 lots of great example applications)
 
-\end{frame}
-
-\begin{frame}{How do we use it? (2)}
-
+}
+\only<2>{
 Lots of cables -- plug the Kinect into the power adapter, then the USB
 to your computer
 
@@ -2360,10 +2412,8 @@ to your computer
   see it only as a microphone
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}{How do we use it? (3)}
-
+}
+\only<3>{
 The Microsoft SDK can be programmed with C\#.Net, VB.Net or VC++
 
 \begin{itemize}
@@ -2381,7 +2431,7 @@ Or if you want to try, there are other options as well
   non-programmers with excellent support for Kinect (see
   \href{http://shiffman.net/p5/kinect/}{here})
 \end{itemize}
-
+}
 \end{frame}
 
 \begin{frame}{Programming principles}
@@ -2403,6 +2453,10 @@ Or if you want to try, there are other options as well
 \end{itemize}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Applications in robotics}
 
 \begin{frame}{In robotics applications}
 
@@ -2433,12 +2487,12 @@ Cutting bananas?:
 \begin{frame}{}
     \begin{center}
         \Large
-        That's all, folk!\\[2em]
+        That's all, folks!\\[2em]
         \normalsize
         Questions:\\
         Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
 
-        Slides:\\ \url{github.com/severin-lemaignan/[REPO]}
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
 
     \end{center}
 \end{frame}
