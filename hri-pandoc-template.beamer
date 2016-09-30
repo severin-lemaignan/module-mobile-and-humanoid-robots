@@ -4,6 +4,10 @@
 %--------------------------------------------------------------------------
 % Common packages
 %--------------------------------------------------------------------------
+
+\definecolor{links}{HTML}{663000}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
 \usepackage[english]{babel}
 \usepackage{pgfpages} % required for notes on second screen
 \usepackage{graphicx}
