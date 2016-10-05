@@ -23,7 +23,7 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 
-\usetheme[nosectionpages]{hri}
+\usetheme{hri}
 
 \usepackage{remreset}% tiny package containing just the \@removefromreset command
 \makeatletter
@@ -51,7 +51,77 @@
 \maketitle
 
 \imageframe[scale=1]{pepper-robot}
+
+\section{What have we seen so far?}
+
+\begin{frame}[plain]
+
+    \begin{multicols}{2}
+
+        \begin{center}
+            \includegraphics[width=\linewidth]{frames_pepper}
+        \end{center}
+        \vfill\columnbreak
+
+        \begin{itemize}
+            \item \textbf{frames}
+            \item \textbf{forward kinematics}
+            \item \textbf{inverse kinematics}
+        \end{itemize}
+
+    \end{multicols}
+\end{frame}
+
+\begin{frame}[plain]
+
+    \begin{center}
+
+        \textbf{Lots of sensors!}
+
+        \includegraphics[width=0.6\linewidth]{rgbd_pepper}
+
+    \end{center}
+
+        \begin{itemize}
+            \item \textbf{RGB-D cameras}, color + depth registration
+            \item \textbf{Laserscans}
+            \item \textbf{Sonars},...
+        \end{itemize}
+
+\end{frame}
+
+\imageframe[color=black,caption=2D mapping!]{mapping_pepper}
+\imageframe[color=black, caption=3D mapping!]{octomap_pepper}
+
+\begin{frame}[plain]
+
+    \begin{center}
+
+        \textbf{Odometry is not good enough}
+
+        \includegraphics[width=0.6\linewidth]{localisation_pepper}
+
+    \end{center}
+
+        \begin{itemize}
+            \item \textbf{SLAM} (Simultaneous Localization and Mapping)
+            \item using \textbf{probabilistic reasoning} (Monte-Carlo localisation)
+        \end{itemize}
+
+\end{frame}
+
+\imageframe[color=black,caption=Costmaps \& Motion planning]{motion_planning_pepper_rviz}
+
+\begin{frame}[plain]{}
+    Well, ROCO318 is over...
+
+    \pause
+    (oh no, I forgot about the autonomous chairs...)
+\end{frame}
+
+
 \videoframe[0.56]{figs/NISSAN-ProPILOT-chair.mp4}
+
 
 \section{Module Overview}
 \begin{frame}{This module}
