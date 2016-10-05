@@ -2104,67 +2104,63 @@ No problem of misalignment of filter.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Depth cameras}
+\subsection{RGB-D cameras}
 
-\begin{frame}{Depth camera technologies}
-
-Stereo cameras.
-
-3D single lens cameras.
-
-\begin{itemize}
-
-\item
-  Swissranger
-\item
-  Primesense (XBox Kinect)
-\end{itemize}
-
+\begin{frame}{RGB-D cameras: many technologies}
+    \begin{itemize}
+        \item Stereo-vision
+        \item Structured light
+        \item Speckle decorrelation
+        \item Time-of-Flight
+        \item (...several other like coded-aperture)
+    \end{itemize}
 \end{frame}
+
+\imageframe{depthmap}
+
+\imageframe{stereo_head}
 
 \begin{frame}{Stereo cameras}
 
 \only<1>{
 \begin{itemize}
 
-\item
-  A camera typically forms a 2D mapping of a 3D environment.
-\item
-  Reconstructing depth from a 2D image is in most cases impossible.
-\item
-  A solution to this is using a \textbf{stereo camera} which can
-  calculate the depth (i.e.~z axis) of pixels.
-\item
-  Using two slightly different views from the same scene and a precise
+\item A camera typically forms a 2D mapping of a 3D environment.
+\item Reconstructing depth from a 2D image is in most cases impossible.
+\item A solution to this is using a \textbf{stereo camera} which can
+  calculate the depth (\ie $z$ axis) of pixels.
+\item Using two slightly different views from the same scene and a precise
   knowledge of camera parameters.
 \end{itemize}
 
-(Videre design, www.videredesign.com)
-
-(JPL)
-
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{stereo_principle}
+        
+        \source{}{Wikipedia}
+    \end{center}
 }
+    
     \only<2>{
 
-Each camera gives slightly shifted view of the scene
+    \begin{multicols}{2}
 
-\begin{itemize}
+    \begin{center}
+        \includegraphics[height=0.8\paperheight]{stereo}
+    \end{center}
 
-\item
-  Depending on the size of the shift one can determine how far obstacles
-  are.
-\end{itemize}
+    \begin{align} 
+d &= EF + GH \\ 
+    &= BF (\frac{EF}{BF} + \frac{GH}{BF})\\ 
+    &= BF (\frac{EF}{BF} + \frac{GH}{DG})  \\ 
+    &= BF (\frac{BC + CD}{AC})  \\ 
+    &= BF \frac{BD}{AC} = \frac{k}{z}  \text{, where}
+    \end{align}
 
-The challenge of finding corresponding pixels in the two images.
+        $k = BD \times BF = b \times f$\\
+        $z = AC$
 
-\begin{itemize}
-
-\item
-  It often is very hard to find pixels that correspond in the two
-  images.
-\end{itemize}
-
-(Wikipedia)
+        $d$ is the \textbf{disparity}.
+\end{multicols}
 
 }
     \only<3>{
