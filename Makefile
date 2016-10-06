@@ -27,7 +27,7 @@ bib: $(TARGET:.tex=.aux)
 %.pdf: %.tex %.thumbs
 	TEXINPUTS=:./style $(LATEX) -shell-escape $<
 
-paper: $(TARGET) $(SVG:.svg=.pdf) $(DOT:.dot=.pdf)
+paper: $(SVG:.svg=.pdf) $(DOT:.dot=.pdf) $(TARGET)
 
 touch:
 	touch $(TEXTARGETS)
