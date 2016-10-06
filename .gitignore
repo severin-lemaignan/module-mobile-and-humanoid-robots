@@ -9,6 +9,7 @@ _minted*
 *.bbl
 *.synctex.gz
 
+figs-lowres/
 tony*
 *.docx
 *.pptx

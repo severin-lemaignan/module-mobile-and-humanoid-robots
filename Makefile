@@ -25,7 +25,7 @@ bib: $(TARGET:.tex=.aux)
 	BSTINPUTS=:./style bibtex $(TARGET:.tex=.aux)
 
 %.pdf: %.tex %.thumbs
-	TEXINPUTS=:./style $(LATEX) -shell-escape $<
+	TEXINPUTS=:./style $(LATEX) --interaction=batchmode -shell-escape $<
 
 paper: $(SVG:.svg=.pdf) $(DOT:.dot=.pdf) $(TARGET)
 
