@@ -114,6 +114,51 @@
 
 \imageframe[color=black,caption=Costmaps \& Motion planning]{motion_planning_pepper_rviz}
 
+\begin{frame}[plain]
+
+\begin{center}
+    \textbf{Robotic middleware} to connects components together
+    \vspace{3em}
+
+\begin{tikzpicture}[
+                    >=latex,
+                    every edge/.style={->, draw, very thick},
+                    service/.style={->, draw, very thick,dashed},
+                    rosnode/.style={draw, font=\sf, node distance=0.5, rounded
+                    corners, align=center, inner sep=5pt,fill=hriSec2Dark!50},
+                    topic/.style={font=\tt, node distance=0.5, align=center, inner sep=5pt},
+                    pic/.style={fill=none,draw=none}
+                ]
+
+    \path[use as bounding box] (-6,1) rectangle (6,-5);
+    \node [rosnode] at (0,0) (node1) {node 1};
+    \node [rosnode] at (4,-2) (node2) {node 2};
+    \node [rosnode] at (-5,-4) (node3) {node 3};
+
+        \node [topic] at (1,-2) (topic1) {/topic1};
+        \node [topic] at (-1,-3) (topic2) {/topic2};
+        \node [topic] at (-4,-2) (topic3) {/topic3};
+        \path (node1) edge[bend left] node[label,right] {} (topic1);
+        \path (node1) edge[bend right] node[label,left] {publishes} (topic2);
+        \path (node3) edge[bend left] node[label,left] {} (topic3);
+        \path (topic1) edge[bend right] node[label,below left] {subscribes} (node2);
+        \path (topic2) edge[bend left] node[label,below] {} (node3);
+        \path (topic2) edge[bend right] (node2);
+        \path[->, dashed] ([yshift=2pt]node1.east) edge[bend left] node[label,above right] {action goal} ([xshift=2pt]node2.north) ;
+        \path[->, dashed] ([xshift=-2pt]node2.north) edge[bend right] node[label,below left] {result} ([yshift=-2pt]node1.east);
+
+        \node [rosnode,fill=hriSec3!50] at (-5,0) (roscore) {roscore};
+        \path[dashed] (node1) edge[<->,very thin, bend right] node[label,above] {\tiny XML-RPC} (roscore);
+        \path[dashed] (node2) edge[<->,very thin, bend right] node[label,above] {\tiny XML-RPC} (roscore);
+        \path[dashed] (node3) edge[<->,very thin, bend left] node[label,above right] {\tiny XML-RPC} (roscore);
+
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+
 \begin{frame}[plain]{}
     Well, ROCO318 is over...
 
