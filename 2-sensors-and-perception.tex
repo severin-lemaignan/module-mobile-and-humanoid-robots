@@ -54,7 +54,7 @@
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,patterns}
 
-\graphicspath{{figs/}}
+\graphicspath{{figs-lowres/}{figs/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
 \subtitle{Part 2 -- Sensors and Perception}
@@ -79,6 +79,7 @@ chapter 4 of (Siegwart and Nourbakhsh, 2004).
 
 \begin{frame}{Sensor classification}
 
+\small
 \textbf{Proprioceptive} sensors
 
 \begin{itemize}
@@ -190,24 +191,23 @@ PC: proprioceptive; EC: exteroceptive; A: active; P: passive; A/P: active/passiv
 
         \begin{itemize}
         
-        \item<3->
+        \item<2->
         \eg current measurement from 1 milliamp to 30 amps
         \[
             \bubblemark{twenty}20\cdot\log_{10}\frac{I_{upper}}{I_{lower}}=20\cdot\log_{10}\frac{30A}{0.001A}=90dB
         \]
-    \bubble<3>[30][0.7cm]{twenty}{20 instead of 10 because square of current or voltage is proportional to power.}
+    \bubble<2>[30][0.7cm]{twenty}{20 instead of 10 because square of current or voltage is proportional to power.}
 
-        \item<4->
-        \eg voltage measurement from 1 millivolt to 20 volt
+        \item<3->
+        \eg voltage measurement from 1 millivolt to 20 volts
         \[
             20\cdot\log_{10}\frac{I_{upper}}{I_{lower}}=20\cdot\log_{10}\frac{20V}{0.001V}=86dB
         \]
         \end{itemize}
 
-    \item<5-> {\bf Range}
+    \item<4-> {\bf Range}
         \begin{itemize}
-        
-        \item upper and lower limits
+            \item upper and lower limits
         \end{itemize}
 
 
@@ -2120,7 +2120,7 @@ No problem of misalignment of filter.
 
 \imageframe{stereo_head}
 
-\begin{frame}{Stereo cameras}
+\begin{frame}{Stereovision}
 
 \only<1>{
 \begin{itemize}
@@ -2159,26 +2159,43 @@ d &= EF + GH \\
         $k = BD \times BF = b \times f$\\
         $z = AC$
 
-        $d$ is the \textbf{disparity}.
+        $d$ is the \textbf{disparity}
 \end{multicols}
 
 }
     \only<3>{
 
-Disadvantages
+        \textbf{Disparity map}
+
+        Pixel disparity: for each {\bf pixel patch} on the left, by how many pixel the
+        same patch is {\bf shifted} on the right?
+
+        \begin{center}
+            \includegraphics[width=0.45\linewidth]{scene_left}
+            \includegraphics[width=0.45\linewidth]{scene_right}
+
+            \includegraphics[width=0.45\linewidth]{disparity}
+        \end{center}
+    }
+
+    \only<4>{
+
+        \textbf{Advantages}
 
 \begin{itemize}
-
-\item
-  Two calibrated cameras needed.
-\item
-  Multiple computationally intensive steps.
-\item
-  Depends on illumination and scene texture.
+    \item Simple technology
+    \item Works great outdoors
 \end{itemize}
 
-More at
-\href{http://campar.in.tum.de/twiki/pub/Chair/TeachingSs11Kinect/2011-DSensors_LabCourse_Kinect.pdf}{TUM}
+\textbf{Disadvantages}
+
+\begin{itemize}
+    \item Two calibrated cameras needed
+    \item Multiple computationally intensive steps
+    \item Depends on illumination and scene texture 
+    \item Requires texture $\Rightarrow$ active stereovision
+\end{itemize}
+
 
 }
 \end{frame}
@@ -2271,6 +2288,9 @@ Principles
 From
 \href{http://worldwide.espacenet.com/publicationDetails/originalDocument?FT=D\&date=20100909\&DB=EPODOC\&locale=en_EP\&CC=US\&NR=2010225746A1\&KC=A1}{US
 Patent}
+
+More at
+\href{http://campar.in.tum.de/twiki/pub/Chair/TeachingSs11Kinect/2011-DSensors_LabCourse_Kinect.pdf}{TUM}
 
 \end{frame}
 
