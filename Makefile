@@ -8,6 +8,8 @@ TARGET=$(TEXTARGETS:.tex=.pdf)
 DOT=$(wildcard figs/*.dot)
 SVG=$(wildcard figs/*.svg)
 
+MODE ?= batchmode
+
 all: paper
 
 $(SVG:.svg=.pdf): %.pdf: %.svg
@@ -25,7 +27,7 @@ bib: $(TARGET:.tex=.aux)
 	BSTINPUTS=:./style bibtex $(TARGET:.tex=.aux)
 
 %.pdf: %.tex %.thumbs
-	TEXINPUTS=:./style $(LATEX) --interaction=batchmode -shell-escape $<
+	TEXINPUTS=:./style $(LATEX) --interaction=$(MODE) -shell-escape $<; if [ $$? -gt 0 ]; then echo "Error while compiling $<"; touch $<; fi
 
 paper: $(SVG:.svg=.pdf) $(DOT:.dot=.pdf) $(TARGET)
 
