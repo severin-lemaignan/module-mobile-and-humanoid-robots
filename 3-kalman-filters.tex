@@ -283,59 +283,58 @@ For example, the x and y position of a robot.
     \begin{columns}
         \begin{column}{0.4\linewidth}
 
-\begin{itemize}
-\tightlist
-\item
-  Combining Gaussians (μ, σ2) and (ν, r2)
-\end{itemize}
+  Combining Gaussians ($\mu, \sigma^2$) and ($\nu, r^2$):
 
-Combining two Gaussians results in a Gaussian that has a smaller
-standard deviation
+            \[
+                \mu' = \frac{1}{\sigma^2 + r^2}(r^2\mu + \sigma^2\nu)
+            \]
+            \[
+                \sigma^2' = \frac{1}{\frac{1}{\sigma^2} + \frac{1}{r^2}}
+            \]
+
+            Combining two Gaussians results in a Gaussian that has a \emph{smaller standard deviation}.
 
         \end{column}
         \begin{column}{0.6\linewidth}
 
-\begin{tikzpicture}
-\begin{axis}[
-  no markers, domain=-5:5, samples=100,
-  axis lines*=left, xlabel=$x$, ylabel=$y$,
-  every axis y label/.style={at=(current axis.above origin),anchor=south},
-  every axis x label/.style={at=(current axis.right of origin),anchor=west},
-  height=4cm, width=\linewidth,
-  xtick={-5,-3,...,5}, ytick={0.0,0.2,...,1.0},
-  enlargelimits=false, clip=false, axis on top,
-  grid = major
-  ]
-  %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
-  \addplot [very thick,yellow!50!black] {gauss(0,2.24)};
-  \addplot [very thick,green!50!black] {gauss(-2,0.71)};
-  \addplot [very thick,red!50!black] {gauss(0,1)};
-  \addplot [very thick,blue!50!black] {gauss(0,0.45)};
+            \begin{tikzpicture}
+            \begin{axis}[
+            no markers, domain=-5:5, samples=100,
+            axis lines*=left,
+            every axis y label/.style={at=(current axis.above origin),anchor=south},
+            every axis x label/.style={at=(current axis.right of origin),anchor=west},
+            height=4.5cm, width=\linewidth,
+            xtick={-5,-3,...,5}, ytick={0.0,0.2,...,1.0},
+            enlargelimits=false, clip=false, ymax=1.2,
+            grid = major
+            ]
+            %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
+            \addplot [very thick,green!50!black] {gauss(-2,0.71)};
+            \addplot [very thick,red!50!black] {gauss(0,1)};
 
-\end{axis}
+            \end{axis}
 
-\end{tikzpicture}
+            \end{tikzpicture}
 
-\begin{tikzpicture}
-\begin{axis}[
-  no markers, domain=-5:5, samples=100,
-  axis lines*=left, xlabel=$x$, ylabel=$y$,
-  every axis y label/.style={at=(current axis.above origin),anchor=south},
-  every axis x label/.style={at=(current axis.right of origin),anchor=west},
-  height=4cm, width=\linewidth,
-  xtick={-5,-3,...,5}, ytick={0.0,0.2,...,1.0},
-  enlargelimits=false, clip=false, axis on top,
-  grid = major
-  ]
-  %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
-  \addplot [very thick,yellow!50!black] {gauss(0,2.24)};
-  \addplot [very thick,green!50!black] {gauss(-2,0.71)};
-  \addplot [very thick,red!50!black] {gauss(0,1)};
-  \addplot [very thick,blue!50!black] {gauss(0,0.45)};
+            \begin{tikzpicture}
+            \begin{axis}[
+            no markers, domain=-5:5, samples=200,
+            axis lines*=left,
+            every axis y label/.style={at=(current axis.above origin),anchor=south},
+            every axis x label/.style={at=(current axis.right of origin),anchor=west},
+            height=4.5cm, width=\linewidth,
+            xtick={-5,-3,...,5}, ytick={0.0,0.2,...,1.0},
+            enlargelimits=false, clip=false, ymax=1.2,
+            grid = major
+            ]
+            %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
+            \addplot [very thick,green!50!black] {gauss(-2,0.71)};
+            \addplot [very thick,red!50!black] {gauss(0,1)};
+            \addplot [very thick,cyan!50!black] {gauss(-1.33,.34)};
 
-\end{axis}
+            \end{axis}
 
-\end{tikzpicture}
+            \end{tikzpicture}
 
         \end{column}
     \end{columns}
