@@ -1,0 +1,926 @@
+%!TEX program = xelatex
+
+\documentclass[compress]{beamer}
+%--------------------------------------------------------------------------
+% Common packages
+%--------------------------------------------------------------------------
+\definecolor{links}{HTML}{663000}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usepackage[english]{babel}
+\usepackage{pgfpages} % required for notes on second screen
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{pgfplots}
+
+\pgfmathdeclarefunction{gauss}{2}{%
+      \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+      }
+
+\usepackage{multicol}
+
+\usepackage{tabularx,ragged2e}
+\usepackage{booktabs}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+\usetheme{hri}
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,backgrounds,positioning}
+
+\graphicspath{{figs/}}
+
+\title{ROCO318 \newline Mobile and Humanoid Robots}
+\subtitle{Part 3 - Kalman filters}
+\date{}
+\author{Séverin Lemaignan}
+\institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
+
+\begin{document}
+
+\licenseframe{github.com/severin-lemaignan/[REPO]}
+
+\maketitle
+
+\begin{frame}{ROCO306/307 Mobile and humanoid robots}
+
+\begin{block}{Part 3 -- Kalman filters}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{See Welch and Bishop (2001) An introduction to the Kalman
+filter, SIGGRAPH 2001, ACM.}
+
+\end{block}
+
+\begin{block}{\url{http://www.cs.unc.edu/~welch/kalman/}}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{What is a Kalman filter?}
+
+\begin{itemize}
+\tightlist
+\item
+  Developed by Rudolph E. Kalman in 1960.
+\item
+  Mathematical tool that estimates the real \textbf{state} of a system
+  based on uncertain sensor readings.
+\item
+  It assumes the system is \textbf{linear} and noise is \textbf{normal}
+  (aka Gaussian).
+\item
+  Gives past, present and \textbf{future estimations}.
+\item
+  Still very effective and useful for all other classes of systems.
+\item
+  Hugely popular in digital control systems.
+\end{itemize}
+
+For example: speed, height, position, acceleration, \ldots{}
+
+\end{frame}
+
+\begin{frame}{Applications of Kalman filters}
+
+\begin{itemize}
+\tightlist
+\item
+  Estimating critical flight parameters for guidance of missiles.
+\item
+  Sensor fusion in aircraft.
+\item
+  Fusion of localisation estimates in GPS.
+\item
+  Estimating game controller sensor information.
+\item
+  Prediction of ball position in robot football.
+\item
+  Prediction of head and hands position and orientation in 3D body
+  posture capture system.
+\item
+  Prediction of the stock market.
+\item
+  \ldots{}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Some Kalman Filter facts}
+
+It is a filter? Not really, it does more than filters do
+
+\begin{itemize}
+\tightlist
+\item
+  Taking into account sensor measurements and process variables.
+\item
+  Prediction forwards (and backwards if needed) in time.
+\item
+  No explicit frequency response
+\end{itemize}
+
+Kalman Filter is recursive
+
+\begin{itemize}
+\tightlist
+\item
+  It start with initial estimates and continuously updates these
+  estimates according to the process model and sensor measurements
+  coming in.
+\end{itemize}
+
+Highly efficient: Polynomial in measurement dimensionality \emph{k} and
+state dimensionality \emph{n}: \emph{O(k2.376 + n2)}
+
+Optimal, i.e. there is no way of doing better.
+
+\end{frame}
+
+\begin{frame}{Stochasticity}
+
+The true state of a system is unknown
+
+\begin{itemize}
+\tightlist
+\item
+  We don't know the true speed of an air craft, or the true location of
+  the robot.
+\end{itemize}
+
+This is due to stochastic (= random) noise in the measurements and the
+process.
+
+\begin{itemize}
+\tightlist
+\item
+  Measurement noise example: the air pressure meter reading fluctuates,
+  even at the same high.
+\item
+  Process noise example: even if we keep the accelerator in the same
+  position the car never goes at exactly 60 mph.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Linear system}
+
+A linear equation is a sum of input variables
+
+\begin{itemize}
+\tightlist
+\item
+  For example \emph{f(x)=5x+3} is linear, \emph{f(x)=cos(x)} is not.
+\item
+  A linear system can be written in matrix form as \emph{} or
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  ~
+\end{itemize}
+
+~
+
+\end{frame}
+
+\begin{frame}{Normal}
+
+\begin{tikzpicture}
+\begin{axis}[
+  no markers, domain=-5:5, samples=100,
+  axis lines*=left, xlabel=$x$, ylabel=$y$,
+  every axis y label/.style={at=(current axis.above origin),anchor=south},
+  every axis x label/.style={at=(current axis.right of origin),anchor=west},
+  height=5cm, width=\linewidth,
+  xtick={-5,...,5}, ytick={0.0,0.1,...,1.0},
+  enlargelimits=false, clip=false, axis on top,
+  grid = major
+  ]
+  %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
+  \addplot [very thick,yellow!50!black] {gauss(0,2.24)};
+  \addplot [very thick,green!50!black] {gauss(-2,0.71)};
+  \addplot [very thick,red!50!black] {gauss(0,1)};
+  \addplot [very thick,blue!50!black] {gauss(0,0.45)};
+
+\end{axis}
+
+\end{tikzpicture}
+
+\href{http://en.wikipedia.org/wiki/Normal_distribution}{Normal} or
+Gaussian
+
+\begin{itemize}
+\tightlist
+\item
+  Symmetrical distribution, captured with two values: mean \emph{μ} and
+  variance \emph{σ2}.
+\item
+  Described by
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  ~
+\end{itemize}
+
+If these would be measurement distributions of sensors, which sensor is
+the best?
+
+The factor serves to keep the integral (surface under the curve) the be
+1
+
+~
+
+\end{frame}
+
+\begin{frame}{Basic concepts: Gaussian or normal}
+
+\begin{itemize}
+\tightlist
+\item
+  The Kalman Filter assumes that measurement and process noise is normal
+  (also known as Gaussian) and independent.
+\end{itemize}
+
+-s
+
+s
+
+m
+
+Univariate
+
+\textbf{m}
+
+Multivariate
+
+For example, a temperature sensor.
+
+For example, the x and y position of a robot.
+
+\end{frame}
+
+\begin{frame}{Gaussian function (2)}
+
+    \begin{columns}
+        \begin{column}{0.4\linewidth}
+
+\begin{itemize}
+\tightlist
+\item
+  Combining Gaussians (μ, σ2) and (ν, r2)
+\end{itemize}
+
+Combining two Gaussians results in a Gaussian that has a smaller
+standard deviation
+
+        \end{column}
+        \begin{column}{0.6\linewidth}
+
+\begin{tikzpicture}
+\begin{axis}[
+  no markers, domain=-5:5, samples=100,
+  axis lines*=left, xlabel=$x$, ylabel=$y$,
+  every axis y label/.style={at=(current axis.above origin),anchor=south},
+  every axis x label/.style={at=(current axis.right of origin),anchor=west},
+  height=4cm, width=\linewidth,
+  xtick={-5,-3,...,5}, ytick={0.0,0.2,...,1.0},
+  enlargelimits=false, clip=false, axis on top,
+  grid = major
+  ]
+  %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
+  \addplot [very thick,yellow!50!black] {gauss(0,2.24)};
+  \addplot [very thick,green!50!black] {gauss(-2,0.71)};
+  \addplot [very thick,red!50!black] {gauss(0,1)};
+  \addplot [very thick,blue!50!black] {gauss(0,0.45)};
+
+\end{axis}
+
+\end{tikzpicture}
+
+\begin{tikzpicture}
+\begin{axis}[
+  no markers, domain=-5:5, samples=100,
+  axis lines*=left, xlabel=$x$, ylabel=$y$,
+  every axis y label/.style={at=(current axis.above origin),anchor=south},
+  every axis x label/.style={at=(current axis.right of origin),anchor=west},
+  height=4cm, width=\linewidth,
+  xtick={-5,-3,...,5}, ytick={0.0,0.2,...,1.0},
+  enlargelimits=false, clip=false, axis on top,
+  grid = major
+  ]
+  %\addplot [fill=cyan!20, draw=none, domain=0:5.96] {gauss(6.5,1)} \closedcycle;
+  \addplot [very thick,yellow!50!black] {gauss(0,2.24)};
+  \addplot [very thick,green!50!black] {gauss(-2,0.71)};
+  \addplot [very thick,red!50!black] {gauss(0,1)};
+  \addplot [very thick,blue!50!black] {gauss(0,0.45)};
+
+\end{axis}
+
+\end{tikzpicture}
+
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+\begin{frame}{Basic concepts: state}
+
+The \textbf{state} of a process is a vector of real numbers capturing
+the relevant information describing the process:
+
+For example
+
+\begin{itemize}
+\tightlist
+\item
+  The position and speed of a wheeled robot:
+\item
+  The speed of a missile
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  ~
+\end{itemize}
+
+~
+
+\end{frame}
+
+\begin{frame}{The basics}
+
+The Kalman filter needs a number of parameters to run.
+
+\begin{itemize}
+\tightlist
+\item
+  These come from the \emph{process equations}: equations that describe
+  how the state of the system in the next time step depends on the
+  current state and any changes that happen to the system.
+\item
+  For example: a car drives down the road. Its position at time
+  \emph{k+1} depends on its position at time \emph{k}, the control input
+  at \emph{k} (is the car braking or accelerating) and system dynamics
+  (it slows down due to friction).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{The process equations (1)}
+
+\begin{itemize}
+\tightlist
+\item
+  The process is governed by a linear difference equation
+\end{itemize}
+
+The state one time step ago
+
+The state at time step \emph{k}
+
+\emph{n} x \emph{n} matrix changing the previous state into the current
+state
+
+\emph{n} x \emph{l} matrix that maps the control input onto the state
+
+Control input, a vector of size \emph{l}
+
+The process noise, a vector of size \emph{n}.
+
+\end{frame}
+
+\begin{frame}{The process equations (2)}
+
+\begin{itemize}
+\tightlist
+\item
+  We taking \emph{m} measurements which will be related to the state
+  \emph{x} according to
+\end{itemize}
+
+Measurements, a vector of size \emph{m}
+
+\emph{m} x \emph{n} matrix mapping the state to the measurements
+
+Measurement noise, a vector of size \emph{m}
+
+\end{frame}
+
+\begin{frame}{The process equations: recap of main variables}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{A}: matrix (\emph{n} x \emph{n}) that describes how the state
+  changes from \emph{k-1 to k} without controls or noise.
+\item
+  \emph{B}: \emph{} matrix (\emph{n} x \emph{l}) that describes how the
+  control \emph{ut} changes the state from \emph{k-1 to k.}
+\item
+  \emph{H}: Matrix (\emph{k} x \emph{n}) that describes how to map the
+  state \emph{xk} to a measurement \emph{zk.}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Covariance (1)}
+
+\href{http://en.wikipedia.org/wiki/Covariance}{Covariance}
+
+\begin{itemize}
+\tightlist
+\item
+  Measure of how two variables change together.
+\item
+  Two series X and Y of values, each of size N.
+\item
+  If cov(X,Y)\textgreater{}0, then X and Y tend move together. If
+  cov(X,Y)\textless{}0 then X and Y have an opposite effect on
+  eachother. And cov(X,Y) = 0?
+\item
+  Example
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Covariance (2)}
+
+\href{http://en.wikipedia.org/wiki/Covariance_matrix}{Covariance matrix}
+is a matrix showing the covariance of two or more variables to each
+other.
+
+\begin{itemize}
+\tightlist
+\item
+  If one variable changes, does the other variable change as well and in
+  what direction?
+\item
+  Example: height, temperature and air pressure
+\end{itemize}
+
+\begin{longtable}[c]{@{}llllllll@{}}
+\toprule
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+height
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+temperature
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+air pressure
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+Covariance matrix
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+20
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+1
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+~
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+height
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+temp
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+pressure
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+1000
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+10
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0.9
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+height
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+2916667
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-29166.7
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-400
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+2000
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0.8
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+temp
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-29166.7
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+291.6667
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+4
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+3000
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-10
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0.7
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+pressure
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-400
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+4
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0.056667
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+4000
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-20
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0.5
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+5000
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+-30
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+0.3
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage} &
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\end{frame}
+
+\begin{frame}{The process equations (3)}
+
+The variables \emph{wk} and \emph{vk} contain the random noise on the
+state and measurements.
+
+\begin{itemize}
+\tightlist
+\item
+  They have a \textbf{normal} distribution.
+\end{itemize}
+
+\emph{p} stands for probability
+
+\emph{N} is the notation for a normal distribution.
+
+With a \textbf{covariance matrix} of \emph{Q} and \emph{R}, this
+signifies the width of the normal distribution.
+
+\end{frame}
+
+\begin{frame}{The process equations (4)}
+
+The goal of a Kalman filter is to \textbf{estimate} the state \emph{x}
+at each time step given
+
+\begin{itemize}
+\tightlist
+\item
+  noisy measurements,
+\item
+  control input,
+\item
+  the process difference equation.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Round and round goes the Kalman filter}
+
+The Kalman filter continuously loops through two steps
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{time update} step.
+\item
+  The \textbf{measurement update} step.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Time and measurement update}
+
+The \textbf{time update} uses the current state estimate and error
+estimate to obtain a new estimate of the state: this is called the
+\textbf{a priori} estimate
+
+\begin{itemize}
+\tightlist
+\item
+  ``A priori'' means that the estimate is taken before any new sensor
+  measurements have come in.
+\end{itemize}
+
+The \textbf{measurement update} is run after new measurements have come
+in an provide the \textbf{a posteriori} estimate.
+
+\begin{itemize}
+\tightlist
+\item
+  ``A posteriori'' because the estimate is made after new sensor
+  measurements have come in.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Time update equations}
+
+A priori estimate of the state at time \emph{k}
+
+A posteriori estimate of the state at time \emph{k-1}
+
+A priori estimate of the error covariance at time \emph{k}
+
+A poseriori estimate of the error covariance at time \emph{k-1}
+
+\textbf{Notes}
+
+A hat \^{} means that a variable is \textbf{estimated},
+
+a superscript -- means the variable is \textbf{a priori}.
+
+Process noise
+
+\end{frame}
+
+\begin{frame}{Measurement update equations}
+
+The Kalman gain, this needs to calculated first
+
+The estimated state.
+
+Sensor
+
+noise
+
+\end{frame}
+
+\begin{frame}{The Kalman filter loop}
+
+\end{frame}
+
+\begin{frame}{Example 1}
+
+A Kalman filter to estimate the state of a system with \textbf{one
+variable}. For this demonstration, the variable remains
+\textbf{constant} (for example, measuring a voltage or a temperature).
+
+\begin{itemize}
+\tightlist
+\item
+  See Matlab code and demo.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{}
+
+\% Our initial estimate of the system's state
+
+x\_estimate\_posterior(1) = -0.4;
+
+\% The recursive Kalman filter process
+
+for k=2:COUNT
+
+\% Time update phase
+
+x\_estimate\_prior(k) = x\_estimate\_posterior(k-1);
+
+P\_prior(k) = P(k-1) + Q;
+
+\% Measurement update phase
+
+K(k) = P\_prior(k) / ( P\_prior(k) + R );
+
+x\_estimate\_posterior(k) = x\_estimate\_prior(k) + K(k) * ( z(k) -
+x\_estimate\_prior(k) );
+
+P(k) = (1 - K(k)) * P\_prior(k);
+
+end
+
+\end{frame}
+
+\begin{frame}{}
+
+\end{frame}
+
+\begin{frame}{Example 2}
+
+\begin{itemize}
+\tightlist
+\item
+  Kalman filter to estimate a moving value (one dimensional).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Example 3}
+
+\begin{itemize}
+\tightlist
+\item
+  Kalman filter to estimate a moving value, but sensor data becomes
+  unreliable
+\end{itemize}
+
+Sensor noise shoots up between t = 70 and 90, but KF doesn't know: the Q
+matrix is unchanged
+
+Same, but KF is told that sensor noise is high, Q matrix values are
+increased
+
+\end{frame}
+
+\begin{frame}{Extension}
+
+In this simple example we only use a state with one variable.
+
+\begin{itemize}
+\tightlist
+\item
+  Most systems will have more variables (e.g. pose of a drone has 6
+  states).
+\item
+  Most systems will have the first and second derivative in time of all
+  variables (i.e. rate of change and acceleration).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{FAQ}
+
+Is a Kalman Filter similar to \emph{complementary filters}?
+
+\begin{itemize}
+\tightlist
+\item
+  Complementary filters are often used to combine accelerometer and gyro
+  readings on an IMU.
+\item
+  CF is simple (few lines of code, no matrices) and combines a high and
+  low pass filter.
+\item
+  CF does not predict states into the future.
+\end{itemize}
+
+What if my problem is non-linear?
+
+\begin{itemize}
+\tightlist
+\item
+  There are alternative versions out there such as the Extended Kalman
+  Filter (EKF) or Unscented Kalman Filter (UKF).
+\end{itemize}
+
+\url{http://www.pieter-jan.com/node/11}
+
+\end{frame}
+
+\begin{frame}{Further reading}
+
+A good text on Kalman filter can be found on
+
+\begin{itemize}
+\tightlist
+\item
+  \url{http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf}
+\end{itemize}
+
+A good video lecture at Udacity
+
+\begin{itemize}
+\tightlist
+\item
+  Lesson 2 of \href{https://www.udacity.com/course/cs373}{Artificial
+  Intelligence for Robotics at Udacity}
+\end{itemize}
+
+Video demonstrations
+
+Kalman filter on accelerometer and gyro to read stable angle
+
+\begin{itemize}
+\tightlist
+\item
+  \url{http://www.youtube.com/watch?v=MJ71V_wxtuU}
+\item
+  \url{http://www.youtube.com/watch?v=Y3TzhXYF0Lg}
+\end{itemize}
+
+Kalman filter tracking an airplane
+
+\begin{itemize}
+\tightlist
+\item
+  \url{http://www.youtube.com/watch?v=0GSIKwfkFCA}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{}
+    \begin{center}
+        \Large
+        That's all, folks!\\[2em]
+        \normalsize
+        Questions:\\
+        Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
+
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
