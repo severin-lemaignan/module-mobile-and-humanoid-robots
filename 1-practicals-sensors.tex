@@ -1,0 +1,150 @@
+%!TEX program = xelatex
+
+\documentclass[compress]{beamer}
+%--------------------------------------------------------------------------
+% Common packages
+%--------------------------------------------------------------------------
+
+\definecolor{links}{HTML}{663000}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usepackage[english]{babel}
+\usepackage{pgfpages} % required for notes on second screen
+\usepackage{graphicx}
+
+\usepackage{multicol}
+
+\usepackage{tabularx,ragged2e}
+\usepackage{booktabs}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+\usetheme{hri}
+
+% Display the navigation bullet even without subsections
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,backgrounds,positioning}
+
+\graphicspath{{figs/}}
+
+\title{ROCO318 \newline Mobile and Humanoid Robots}
+\subtitle{Practical 1 -- Sensors Projects}
+\date{}
+\author{Séverin Lemaignan}
+\institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
+
+\begin{document}
+
+\licenseframe{github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+\maketitle
+
+\section{Sensors Projects}\label{sensors-projects}
+
+\begin{frame}{Objective}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Pick a sensor (or more than one)
+\item
+  Figure out a cool application
+\item
+  Build it!
+\end{enumerate}
+
+\end{frame}
+
+\imageframe[color=black]{practicals/media/auto_maze.jpg}
+\imageframe[color=black]{practicals/media/3d_scanner.jpg}
+\imageframe[color=black]{practicals/media/haptic_obstacle_detector.jpg}
+\videoframe{practicals/media/gun_turret.mov}
+\videoframe{practicals/media/pothole_detection.webm?start=25}
+
+\begin{frame}{Timeframe}
+
+\emph{This week}:
+
+\begin{itemize}
+\tightlist
+\item
+  make groups (2-3 persons/group)
+\item
+  play with sensors (including installation of SDKs)
+\item
+  discuss a project idea within the group
+\end{itemize}
+
+\emph{Week 2}:
+
+\begin{itemize}
+\tightlist
+\item
+  submit the project ideas, we tell you if it is realistic
+\item
+  hack hack hack
+\end{itemize}
+
+\emph{Week 3 \& 4}:
+
+\begin{itemize}
+\tightlist
+\item
+  hack hack hack
+\end{itemize}
+
+\emph{Week 5}:
+
+\begin{itemize}
+\tightlist
+\item
+  projects demonstrations!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Constraints}
+
+Not many: you choose the language, the OS, the platform
+
+\end{frame}
+
+\begin{frame}{Deliverables}
+
+\begin{itemize}
+\tightlist
+\item
+  project demonstrations will be marked
+\item
+  a report (max 10 pages) on the sensor(s) you have been using +
+  detailed presentation of your project -- \textbf{accompanying video is
+  encouraged!}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{}
+    \begin{center}
+        \Large
+        Let's get to work!\\[2em]
+
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
