@@ -54,6 +54,9 @@
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,patterns}
 
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
 \graphicspath{{figs-lowres/}{figs/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
@@ -1200,9 +1203,9 @@
 
 \begin{frame}{Other radio localisation methods}
 
-    Mainly used in mobile phones and mobile devices.
+    Mainly used in mobile phones and mobile devices
 
-    GSM-based triangulation.
+    \textbf{GSM-based triangulation}
 
     \begin{itemize}
 
@@ -1215,22 +1218,23 @@
 
     \pause
 
-    WiFi-based localisation.
+    \textbf{WiFi-based localisation}
 
     \begin{itemize}
         \item
-              If a device connects to a WiFi router, it knows the IP address of the
-              router. Some internet providers know at which address a router is and
-              provide this
-        \item More accurate as range of WiFi router is limited, radius of about 50m.
-              But not all IP can be geo-coded
-        \item Alternatively, positionning via databases that associate unique IDs (MAC
-              addresses) of WiFi routers with their position. For example,
+              Whenever a device connects to a WiFi router, it knows the IP of the
+              router. Some Internet providers know at which address a router is and
+              provide this (\emph{geo-coding})
+        \item When available, more accurate as range of WiFi router is limited, radius of about 50m.
+        \item Alternatively, positioning via databases that associate unique IDs (MAC
+              addresses) of WiFi routers with their location. For example,
               \href{https://location.services.mozilla.com/}{Mozilla Location Service}
 
     \end{itemize}
 
 \end{frame}
+
+\imageframe[caption=Regions covered by Mozilla Location Service, color=black]{mozilla-localisation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Range sensors}
@@ -1279,7 +1283,7 @@
                   only 10 ns for a laser range sensor
         \end{itemize}
 
-        Measuring the time of flight $t$ with electromagnetic signals is not an easy task; laser range sensors are expensive and delicate
+        Measuring the time of flight $t$ with electromagnetic signals is \textbf{not an easy task}; laser range sensors are expensive and delicate
 
     }
 
@@ -1290,7 +1294,7 @@
         \begin{itemize}
 
             \item Uncertainties about the exact time of arrival of the reflected signal,
-                  due to reflections, multiple echo's, \ldots{}
+                  due to reflections, multiple echos, \ldots{}
             \item Internal sensor inaccuracies in the time of flight measure (laser
                   range sensors)
             \item Opening angle of transmitted beam (ultrasonic range sensors)
@@ -1304,6 +1308,8 @@
 
 \begin{frame}{Ultrasonic Sensor (sonar)}
 
+
+    \only<1>{
 
     Transmit a packet of (ultrasonic) pressure waves.
 
@@ -1327,11 +1333,10 @@
 
     \end{itemize}
 
-\end{frame}
+    }
+    \only<2>{
 
-\begin{frame}{Speed of sound in air}
-
-    Can be approximated by:
+    The speed of sound in air can be approximated by:
     \[
         c_{air} = 331.3 \sqrt{1+\frac{J}{273.15}}
     \]
@@ -1339,67 +1344,181 @@
 
     If no correction for temperature would be done, what would the error be?
 
-    \begin{multicols}{2}
-        Assume obstacle at 1m, and $T = 15^{\circ}C$.
+        Assume obstacle at 1m, and $T = 15^{\circ}C$:
 
-        \begin{center}
-            \includegraphics[width=\linewidth]{sound_speed_error}
-        \end{center}
-    \end{multicols}
+        \centering
+        \begin{tabular}{@{}llll@{}}
+            \toprule
+            T ($^{\circ}C)$ & $c$   & $t$     & \bf Error (\%) \\ \midrule
+            -10          & 325.2 & 0.00615 & \bf 4.6        \\
+            0            & 331.3 & 0.00604 & \bf 2.7        \\
+            15           & 340.3 & 0.00588 & \bf 0          \\
+            30           & 349.0 & 0.00573 & \bf -2.5       \\ \bottomrule
+        \end{tabular}
 
+    }
 
 \end{frame}
 
-\begin{frame}{Signals of ultrasonic sensor}
+\begin{frame}[plain]
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{us_signals}
+    \centering
+    \begin{tikzpicture} 
+        [label/.style={align=left,font=\footnotesize}]
 
-    \end{center}
-    Transmitted sound
+        \draw[dotted,thick, grey] (3*pi * 0.2 ,0) -- (3*pi * 0.2, -5.2);
+        \draw[dotted,thick, grey] (5*pi * 0.2 ,0) -- (5*pi * 0.2, -5.2);
+        \draw[dotted,thick, grey] (13*pi * 0.2 ,0) -- (13*pi * 0.2, -5.2);
+        \draw[dotted,thick, grey] (15*pi * 0.2 ,0) -- (15*pi * 0.2, -5.2);
 
-    Analog echo signal
+        \draw[dotted,thick, grey] (10.1*pi * 0.2 ,-2.5*0.5) -- (10.1*pi * 0.2, -5.2);
 
-    threshold
 
-    Digital echo signal
+        \begin{axis}[
+                anchor=origin,
+            at={(0,0)},
+            disabledatascaling,
+            x=2mm,y=5mm,
+            ticks=none, no markers, domain=0:50, samples=200,
+            axis x line=middle,
+            axis y line=left,
+            height=5cm, width=\linewidth,
+            ymin=-1.2,ymax=1.2,
+            xmin=0,xmax=50,
+        ]
+            \addplot[ultra thick,domain=0:3*pi] {0}; 
+            \addplot[ultra thick,domain=3*pi:5*pi] {sin(deg(4*x))}; 
+            \addplot[ultra thick,domain=5*pi:13*pi] {0}; 
+            \addplot[ultra thick,domain=13*pi:15*pi] {sin(deg(4*x))}; 
+            \addplot[ultra thick,domain=15*pi:48] {0}; 
+        \end{axis}
 
-    Integrated time
+        \node[label] at (1,0.4) {transmitted \\ sound};
 
-    Output signal
+        \begin{axis}[
+                anchor=origin,
+            at={(0,-3.5)},
+            disabledatascaling,
+            x=2mm,y=5mm,
+            ticks=none, no markers, domain=0:50, samples=200,
+            axis x line=middle,
+            axis y line=left,
+            height=5cm, width=\linewidth,
+            ymin=-1.2,ymax=2,
+            xmin=0,xmax=50,
+        ]
 
-    integrator
+            \addplot[ultra thick,domain=0:4.5*pi] {0}; 
+            \addplot[ultra thick,domain=4.5*pi:6.5*pi] {sin(deg(4*(x-1.5*pi)))/(x/(4.5*pi))^4}; 
+            \addplot[ultra thick,domain=6.5*pi:9*pi] {0}; 
 
-    Time of flight (sensor output)
+            \addplot[ultra thick,domain=9*pi:12.5*pi] {sin(deg(4*(x)))* exp(-(x-10.75*pi)^2/10)}; 
 
-    threshold
+            \addplot[ultra thick,domain=12.5*pi:14.5*pi] {0}; 
+            \addplot[ultra thick,domain=14.5*pi:48] {sin(deg(4*(x-1.5*pi)))/((x-10*pi)/(4.5*pi))^4}; 
 
-    Wave packet
+            \addplot[thick,blue,domain=0:3*pi] {0.5};
+            \addplot[thick,blue,domain=3*pi:5*pi] {1-exp(-x+3*pi) + 0.5}; 
+            \addplot[thick,blue,domain=5*pi:13*pi] {exp(-x+5*pi) + 0.5}; 
+            \addplot[thick,blue,domain=13*pi:15*pi] {1-exp(-x+13*pi) + 0.5}; 
+            \addplot[thick,blue,domain=15*pi:48] {exp(-x+15*pi) + 0.5}; 
+        \end{axis}
 
+        % threshold
+        \node[label,blue] at (1,-1.25) {threshold};
+        \draw[dashed] (0 , -3 * 0.5) -- (50 * 0.2, -3 * 0.5);
+        \node[label] at (1,-2.2) {analog echo \\ signal};
+
+
+        \begin{axis}[
+                anchor=origin,
+            at={(0,-7)},
+            disabledatascaling,
+            x=2mm,y=5mm,
+            ticks=none, no markers, domain=0:50, samples=200,
+            axis x line=middle,
+            axis y line=left,
+            height=5cm, width=\linewidth,
+            ymin=0,ymax=1.4,
+            xmin=0,xmax=50,
+        ]
+
+            \addplot[thick] coordinates {
+                (      0, 1)
+                (10.1*pi, 1)
+                (10.1*pi, 0)
+                (10.3*pi, 0)
+                (10.3*pi, 1)
+                (10.6*pi, 1)
+                (10.6*pi, 0)
+                (10.9*pi, 0)
+                (10.9*pi, 1)
+                (11.2*pi, 1)
+                (11.2*pi, 0)
+                (11.4*pi, 0)
+                (11.4*pi, 1)
+                (11.6*pi, 1)
+                (11.6*pi, 0)
+                (11.7*pi, 0)
+                (11.7*pi, 1)
+                (     48, 1)
+            };
+        \end{axis}
+
+        \node[label] at (1.35,-3.3) {digital echo signal};
+
+        \begin{axis}[
+                anchor=origin,
+            at={(0,-10)},
+            disabledatascaling,
+            x=2mm,y=5mm,
+            ticks=none, no markers, domain=0:50, samples=10,
+            axis x line=middle,
+            axis y line=left,
+            height=5cm, width=\linewidth,
+            ymin=0,ymax=1.5,
+            xmin=0,xmax=50,
+        ]
+            \addplot[thick,red] coordinates {
+                (0, 0.5)
+                (3*pi, 1.3)
+                (3*pi + 1, 0)
+                (5*pi, 0)
+                (13*pi, 1.3)
+                (13*pi + 1, 0)
+                (15*pi, 0)
+                (48, 0.1)
+            };
+            \addplot[ultra thick,green!50!black] coordinates {
+                (0, 1.1)
+                (10.1*pi, 1.1)
+                (10.1*pi, 0.85)
+                (48, 0.85)
+            };
+        \end{axis}
+
+        \node[label,red] at (1.2,-4.8) {integrator};
+        \node[label,green!50!black] at (5,-4.2) {{\bf time of flight} (sensor output)};
+
+    \end{tikzpicture}
+
+    \source{https://books.google.co.uk/books?id=4of6AQAAQBAJ&pg=PA127}{Autonomous Mobile Robots, p.127}
 \end{frame}
 
 \begin{frame}{Ultrasonic sensor properties}
 
-    Typically a frequency: 40 - 180 kHz
-
-    Generation of sound wave: piezo transducer
-
     \begin{itemize}
-
-        \item
-              transmitter and receiver separated or not separated.
+        \item Typical frequency: \textbf{40 -- 180 kHz}
+        \item Generation of sound wave: piezo transducer
+        \item Transmitter and receiver: same unit or separate units (for reduced \emph{blanking time})
     \end{itemize}
 
-    Sound beam propagates in a cone like manner
+    Sound beam propagates in a cone-like manner:
 
     \begin{itemize}
-
-        \item
-              opening angles around 20 to 40 degrees
-        \item
-              regions of constant depth
-        \item
-              segments of an arc (sphere for 3D)
+        \item opening angles around 20 to 40 degrees
+        \item acquisition of \emph{regions of constant depth} rather than depth
+            points $\rightarrow$ segments of an arc (sphere for 3D)
     \end{itemize}
 
 \end{frame}
@@ -1408,41 +1527,34 @@
 
     \begin{itemize}
 
-        \item
-              Soft surfaces absorb most of the acoustic energy.
-        \item
-              Surfaces that are fare from being perpendicular to the direction of
-              the sound: specular reflection.
+        \item Soft surfaces absorb most of the acoustic energy
+        \item Surfaces that are far from being perpendicular to the direction of
+              the sound: specular reflection
     \end{itemize}
 
-    a) 360° scan
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{us_scan}
 
-    b) results from different geometric primitives
-
+        \source{https://books.google.co.uk/books?id=4of6AQAAQBAJ&pg=PA129}{Autonomous Mobile Robots, p.129}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Cycle time of ultrasonic sensors}
 
     When emitter and receiver are one and the same piece of hardware, the
-    sensor has a \emph{blanking time}.
+    sensor has a \textbf{blanking time}.
 
     \begin{itemize}
-
-        \item
-              Time after the ping in which the sensor is blind.
-        \item
-              Close obstacles will be missed.
+        \item Time after the ping in which the sensor is blind
+        \item Close obstacles will be missed
     \end{itemize}
 
-    Cycle time is rather low.
+    \textbf{Cycle time} is rather low
 
     \begin{itemize}
-
-        \item
-              In a moderately sized room where obstacles are 3m away, the time of
+        \item In a moderately sized room where obstacles are 3m away, the time of
               flight is about 20ms. The sensor refresh rate is 50Hz.
-        \item
-              However, if a ring of sonar sensors is used, only one sensor at a time
+        \item However, if a ring of sonar sensors is used, only one sensor at a time
               can be fired. For example, a 20 sensor ring will only operate at
               2.5Hz.
     \end{itemize}
@@ -1451,27 +1563,56 @@
 
 \begin{frame}{Sonar sensors}
 
-    LV-MaxSonar
+    \begin{columns}
+        \begin{column}{0.6\linewidth}
 
-    \begin{itemize}
+            LV-MaxSonar
 
-        \item
-              \url{http://www.maxbotix.com/}
-        \item
-              Detect 0 to 6.5m, range sensing 0.2 to 6.5m
-        \item
-              42 kHz sonar ping.
-        \item
-              Serial out.
-        \item
-              Free run or triggered.
-        \item
-              \$25 - \$30 (in 2008).
-    \end{itemize}
+            \begin{itemize}
+                \item \url{http://www.maxbotix.com/}
+                \item Detect 0 to 6.5m, range sensing 0.2 to 6.5m
+                \item 42 kHz sonar ping.
+                \item Serial out.
+                \item Free run or triggered.
+                \item \$25 - \$30
+            \end{itemize}
 
+        \end{column}
+        \begin{column}{0.4\linewidth}
+
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{maxbotix-lvmax}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Laser Range Sensor}
+
+\begin{tikzpicture} 
+    [label/.style={align=center,font=\footnotesize}]
+
+    \draw[fill,orange] (0,0) rectangle (2,1);
+    \draw[thick] (2, 0.5) -- (10, 0.5);
+    \draw[thick, dashed] (3, 0.4) -- (10, 0.4);
+    \draw[thick, dashed,->] (10, 0.5) -- +(160:1);
+    \draw[thick, dashed,->] (10, 0.5) -- +(120:1);
+    \draw[thick, dashed,->] (10, 0.5) -- +(200:1);
+    \draw[thick, dashed,->] (10, 0.5) -- +(240:1);
+
+    \draw[ultra thick] (10, 1.5) -- +(0,-2);
+    \draw[ultra thick] (3, 0.5) -- +(45:0.5);
+    \draw[ultra thick] (3, 0.5) -- +(225:0.5);
+
+    \draw[thick, dashed,->] (3, 0.4) -- (3, -1);
+
+    \draw[blue] (2,-1) rectangle (4,-2);
+
+    \node[label,blue] at (3,-1.5) {phase\\measurement};
+    \node[label] at (1,0.5) {transmitter};
+
+\end{tikzpicture}
+
 
     Transmitted and received beams coaxial.
 
