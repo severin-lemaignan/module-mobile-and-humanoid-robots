@@ -397,8 +397,7 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Multi-Modal Error Distributions: The Challenges in
-        \ldots{}}
+\begin{frame}{Multi-Modal Error Distributions: The Challenges in \ldots{}}
 
     Behavior of sensors modeled by probability distribution (random errors)
 
@@ -440,37 +439,28 @@
 \subsection{Encoders}
 \begin{frame}{Wheel / Motor Encoders}
 
+    \footnotesize
     \begin{itemize}
         \item Measures position or speed of the wheels or steering.
 
-        \item Wheel movements can be integrated to get an estimate of the robots
-              position \rightarrow odometry.
+        \item Wheel movements can be \textbf{integrated} to get an estimate of the robots
+            position \rightarrow \textbf{odometry}
 
         \item Optical encoders are proprioceptive sensors
-
               \begin{itemize}
-
-                  \item
-                        Due to errors (slippage etc.) the position estimate in relation to a
-                        fixed reference frame is only valuable for short movements.
+                  \item \footnotesize Due to errors (slippage etc.) the position estimate in relation to a
+                        fixed reference frame is only valuable for short movements
               \end{itemize}
 
-        \item Typical resolutions: 2000 increments per revolution.
-
+        \item Typical resolutions: 2000 increments per revolution
               \begin{itemize}
-
-                  \item
-                        For high resolution: interpolation.
+                  \item \footnotesize For high resolution: interpolation
               \end{itemize}
 
         \item Quadrature encoder (two emittor/detector pairs)
-
               \begin{itemize}
-
-                  \item
-                        Gives direction and 4 times higher resolution.
+                  \item \footnotesize Gives direction and 4 times higher resolution.
               \end{itemize}
-
     \end{itemize}
 
     \begin{center}
@@ -491,23 +481,28 @@
 
 \begin{frame}{Wheel / motor encoders}
 
-    \centering
-    \begin{multicols}{2}
-        \includegraphics[width=0.6\linewidth]{encoders3}
 
-        Home-made encoder
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \centering
 
-        \includegraphics[width=0.6\linewidth]{encoders5}
+            \includegraphics[width=0.6\linewidth]{encoders3}
+            Home-made encoder
 
-        Commercial encoder
+            \includegraphics[width=0.6\linewidth]{encoders5}
+            Commercial encoder
 
-        \begin{center}
+        \end{column}
+
+        \begin{column}{0.5\linewidth}
+            \centering
+
             \includegraphics[width=0.9\linewidth]{encoders4}
-        \end{center}
 
-        Absolute encoder disk
+            Absolute encoder disk
+        \end{column}
+    \end{columns}
 
-    \end{multicols}
 
 \end{frame}
 
@@ -542,7 +537,7 @@
               sensors)
     \end{itemize}
 
-    Major drawbacks:
+    \emph{Major drawbacks}:
 
     \begin{itemize}
         \item weakness of the earth field
@@ -569,21 +564,18 @@
 
 \begin{frame}{Gyroscope}
 
-    Reports an acceleration of rotation to a relative frame of reference.
+    Reports an acceleration of rotation to a \textbf{relative frame of reference}.
 
-    \begin{beamercolorbox}{block body example}
+    \textbf{Unlike a compass!} that keeps the orientation to a fixed frame: reference to an
+    absolute frame of reference.
 
-        Unlike a compass, that keeps the orientation to a fixed frame: reference to an
-        absolute frame of reference.
-
-    \end{beamercolorbox}
+    \pause
 
     Two categories, the mechanical and the optical gyroscopes
 
     {\bf Mechanical Gyroscopes}
 
     \begin{itemize}
-
         \item Standard gyro
         \item Rated gyro
     \end{itemize}
@@ -591,7 +583,6 @@
     {\bf Optical Gyroscopes}
 
     \begin{itemize}
-
         \item Rated gyro
     \end{itemize}
 
@@ -599,35 +590,40 @@
 
 \begin{frame}{Mechanical gyroscopes}
 
-    Concept: inertial properties of a fast spinning rotor.
-
-    \begin{itemize}
-
-        \item
-              \emph{gyroscopic precession.}
-    \end{itemize}
+    \begin{multicols}{2}
+    \emph{Concept}: inertial properties of a fast spinning rotor $\Rightarrow$ \textbf{gyroscopic precession}
 
     Angular momentum associated with a spinning wheel keeps the axis of the
     gyroscope inertially stable.
+        \vfill
+        \columnbreak
+        \video[0.82]{0.8\linewidth}{figs/gyro.mp4?autostart}
+    \end{multicols}
 
+
+    \only<1>{
     Reactive torque $\tau$ (tracking stability) is proportional to the
     spinning speed $\omega$, the precession speed $\Omega$ and the wheels
-    inertia $\mathcal{I}$:
-
+    inertia $\mathcal{I}$\bubblemark{inertia}.
     \[
-        \tau = \mathcal{I}\cdot\omega CHECK THAT
+        \tau = \mathcal{I}\cdot\omega\cdot\Omega
     \]
-
+    \bubble<1>[30]{inertia}{$\mathcal{I} = \int_{W}r^2dm$}
     No torque can be transmitted from the outer pivot to the wheel axis: {\bf
     spinning axis will therefore be space-stable}
+    }
+    \only<2>{
 
-    Quality: 0.1° in 6 hours
+
+        \emph{Quality}: 0.1° over 6 hours
 
     If the spinning axis is aligned with the north-south meridian, the
     earth's rotation has no effect on the gyro's horizontal axis
 
     If it points east-west, the horizontal axis reads the
     earth rotation
+    }
+
 \end{frame}
 
 \imageframe[caption=Mechanical gyroscope of ballistic missile (French IRBM S3 -- 1970s -- Wikimedia)]{gyro-example}
@@ -656,7 +652,8 @@
             \includegraphics[width=0.7\linewidth]{optical-gyro2}
         \end{center}
 
-        Hitachi fibre optical gyroscope
+        {\footnotesize Hitachi fibre optical gyroscope}
+
         \vfill
         \columnbreak
 
@@ -675,16 +672,16 @@
 
     \begin{multicols}{2}
 
+        \only<1>{
         A beam of light is split, both beams follow a trajectory in opposite
         directions.
 
-        \begin{center}
-            \includegraphics[width=0.6\linewidth]{sagnac-effect}
-        \end{center}
 
         One is traveling in a fiber clockwise, the other counterclockwise
         around a cylinder (older setups use a ring of mirrors).
+        }
 
+        \only<2>{
         Laser beam traveling in direction of rotation
 
         \begin{itemize}
@@ -696,6 +693,15 @@
         On return to the point of entry both beams form an {\bf interference
             pattern}. Rotating the apparatus results in a {\bf changing
         interference pattern}.
+        }
+
+        \vfill
+        \columnbreak
+    
+        \vspace{2cm}
+        \begin{center}
+            \includegraphics[width=0.8\linewidth]{sagnac-effect}
+        \end{center}
 
     \end{multicols}
 \end{frame}
@@ -704,13 +710,13 @@
 
     A small vibrating element replaces the spinning wheel.
 
-    {\bf Measures angular acceleration (= rate gyroscope)}
-
     \begin{itemize}
 
-        \item {\bf Small} due to {\bf MEMS} technology (Micro Electro
-              Mechanical System): lithographic etching of mechanical structure of
-              mm (or smaller) size.
+        \item {\bf Measures angular acceleration} (= rate gyroscope)
+        \item {\bf Small} due to
+            \href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{\bf
+            MEMS} technology (\emph{Micro Electro Mechanical System}): lithographic
+            etching of mechanical structure of mm (or smaller) size.
 
     \end{itemize}
 
@@ -731,14 +737,16 @@
     Relies on gyroscopic effect, but executed in MEMS technology.
 
     \begin{center}
-        \includegraphics[width=0.4\linewidth]{vibratingwheel}\bubblemark{wheel}
+        \includegraphics[width=0.4\linewidth]{vibratingwheel}\hspace{1em}
         \includegraphics[width=0.4\linewidth]{vibratingwheel2}
+        
+        \bubblemark{wheel}\source{https://www.quora.com/How-does-a-MEMS-gyroscope-work}{Quora}
+
     \end{center}
 
-    \bubble<1>{wheel}{Wheel vibrates (equivalent to rotating), tilt due to gyropscopic effect
-    when, change detected by chance in capacitance}
+    \bubble<1>[90][0.5cm][6cm]{wheel}{Wheel vibrates (equivalent to rotating), tilt due to gyropscopic effect
+     change detected by change in capacitance}
 
-    (reference: \href{https://www.quora.com/How-does-a-MEMS-gyroscope-work}{Quora})
 
 \end{frame}
 
@@ -749,11 +757,13 @@
 
     \begin{center}
         \includegraphics[width=0.5\linewidth]{coriolis}
+        
+        \source{http://electroiq.com/blog/2010/11/introduction-to-mems-gyroscopes/}{STM}
     \end{center}
-    Displacement measured as change in capacitance.
+
+    Displacement measured as \emph{change in capacitance}.
 
 
-    (reference: \href{http://electroiq.com/blog/2010/11/introduction-to-mems-gyroscopes/}{STM})
 
 \end{frame}
 
@@ -793,11 +803,13 @@
             a = \int_{0}^{t} \dot{a}dt
         \]
 
-        \bubble<1>{derivative}{A variable with a dot on top is that variable at a particular point in time}
+        \bubble<1>[160][2.5cm][3cm]{derivative}{A variable with a dot on top is that variable at a particular point in time}
 
         \begin{multicols}{2}
             While classic optical or mechanical gyroscopes do not suffer from drift,
-            MEMS gyroscopes do. Example, 30º drift over 12 seconds!!
+            MEMS gyroscopes do.
+            
+            Example, 30$^{\circ}$ drift over 12 sec!
 
             \begin{center}
                 \includegraphics[width=0.8\linewidth]{gyro-drift}
@@ -809,15 +821,14 @@
 
     }
     \only<2>{
-        \href{http://en.wikipedia.org/wiki/Microelectromechanical_systems}{MEMS}
-        gyroscopes are very noisy:
+        MEMS gyroscopes are very noisy:
 
 
         \begin{center}
             \includegraphics[width=0.6\linewidth]{mems-noise}\bubblemark{gyronoise}
         \end{center}
         Filtering needed to get rid of noise.
-        \bubble<2>{gyronoise}{Gyro rotates 90$^{\circ}$ clockwise and then 90$^{\circ}$ counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
+        \bubble<2>[180][0.3cm]{gyronoise}{Gyro rotates 90$^{\circ}$ clockwise and then 90$^{\circ}$ counter clockwise and back. Blue line is raw output from gyro, red is low pass filtered.}
     }
     \only<3>{
 
@@ -884,7 +895,7 @@
 
     An accelerometer always senses the Earth's gravitational vector $\vec{g} = 9.81\cdot\frac{m}{s^2}$.
 
-    As such an accelerometer can be used to measure rotation.
+    As such an accelerometer can be used to \textbf{measure rotation}.
 
     \begin{itemize}
         \item Gravity vector will be sensed on all three axes as $\vec{g_x}$, $\vec{g_y}$, $\vec{g_z}$.
@@ -892,7 +903,7 @@
         \item The gravitation vector can be decomposed in three components, which
               need to vector sum to $\vec{g}$.
 
-        \item However, it cannot measure rotation around the z-axis, for that a
+          \item However, it cannot measure rotation around the $\vec{z}$-axis, for that a
               gyroscope is still needed.
 
     \end{itemize}
@@ -907,34 +918,28 @@
 \subsection{GPS}
 \begin{frame}{Global Positioning System (GPS)}
 
-    \begin{itemize}
+    \only<1>{
+        \begin{itemize}
 
-        \item
-              Developed for military use (since 1978)
-        \item
-              Cost of maintenance estimated at \$400M per year
-        \item
-              Recently it became accessible for commercial applications
-        \item
-              24 satellites (excluding five spares) orbit the earth every 12 hours
-              at a height of 20,190 km
-        \item
-              4 satellites are located in each of six planes inclined 55 degrees
-              with respect to the plane of the earth's equators
-        \item
-              From any location on the planet at least 4 satellites can be seen
-    \end{itemize}
+            \item Developed for military use (since 1978)
+            \item Cost of maintenance estimated at \$400M per year
+            \item Recently it became accessible for commercial applications
+            \item 24 satellites (excluding five spares) orbit the earth every 12 hours
+                at a height of 20,190 km
+            \item 4 satellites are located in each of six planes inclined 55$^{\circ}$
+                with respect to the plane of the earth's equators
+            \item From any location on the planet at least \textbf{4 satellites can be seen}
+        \end{itemize}
 
-\end{frame}
+    }
+    \only<2>{
 
-\begin{frame}{Position of satellites}
+        \begin{center}
+            \video[1]{6cm}{figs/gps.mp4?autostart}
 
-    \begin{center}
-        \video[1]{6cm}{figs/gps.mp4}
-
-        \source{https://en.wikipedia.org/wiki/File:GPS24goldenSML.gif}{Wikipedia}
-    \end{center}
-
+            \source{https://en.wikipedia.org/wiki/File:GPS24goldenSML.gif}{Wikipedia}
+        \end{center}
+    }
 
 \end{frame}
 
@@ -983,28 +988,26 @@
             \end{center}
 
         }
-        \only<3-4>{
+        \only<3>{
 
 
-            \begin{beamercolorbox}{block body example}
+            \begin{exampleblock}{}
                 A deviation in the receivers clock results an error on the distance to
                 the satellite.
-            \end{beamercolorbox}
+            \end{exampleblock}
 
 
-            For example, satellite at 25,000km from receiver, 0.1ms deviation
-            between clocks, results in an error of 30m in the distance to the
-            satellite.
+            For example, for a satellite at 25,000km from the receiver, \emph{a 0.1ms deviation
+            between clocks results in an error of 30m in the distance to the
+            satellite}.
         }
 
         \only<4>{
 
-            Assume the time difference between the atomic clocks of two satellites' atomic clocks is
+            Assume the time difference between the atomic clocks and the receiver clock is
             $\Delta_t$. The distance to the satellites is now erroneously estimated
             at $r_i = v_{air}\cdot (t_i + \Delta_t)$
 
-        }
-        \only<5>{
             $\Delta_t$ can be calculated by taking an extra satellite into account.
 
             \[
@@ -1020,7 +1023,7 @@
 }
 \end{frame}
 
-\begin{frame}{GPS - accuracy}
+\begin{frame}{GPS -- accuracy}
 
     With the C/A code, the time of flight can be measured to within 10ns,
     which is an error of $\approx$ 3m.
@@ -1029,11 +1032,12 @@
 
     \begin{itemize}
 
-        \item Ionospheric effects: $\pm$ 5m
-        \item Ephemeris errors: $\pm$ 2.5m
+        \item Time of flight measure accuracy: $\pm$ 3m
         \item Satellite clock errors: $\pm$ 2m
-        \item Multipath distortion: $\pm$ 1m
-        \item Tropospheric effects: $\pm$ 0.5m
+        \item Ephemeris errors (position of satellites): $\pm$ 2.5m
+        \item \textbf<2>{Ionospheric effects} (signal dispersion): $\pm$ 5m
+        \item \textbf<2>{Tropospheric effects} (dispersion due to humidity): $\pm$ 0.5m
+        \item \textbf<2>{Multipath distortion} (reflections in environment): $\pm$ 1m
         \item Numerical errors $\pm$ 1m or less
     \end{itemize}
 
@@ -1047,7 +1051,7 @@
 
     Same time information is transmitted on two frequencies, these
     frequencies will experience noise in a different way. Can be used to
-    cancel noise.
+    cancel atmospheric noise.
 
     \pause
 
@@ -1104,9 +1108,10 @@
 
         \begin{center}
             \includegraphics[width=0.8\linewidth]{adafruit_receiver}
+
+            \source{https://www.adafruit.com/product/790}{Adafruit}
         \end{center}
 
-        \source{https://www.adafruit.com/product/790}{Adafruit}
         \vfill
         \columnbreak
 
@@ -1122,7 +1127,7 @@
             {\bf Why 66 channels when only max. 12 satellites are visible?}
         }
         \only<3>{
-            Improved correlation time $\rightarrow$ faster acquisition; lower power consumption
+            \href{http://electronics.stackexchange.com/a/11900}{Improved correlation time} $\rightarrow$ faster acquisition; lower power consumption
         }
         \vfill
 
