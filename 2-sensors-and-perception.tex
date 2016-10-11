@@ -1366,12 +1366,12 @@
     \begin{tikzpicture} 
         [label/.style={align=left,font=\footnotesize}]
 
-        \draw[dotted,thick, grey] (3*pi * 0.2 ,0) -- (3*pi * 0.2, -5.2);
-        \draw[dotted,thick, grey] (5*pi * 0.2 ,0) -- (5*pi * 0.2, -5.2);
-        \draw[dotted,thick, grey] (13*pi * 0.2 ,0) -- (13*pi * 0.2, -5.2);
-        \draw[dotted,thick, grey] (15*pi * 0.2 ,0) -- (15*pi * 0.2, -5.2);
+        \draw[dotted,thick, gray] (3*pi * 0.2 ,0) -- (3*pi * 0.2, -5.2);
+        \draw[dotted,thick, gray] (5*pi * 0.2 ,0) -- (5*pi * 0.2, -5.2);
+        \draw[dotted,thick, gray] (13*pi * 0.2 ,0) -- (13*pi * 0.2, -5.2);
+        \draw[dotted,thick, gray] (15*pi * 0.2 ,0) -- (15*pi * 0.2, -5.2);
 
-        \draw[dotted,thick, grey] (10.1*pi * 0.2 ,-2.5*0.5) -- (10.1*pi * 0.2, -5.2);
+        \draw[dotted,thick, gray] (10.1*pi * 0.2 ,-2.5*0.5) -- (10.1*pi * 0.2, -5.2);
 
 
         \begin{axis}[
@@ -1588,12 +1588,12 @@
 \end{frame}
 
 \begin{frame}{Laser Range Sensor}
-
 \begin{tikzpicture} 
-    [label/.style={align=center,font=\footnotesize}]
+    [>=latex,label/.style={align=center,font=\footnotesize}]
 
-    \draw[fill,orange] (0,0) rectangle (2,1);
     \draw[thick] (2, 0.5) -- (10, 0.5);
+    \draw[fill,orange] (0,0) rectangle (2,1);
+    \draw[fill,orange] (1.9,0.4) rectangle (2.1,0.6);
     \draw[thick, dashed] (3, 0.4) -- (10, 0.4);
     \draw[thick, dashed,->] (10, 0.5) -- +(160:1);
     \draw[thick, dashed,->] (10, 0.5) -- +(120:1);
@@ -1605,157 +1605,247 @@
     \draw[ultra thick] (3, 0.5) -- +(225:0.5);
 
     \draw[thick, dashed,->] (3, 0.4) -- (3, -1);
+    \draw[thick, ->] (3.1, 0.5) -- (3.1, -1);
 
     \draw[blue] (2,-1) rectangle (4,-2);
 
     \node[label,blue] at (3,-1.5) {phase\\measurement};
     \node[label] at (1,0.5) {transmitter};
 
+    \draw[thick] (6,-1) -- (6.5,-1) node[label,right] {Transmitted beam};
+    \draw[thick,dashed] (6,-1.5) -- (6.5,-1.5) node[label,right] {Reflected beam};
+
+    \node[label] at (6,1.1) {Parallel rays of \\electromagnetic energy};
+
+    \node[label,rotate=-90] at (10.5,0) {Diffuse reflection\\$\rightarrow$ isotropic reflection};
+
 \end{tikzpicture}
 
-
-    Transmitted and received beams coaxial.
-
-    Transmitter illuminates a target with a collimated beam.
-
-    Receiver detects the time needed for round-trip.
-
-    A mechanical mechanism with a mirror sweeps
-
     \begin{itemize}
-
-        \item
-              2 or 3D measurement
-    \end{itemize}
-
-    Parallel rays of electromagnetic energy
-
-    Diffuse reflection, resulting in near isotropic reflection.
-
-\end{frame}
-
-\begin{frame}{Measuring time of flight of light}
-
-    Pulsed laser.
-
-    \begin{itemize}
-
-        \item
-              measurement of elapsed time directly.
-        \item
-              resolving picoseconds \rightarrow expensive hardware.
-    \end{itemize}
-
-    Indirectly: the time of flight can be measured using a phase shift
-    measurement to produce range estimation.
-
-    \begin{itemize}
-
-        \item
-              technically easier than the above two methods.
+        \item Transmitted and received beams coaxial
+        \item Transmitter illuminates a target with a collimated beam
+        \item Receiver detects the time needed for round-trip
+        \item A mechanical mechanism with a mirror sweeps
+        \begin{itemize}
+            \item 2D or 3D measurement
+        \end{itemize}
     \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Phase-shift measurement of TOF}
+\begin{frame}{Measuring time of flight: Phase-shift measurement}
 
     \only<1>{
-        Phase-shift Measurement
+    \begin{itemize}
+        \item \emph{Pulsed laser}: same principle as ultrasonic sonar
+        \item measurement of elapsed time directly
+        \item \textbf{need to resolve picoseconds!} \rightarrow expensive hardware.
+    \end{itemize}
 
 
-        Where \emph{c}: is the speed of light; \emph{f} the
-        modulating frequency; \emph{D'} covered by the emitted light is,
-        \emph{θ} is phase shift.
+    \begin{itemize}
+        \item \emph{Indirect measure}: the time of flight measured using a \textbf{phase shift}
+    measurement to produce range estimation.
 
-        \begin{itemize}
+        \item technically easier than the above two methods.
+    \end{itemize}
 
-            \item
-                  for f = 5 Mhz (as in the AT\&T sensor), l = 60 meters
-        \end{itemize}
+}
+    \only<2-5>{
 
-        l = \emph{c/f}
+\begin{tikzpicture} 
+    [>=latex,label/.style={align=center,font=\footnotesize}]
 
-        Θ in radians, θ/2π is {[}0..1{]}
+    \draw[thick] (2, 0.5) -- (10, 0.5);
+    \draw[fill,orange] (0,0) rectangle (2,1);
+    \draw[fill,orange] (1.9,0.4) rectangle (2.1,0.6);
+    \draw[thick, dashed] (3, 0.4) -- (10, 0.4);
+    \draw[thick, dashed,->] (10, 0.5) -- +(160:1);
+    \draw[thick, dashed,->] (10, 0.5) -- +(120:1);
+    \draw[thick, dashed,->] (10, 0.5) -- +(200:1);
+    \draw[thick, dashed,->] (10, 0.5) -- +(240:1);
+
+    \draw[ultra thick] (10, 1.5) -- +(0,-2) node[right,midway] {$P$};
+    \draw[ultra thick] (3, 0.5) -- +(45:0.5);
+    \draw[ultra thick] (3, 0.5) -- +(225:0.5);
+
+    \draw[thick, dashed,->] (3, 0.4) -- (3, -1);
+    \draw[thick, ->] (3.1, 0.5) -- (3.1, -1);
+
+    \draw[blue] (2,-1) rectangle (4,-2);
+
+    \node[label,blue] at (3,-1.5) {phase\\measurement};
+    \node[label] at (1,0.5) {transmitter};
+
+    \draw[<->] (2.5,0.5) -- (2.5,-1) node[left,midway] {$L$};
+    \draw[<->] (3,1) -- (10,1) node[above,midway] {$D$};
+
+    \node[align=left, anchor=west] at (5,-1) {$\lambda = \frac{c}{f}$};
+    \node[align=left, anchor=west] at (5,-1.6) {$D' = L + 2\cdot D = L + \frac{\theta}{2 \pi} \cdot \lambda$};
+
+\end{tikzpicture}
     }
+
+    \vspace{1em}
+
+    \only<2-3>{
+
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=left,font=\footnotesize}]
+
+        \begin{axis}[
+            anchor=origin,
+            at={(0,0)},
+            disabledatascaling,
+            x=0.5cm,y=1cm,
+            ticks=none,no markers, samples=100,
+            axis x line=middle,
+            axis y line=left,
+            height=4cm, width=5cm,
+            ymin=-1.4,ymax=1.1,
+            xmin=0, xmax=2*pi+1
+        ]
+            \addplot[thick,domain=0:2*pi] {sin(deg(x))}; 
+            \addplot[thick,dashed,domain=0.5:2*pi + 0.5] {sin(deg(x-0.5))}; 
+        \end{axis}
+
+        \draw[<->] (0,-1.2) -- (pi,-1.2) node[label,above,midway] {$\lambda$};
+        \draw (pi, 0) -- (pi,-1.3);
+        \node[label] at(-0.2,0) {0};
+        \node[label] at(0.25,-0.2) {$\theta$};
+        \node[label,anchor=south] at(0,1.1) {amplitude (V)};
+        \node[label,anchor=south] at(pi + 0.5,0) {phase (m)};
+\end{tikzpicture}
+
+            \end{column}
+            \begin{column}{0.5\linewidth}
     \only<2>{
+        where $c$ is the speed of light; $f$ the
+        modulating frequency; $D'$ the total distance covered by the emitted light;
+        $\theta$ the (measured) phase shift.
+    }
+    \only<3>{
 
+        \[
+        \Rightarrow D = \frac{\lambda}{4\pi}\theta
+        \]
+    }
+            \end{column}
+        \end{columns}
 
-        Distance D, between the beam splitter and the target where  phase
-        difference between the transmitted and received beam.
+    }
+    \only<4>{
 
-        Theoretically ambiguous range estimates
+        For $f$ = 5 Mhz, $\lambda$ = 60 meters.
 
-        \begin{itemize}
+        Theoretically, \emph{ambiguous range estimates} are possible. For example if
+        $\lambda$ = 60m, a target at a range of 5m $\equiv$ target at 35m (same
+        $\theta$).
 
-            \item
-                  since for example if  = 60 meters, a target at a range of 5 meters =
-                  target at 35 meters
-        \end{itemize}
+        Usually not an issue as the range of the sensor is typically smaller
+        than $\lambda$ due to attenuation.
+    }
+    \only<5>{
+
+        Confidence in the range (phase estimate) is \emph{inversely
+        proportional to the square of the received signal amplitude}.
+
+        Hence \emph{dark, distant objects will not produce such good range
+        estimates} as closer brighter objects \ldots{}
+
     }
 \end{frame}
 
-\begin{frame}{Example}
+\imageframe[color=black,caption=The sensors point down to avoid ambiguities]{darpa-urban-challenge}
 
-    Laser range scanners in outdoor robotics application point down.
+\begin{frame}{Mechanical implementation}
 
-    \begin{itemize}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{tikzpicture} 
+                [>=latex,label/.style={align=left,font=\footnotesize}]
 
-        \item
-              If they would look at the horizon, they would return ambiguous
-              measurements.
-    \end{itemize}
+                \pgfmathsetmacro{\lensRadius}{4}
+                \pgfmathsetmacro{\lensHeight}{1.2}
+                \pgfmathsetmacro{\startAngle}{asin(\lensHeight/\lensRadius)}
+
+                \draw[dash pattern=on 2pt off 4pt on 6pt off 4pt] (0,-1.5) -- (0,4);
+                \draw[thick,->] (0.3,3.7) arc[start angle=-20, end angle=300,x radius=0.3, y radius=0.1];
+                \filldraw[fill=white] (-0.5,-1) rectangle (0.5, -0.8) node[label,below,midway] (detector) {detector};
+                \draw[thick,dashed,<-] (detector) -- (-1,0.5) -- (-1,2) -- (3,2) node[label,anchor=west] {reflected light};
+                \draw[thick,dashed,<-] (detector) -- (1,0.5) -- (1,4) -- (3,4) node[label,anchor=west] {reflected light};
+                \filldraw[red] (-0.1,1.1) rectangle (0.1, 1.2) node[label,below,midway] (led) {laser LED};
+                \filldraw[red, semitransparent] (led) -- (-0.2,1.6) -- (-0.2,2.9) -- (0.2,3.2) -- (3,3.2) -- (3,2.8) -- (0.2,2.8) -- (0.2,1.6) -- (led);
+                \draw[thick,black,->] (led) -- (0,3) -- (2.8,3) node[label,anchor=west] {transmitted light};
+                \filldraw[black,rotate around={45:(0,3)}] (-2,3.1) rectangle (2,2.9);
+
+                \node[label] at (-1,3) {rotating\\mirror};
+
+                \draw [rotate=90,fill=blue!15, semitransparent]  (0.5,\lensHeight)
+                arc[start angle=180-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+                arc[start angle=-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+                -- cycle; % to get a better line end
+
+                \draw [rotate=90,scale=0.3,fill=blue!15, semitransparent]  (5.4,\lensHeight)
+                arc[start angle=180-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+                arc[start angle=-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+                -- cycle; % to get a better line end
+
+            \end{tikzpicture}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+
+            \begin{center}
+                \includegraphics[width=0.6\linewidth]{SICK_LMS200}
+
+                \includegraphics[width=0.6\linewidth]{velodyne}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
-\begin{frame}{Other practical issues}
+\begin{frame}{2D laser scan}
 
-    Confidence in the range (phase estimate) is inversely proportional to
-    the square of the received signal amplitude.
+    Typical range image of a 2D laser range sensor with a rotating mirror.
+    The length of the lines through the measurement points indicate the
+    uncertainties.
 
-    \begin{itemize}
-
-        \item
-              Hence dark, distant objects will not produce such good range estimated
-              as closer brighter objects \ldots{}
-    \end{itemize}
-
-\end{frame}
-
-\begin{frame}{2D laser range scanner}
-
-    \begin{itemize}
-
-        \item
-              Typical range image of a 2D laser range sensor with a rotating mirror.
-              The length of the lines through the measurement points indicate the
-              uncertainties.
-    \end{itemize}
-
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{laserscan}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Laser range finder}
 
-    Hokuyo URG-04LX
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+    \textbf{Hokuyo UST-10LX}
 
     \begin{itemize}
 
-        \item
-              240° field of view.
-        \item
-              0.36° angular resolution.
-        \item
-              10 Hz scan rate.
-        \item
-              USB (and RS232) interface.
-        \item
-              Range 20mm to 4m.
-        \item
-              Dimensions 50 x 50 x 71mm
-        \item
-              £900 (in 2010, down from £1800 in 2008).
+        \item 270° field of view.
+        \item 0.25° angular resolution.
+        \item 40 Hz scan rate.
+        \item Ethernet
+        \item Range 20mm to 10m $\pm$ 40mm
+        \item Dimensions: 50 x 50 x 70mm
+        \item Power: 0.15A 24V
+        \item \$1775 in 2016
     \end{itemize}
 
-    \url{http://www.acroname.com/robotics/parts/R283-HOKUYO-LASER1.html}
+    \url{https://acroname.com/products/HOKUYO-UST-10LX-LASER}
+            
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{hokuyo}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
@@ -1780,55 +1870,83 @@
 \end{frame}
 
 \begin{frame}{Triangulating distance sensor}
+    \textbf{Principle of 1D laser triangulation}
 
-    \emph{Target}
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize}]
 
-    \emph{D}
+        \pgfmathsetmacro{\lensRadius}{2}
+        \pgfmathsetmacro{\lensHeight}{0.7}
+        \pgfmathsetmacro{\startAngle}{asin(\lensHeight/\lensRadius)}
 
-    \emph{L}
+        \draw[thick] (2, 0.5) -- (10, 0.5);
 
-    \emph{Laser / Collimated beam}
+        \draw[fill,orange] (0,0) rectangle (2,1);
+        \draw[fill,orange] (1.9,0.4) rectangle (2.1,0.6);
+        \node[label] at (1,0.5) {transmitter};
 
-    \emph{Transmitted Beam}
+        \draw[thick, dashed,->] (10, 0.5) -- +(160:1);
+        \draw[thick, dashed,->] (10, 0.5) -- +(120:1);
+        \draw[thick, dashed,->] (10, 0.5) -- +(200:1);
+        \draw[thick, dashed,->] (10, 0.5) -- +(240:1);
 
-    \emph{Reflected Beam}
+        \draw[ultra thick] (10, 1.5) -- +(0,-2) node[right,midway] {$P$};
 
-    \emph{P}
+        \coordinate (psd) at (1.5,-1.5);
+        \draw[thick, dashed,->] (10, 0.5) -- (psd);
 
-    \emph{Position-Sensitive Device (PSD)}
+        \draw[<->] (2.5,0.5) -- (2.5,-1) node[left,midway] {$L$};
+        \draw[<->] (3,1) -- (10,1) node[above,midway] {$D$};
 
-    \emph{or Linear Camera}
+        \draw (0.5,-1) -- (2.7,-1);
+        \draw[thick] (1,-1) rectangle (psd |- 1,-3);
+        \foreach \a in {-1.2,-1.4,...,-3}
+            \draw (1,\a) -- (psd |- 1,\a);
 
-    \emph{x}
+        \node[label,anchor=north] at (1.5,-3) {Position-Sensitive Device (PSD) \\ or Linear Camera};
 
-    \emph{Lens}
+        \draw (psd -| 0.5,0) -- +(0.5,0);
+        \draw[<->] (psd -| 0.6,0) -- (0.6,-1) node[left,midway] {$x$};
 
-    Principle of 1D laser triangulation.
+        \draw [fill=blue!15, semitransparent]  (3,\lensHeight - 1.5)
+        arc[start angle=180-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+          arc[start angle=-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+             -- cycle;
 
-    \begin{itemize}
+        \node[label,anchor=west] at (3.2,-2) {Lens};
+        \draw (3,-0.7) -- (3,1.1);
 
-        \item
-              distance is proportional to the 1/x
-    \end{itemize}
+        \node[align=left, anchor=west] at (5,-2) {$D = f\cdot \frac{L}{x}$};
+
+    \end{tikzpicture}
+
+
+    Note that distance is proportional to $\frac{1}{x}$: \textbf{the closer, the more accurate}.
 
 \end{frame}
 
 \begin{frame}{Sharp GP series distance sensors}
 
-    \begin{itemize}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
-        \item
-              Cheap (≈ £6).
-        \item
-              Distance measurement between 8 and 80cm (for GP2D12 model).
-        \item
-              Output: analogue voltage.
-        \item
-              Less dependant on reflectivity of material than normal IR distance
-              sensors.
-        \item
-              Measurement every 40ms.
-    \end{itemize}
+            \begin{itemize}
+
+                \item Cheap ($\approx$ £6)
+                \item Distance measurement between 8 and 80cm (for GP2D12 model)
+                \item Output: analogue voltage
+                \item Less dependant on reflectivity of material than normal IR distance
+                    sensors
+                \item Measurement every 40ms (25Hz)
+            \end{itemize}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.9\linewidth]{sharp_ir}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
