@@ -52,7 +52,7 @@
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
-\usetikzlibrary{mindmap,backgrounds,positioning,patterns}
+\usetikzlibrary{mindmap,backgrounds,positioning,patterns,calc}
 
 \usepackage{pgfplots}
 \pgfplotsset{compat=newest}
@@ -1837,7 +1837,7 @@
         \item \$1775 in 2016
     \end{itemize}
 
-    \url{https://acroname.com/products/HOKUYO-UST-10LX-LASER}
+            \source{https://acroname.com/products/HOKUYO-UST-10LX-LASER}{acroname}
             
         \end{column}
         \begin{column}{0.5\linewidth}
@@ -1851,12 +1851,11 @@
 
 \begin{frame}{Triangulating distance sensor}
     \textbf{Principle of 1D laser triangulation}
-
     \begin{tikzpicture} 
         [>=latex,label/.style={align=center,font=\footnotesize}]
 
-        \pgfmathsetmacro{\lensRadius}{2}
-        \pgfmathsetmacro{\lensHeight}{0.7}
+        \pgfmathsetmacro{\lensRadius}{3}
+        \pgfmathsetmacro{\lensHeight}{1}
         \pgfmathsetmacro{\startAngle}{asin(\lensHeight/\lensRadius)}
     
         \only<1>{
@@ -1866,9 +1865,9 @@
         \coordinate (target) at (7,0.5);
         }
 
-        \coordinate (lens) at (3,-1.5);
-        \coordinate (psd) at (1.5,-1.5);
-        \coordinate (psd2) at (1.5,-2.5);
+        \coordinate (lens) at (3.2,-1);
+        \coordinate (psd) at (1.5,-1);
+        \coordinate (psd2) at ($(psd) + (0,-1.5)$);
 
         \coordinate (impact) at (intersection of target--lens and psd--psd2);
 
@@ -1889,33 +1888,37 @@
 
         \draw[thick, dashed,->] (target) -- (impact);
 
-        \draw[<->] (2.5,0.5) -- (2.5,-1) node[left,midway] {$L$};
-        \draw[<->] (3,1) -- (target |- 0,1) node[above,midway] {$D$};
+        \draw[<->] (2.5,0.5) -- (2.5,1 |- psd) node[left,midway] {$L$};
 
-        \draw (0.5,-1) -- (2.7,-1);
-        \draw[thick] (1,-1) rectangle (psd |- 1,-3);
-        \foreach \a in {-1.2,-1.4,...,-3}
-            \draw (1,\a) -- (psd |- 1,\a);
+        \draw[<->] (lens |- 0,1) -- (target |- 0,1) node[above,midway] {$D$};
+        \draw ($(lens) + (0,1.1)$) -- (lens |- 0,1.1);
 
-        \node[label,anchor=north] at (1.5,-3) {Position-Sensitive Device (PSD) \\ or Linear Camera};
+        \draw ($(psd) + (-1,0)$) -- ($(psd) + (1.2,0)$);
+        \draw[thick] (psd) rectangle ($(psd2)+(-0.3,0)$);
+        \foreach \a in {0.1,0.2,...,1.5}
+            \draw ($(psd) + (0,-\a)$) -- +(-0.3,0);
+
+        \node[label,anchor=north] at (1.5,-2.5) {Position-Sensitive Device (PSD) \\ or Linear Camera};
 
         \draw (impact -| 0.5,0) -- +(0.5,0);
-        \draw[<->] (impact -| 0.6,0) -- (0.6,-1) node[left,midway] {$x$};
+        \draw[<->] (impact -| 0.6,0) -- (0.6,-1 |- psd) node[left,midway] {$x$};
 
-        \draw [fill=blue!15, semitransparent]  (lens)++(0,\lensHeight)
+        \draw [fill=blue!15, semitransparent]  ($(lens)+(0,\lensHeight)$)
         arc[start angle=180-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
           arc[start angle=-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
              -- cycle;
 
+        \draw[<->] (psd |- 0,-2.1) -- (lens |- 0,-2.1) node[below,midway] {$f$};
+
         \node[label,anchor=west] at (3.2,-2) {Lens};
-        \draw (3,-0.7) -- (3,1.1);
 
         \node[align=left, anchor=west] at (5,-2) {$D = f\cdot \frac{L}{x}$};
 
     \end{tikzpicture}
 
-
-    Note that distance is proportional to $\frac{1}{x}$: \textbf{the closer, the more accurate}.
+    \onslide<2>{
+       Note that distance is proportional to $\frac{1}{x}$: \textbf{the closer, the more accurate}.
+    }
 
 \end{frame}
 
@@ -1952,68 +1955,94 @@
     \only<1>{
         \begin{itemize}
 
-            \item
-                  Eliminate the correspondence problem of stereo vision by projecting
+            \item Eliminate the correspondence problem of stereo vision by projecting
                   structured light on the scene.
-            \item
-                  Project slits of light or emits collimated light (\eg laser) by means
+            \item Project slits of light or emits collimated light (\eg laser) by means
                   of a rotating mirror.
-            \item
-                  Reflection sensed by camera.
-            \item
-                  Range to an illuminated point can be determined from simple geometry.
+            \item Reflection sensed by camera.
+            \item Range to an illuminated point can be determined from simple geometry.
         \end{itemize}
     }
     \only<2>{
+        \begin{center}
+            \includegraphics[width=0.6\linewidth]{2d-structured-light}
 
-        \emph{b}
-
-        \emph{u}
+            \[
+            H=D\cdot tan(\alpha)
+            \]
+        \end{center}
+    }
+    \only<3>{
+        \begin{center}
+            \includegraphics[width=0.7\linewidth]{structured-light-patterns}
+        \end{center}
     }
 \end{frame}
 
 \begin{frame}{Structured light -- 1D illustration}
 
     \only<1>{
-        \begin{itemize}
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
 
-            \item
-                  One dimensional schematic of the principle
-            \item
+                One dimensional schematic of the principle
+
                   From the figure, simple geometry shows that:
-        \end{itemize}
+
+                  \[
+                      x=\frac{b\cdot u}{f\cdot cot(\alpha) + u}
+                    \]
+
+                \[
+                    z=\frac{b\cdot f}{f\cdot cot(\alpha) + u}
+                    \]
+
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{2d-structured-light-schematic}
+                \end{center}
+            \end{column}
+        \end{columns}
 
     }
+
+    \only<2-3>{
+        Range resolution is defined as the \textbf{triangulation gain} $G_p$:
+
+        \[
+            \frac{\partial u}{\partial z} = G_p = \frac{b \cdot f}{z^2}
+        \]
 
     \only<2>{
-        Range resolution is defined as the triangulation gain \emph{Gp.}
-
-        Baseline length \emph{b}
+        \textbf{Baseline} length $b$
 
         \begin{itemize}
 
-            \item
-                  the smaller \textbf{\emph{b}} is the more compact the sensor can be.
-            \item
-                  the larger \emph{b} is the better the range resolution is.
+            \item the smaller $b$, the more compact the sensor can be.
+            \item the larger $b$, the better the range resolution is.
         \end{itemize}
 
-        Focal length \emph{f}
+        \begin{exampleblock}{}
+            For large  b, the chance that an illuminated point is not visible to the receiver increases
+        \end{exampleblock}
 
-        larger focal length \emph{f} gives
-
-        \begin{itemize}
-
-            \item
-                  a smaller field of view
-            \item
-                  an improved range resolution
-            \item
-                  less lens distortion
-        \end{itemize}
-
-        however, large focal length means a larger sensor head.
     }
+    \only<3>{
+
+        \textbf{Focal length} $f$
+
+        A larger focal length $f$ gives
+
+        \begin{itemize}
+            \item a smaller field of view
+            \item an improved range resolution
+            \item less lens distortion
+        \end{itemize}
+
+        However, large focal length means a larger sensor head.
+    }
+}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
