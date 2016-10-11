@@ -1849,26 +1849,6 @@
 
 \end{frame}
 
-\begin{frame}{Triangulation ranging}
-
-    Geometrical properties of the image to establish a distance measurement.
-
-    Project a well defined light pattern (\eg point, line) onto the
-    environment.
-
-    \begin{itemize}
-
-        \item
-              reflected light is then captured by a photo-sensitive line or matrix
-              sensor device (camera).
-        \item
-              simple triangulation allows to establish a distance.
-    \end{itemize}
-
-    Size of an captured object can be known.
-
-\end{frame}
-
 \begin{frame}{Triangulating distance sensor}
     \textbf{Principle of 1D laser triangulation}
 
@@ -1878,25 +1858,39 @@
         \pgfmathsetmacro{\lensRadius}{2}
         \pgfmathsetmacro{\lensHeight}{0.7}
         \pgfmathsetmacro{\startAngle}{asin(\lensHeight/\lensRadius)}
+    
+        \only<1>{
+        \coordinate (target) at (10,0.5);
+        }
+        \only<2>{
+        \coordinate (target) at (7,0.5);
+        }
 
-        \draw[thick] (2, 0.5) -- (10, 0.5);
+        \coordinate (lens) at (3,-1.5);
+        \coordinate (psd) at (1.5,-1.5);
+        \coordinate (psd2) at (1.5,-2.5);
+
+        \coordinate (impact) at (intersection of target--lens and psd--psd2);
+
+        \fill [red, opacity=0.5] (impact) circle (2pt);
+
+        \draw[thick] (2, 0.5) -- (target);
 
         \draw[fill,orange] (0,0) rectangle (2,1);
         \draw[fill,orange] (1.9,0.4) rectangle (2.1,0.6);
         \node[label] at (1,0.5) {transmitter};
 
-        \draw[thick, dashed,->] (10, 0.5) -- +(160:1);
-        \draw[thick, dashed,->] (10, 0.5) -- +(120:1);
-        \draw[thick, dashed,->] (10, 0.5) -- +(200:1);
-        \draw[thick, dashed,->] (10, 0.5) -- +(240:1);
+        \draw[thick, dashed,->] (target) -- +(160:1);
+        \draw[thick, dashed,->] (target) -- +(120:1);
+        \draw[thick, dashed,->] (target) -- +(200:1);
+        \draw[thick, dashed,->] (target) -- +(240:1);
 
-        \draw[ultra thick] (10, 1.5) -- +(0,-2) node[right,midway] {$P$};
+        \draw[ultra thick] (target)++(0, 1) -- ++(0,-2) node[right,midway] {$P$};
 
-        \coordinate (psd) at (1.5,-1.5);
-        \draw[thick, dashed,->] (10, 0.5) -- (psd);
+        \draw[thick, dashed,->] (target) -- (impact);
 
         \draw[<->] (2.5,0.5) -- (2.5,-1) node[left,midway] {$L$};
-        \draw[<->] (3,1) -- (10,1) node[above,midway] {$D$};
+        \draw[<->] (3,1) -- (target |- 0,1) node[above,midway] {$D$};
 
         \draw (0.5,-1) -- (2.7,-1);
         \draw[thick] (1,-1) rectangle (psd |- 1,-3);
@@ -1905,10 +1899,10 @@
 
         \node[label,anchor=north] at (1.5,-3) {Position-Sensitive Device (PSD) \\ or Linear Camera};
 
-        \draw (psd -| 0.5,0) -- +(0.5,0);
-        \draw[<->] (psd -| 0.6,0) -- (0.6,-1) node[left,midway] {$x$};
+        \draw (impact -| 0.5,0) -- +(0.5,0);
+        \draw[<->] (impact -| 0.6,0) -- (0.6,-1) node[left,midway] {$x$};
 
-        \draw [fill=blue!15, semitransparent]  (3,\lensHeight - 1.5)
+        \draw [fill=blue!15, semitransparent]  (lens)++(0,\lensHeight)
         arc[start angle=180-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
           arc[start angle=-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
              -- cycle;
