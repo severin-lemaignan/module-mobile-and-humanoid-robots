@@ -2526,12 +2526,12 @@
                     & = BF \frac{BD}{AC} = \frac{k}{z}  \text{, where}
                 \end{align}
 
-                $k = BD \times BF = b \times f$\\
+                $k = BD \times BF = b \cdot f$\\
                 $z = AC$
 
                 \vspace{1em}
 
-                $d$ is the \textbf{disparity}
+                $d = \frac{b\cdot f}{z}$ is the \textbf{disparity}
             \end{column}
         \end{columns}
 
@@ -2573,25 +2573,77 @@
     }
 \end{frame}
 
-\begin{frame}{Swissranger 3D camera}
+\begin{frame}{Active stereo-vision}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{r200}
 
-    MESA SR3000
+        \includegraphics[width=0.8\linewidth]{r200_inside}
+    \end{center}
+\end{frame}
 
-    \begin{itemize}
+    \begin{frame}{Structured light}
+        \centering
+        \only<1>{
+            \begin{multicols}{2}
+                \includegraphics[height=0.75\paperheight]{structured_light}
 
-        \item
-              Uses TOF measured as phase difference of IR light.
-        \item
-              CCD camera at 176 x 144 resolution.
-        \item
-              Frame rate, 29fps at 0.3m to 12fps at 3m.
-        \item
-              Accuracy: 3mm (best case).
-        \item
-              \$7500 (in 2008)
-    \end{itemize}
+
+
+                \includegraphics[width=0.8\columnwidth]{structured_light_gray_code}
+
+                Gray code
+                \vspace{1cm}
+
+                \includegraphics[width=\linewidth]{f200_module_simple}
+\end{multicols}
+        }
+        \only<2>{
+
+            \video{0.8\linewidth}{videos/structured_light.mp4}
+
+            \begin{table}[htpb]
+                \centering
+                \begin{tabular}{ccc}
+                    & {\bf Yellow} & {\bf Red} \\
+                    Gray code & 110100111 & 010000111 \\
+                    Projector col. & 314 & 250 \\
+                    Camera col. & 335 & 392 \\
+                    {\bf Disparity} & 335-314=21 & 392-250=142 \\
+
+                \end{tabular}
+            \end{table}
+        }
+
+    \source{http://www.hackengineer.com/structured-light-vs-microsoft-kinect/}{Hackengineer}
+\end{frame}
+
+
+\begin{frame}{Structured light cameras}
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{f200}
+        \includegraphics[width=0.6\linewidth]{f200_module}
+    \end{center}
+\end{frame}
+
+
+{\fullbackground{kinect360}
+\begin{frame}{Speckle decorrelation}
+
 
 \end{frame}
+}
+
+\imageframe[color=black]{kinect_pattern}
+\imageframe[color=black]{kinect_pattern2}
+
+\begin{frame}{Multiscale pattern}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{multiscale_kinect_pattern}\\
+        \includegraphics[width=0.5\linewidth]{kinect_pattern2}
+
+    \end{center}
+\end{frame}
+
 
 \begin{frame}{Microsoft Kinect}
 
@@ -2667,47 +2719,58 @@
 
 \end{frame}
 
-\begin{frame}{Kinect skeleton tracking}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Skeleton Tracking}
 
-    \begin{itemize}
+\imageframe[color=black]{skeleton/skel1}
 
-        \item
-              Reading depth image is only one part what the Kinect does.
-        \item
-              It also infers skeleton (positions of torse, head, arms and legs) from
-              depth image.
-        \item
-              Based on machine learning
-              (\href{http://research.microsoft.com/pubs/145347/BodyPartRecognition.pdf}{Shotton
-              et al., 2011})
-    \end{itemize}
+{
+    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
+    \begin{frame}{Skeleton Tracking}
 
+        \begin{center}
+            \includegraphics[width=0.3\linewidth]{skeleton/skel3}
+            \includegraphics[width=0.3\linewidth]{skeleton/skel2}
+            \includegraphics<2>[width=0.3\linewidth]{skeleton/skel1}
+        \end{center}
 \end{frame}
+}
 
-\begin{frame}{Machine learning}
+{
+    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
 
-    100,000 images of people in front of RGBD sensor, together with ``ground
-    truth'' from a motion capture system.
+\begin{frame}{Skeleton estimation}
+    \begin{enumerate}
+        \item Estimate body parts using a randomized decision forest
+        \item Estimate the skeleton
+    \end{enumerate}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{skeleton/skeleton_estimation}
+    \end{center}
+\end{frame}
+}
 
-    \begin{itemize}
+{
+    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
 
-        \item
-              Different body types, different clothes.
-    \end{itemize}
+\begin{frame}{Body parts}
 
-    Using machine learning (\emph{randomised decision forest} algorithm) to
-    find body parts
+    {\bf Train a decision tree} from \approx 1M samples, computer-generated from
+    \approx 100K acquired pairs (depth image, motion capture). This allow
+    {\bf tagging} of body parts in the depth image.
 
-    \begin{itemize}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{skeleton/training}
+    \end{center}
+\end{frame}
+}
 
-        \item
-              A farm of computers required a day to arrive at a solution to separate
-              body parts from background images.
-    \end{itemize}
-
-    Microsoft SDK allows tracking of 2 skeleton for Kinect 360 and 5 for
-    Kinect One.
-
+\begin{frame}{Skeleton}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{skeleton/skel4}\\
+        \includegraphics[width=0.8\linewidth]{skeleton/skel5}
+    \end{center}
 \end{frame}
 
 \begin{frame}{The Kinect One}
