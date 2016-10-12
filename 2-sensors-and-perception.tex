@@ -1979,29 +1979,98 @@
     }
 \end{frame}
 
-\begin{frame}{Structured light -- 1D illustration}
+\begin{frame}{Structured light -- Principle}
 
     \only<1>{
         \begin{columns}
-            \begin{column}{0.5\linewidth}
+            \begin{column}{0.4\linewidth}
 
-                One dimensional schematic of the principle
+                One dimensional schematic of the principle.
 
                   From the figure, simple geometry shows that:
 
                   \[
-                      x=\frac{b\cdot u}{f\cdot cot(\alpha) + u}
+                      x_{target}=\frac{b\cdot u}{f\cdot cot(\alpha) + u}
                     \]
 
                 \[
-                    z=\frac{b\cdot f}{f\cdot cot(\alpha) + u}
+                    z_{target}=\frac{b\cdot f}{f\cdot cot(\alpha) + u}
                     \]
 
             \end{column}
-            \begin{column}{0.5\linewidth}
-                \begin{center}
-                    \includegraphics[width=0.8\linewidth]{2d-structured-light-schematic}
-                \end{center}
+            \begin{column}{0.6\linewidth}
+    \tikzset{
+            camera/.pic = {
+                \draw[fill,orange] (-2,-0.5) rectangle (-0.1,0.5);
+                \draw[fill,orange] (-0.2,-0.1) rectangle (0,0.1);
+                \node[label] at (-1,0) {laser};
+            }
+    }
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize}]
+
+        \pgfmathsetmacro{\lensRadius}{3}
+        \pgfmathsetmacro{\lensHeight}{1}
+        \pgfmathsetmacro{\startAngle}{asin(\lensHeight/\lensRadius)}
+        \pgfmathsetmacro{\incidenceAngle}{70}
+    
+        \coordinate (target) at (0,0);
+
+        \coordinate (lens) at ($(target)+(\incidenceAngle:5)$);
+        \coordinate (transmitter) at ($(target)+(180-\incidenceAngle:5)$);
+        \coordinate (psd) at ($(lens) + (-1.5,0.5)$);
+        \coordinate (psd2) at ($(psd) + (3,0.3)$);
+
+        \coordinate (impact) at (intersection of target--lens and psd--psd2);
+
+        \fill [red, opacity=0.5] (impact) circle (2pt);
+
+        \path (transmitter) pic[scale=0.5,rotate=-\incidenceAngle]{camera};
+        \draw[very thick,->] (transmitter) -- (target);
+
+        \draw[dash pattern=on 2pt off 4pt on 6pt off 4pt] (transmitter) -- ($(lens) + (1.5,0)$);
+
+        \draw[thick, dashed,->] (target) -- +(30:1);
+        \draw[thick, dashed,->] (target) -- +(60:1);
+        \draw[thick, dashed,->] (target) -- +(120:1);
+        \draw[thick, dashed,->] (target) -- +(150:1);
+
+        \draw[ultra thick] (target)++(1, 0) -- ++(-2,0) node[label,below,midway] {$(x_{target},z_{target})$};
+
+        \draw[very thick, dashed,->] (target) -- (impact);
+
+        \draw[<->] (2.8,0.5 |- lens) -- (2.8,1 |- psd) node[label, right,midway] {$f$};
+
+        \draw[<->] (lens |- 3,4) -- (transmitter |- 3,4) node[label,below,midway] {baseline $b$};
+        \draw ($(lens) + (0,0.5)$) -- ($(lens) + (0,-1.1)$);
+        \draw (transmitter) -- ($(transmitter) + (0,-1.1)$);
+
+        \draw (transmitter) + (0.5,0) arc [start angle=0, end angle=-\incidenceAngle, radius=0.5] node[midway,right] {$\alpha$};
+
+        \draw[thick] (psd) rectangle (psd2);
+        \foreach \a in {0.1,0.2,...,3}
+            \draw ($(psd) + (\a,0)$) -- +(0,0.3);
+
+        \draw[rotate=90,fill=blue!15, semitransparent]  ($(lens)+(0,\lensHeight)$)
+        arc[start angle=180-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+          arc[start angle=-\startAngle,delta angle=2*\startAngle,radius=\lensRadius]
+             -- cycle;
+
+        \node[label,anchor=west] at ($(lens) + (0.5,-0.3)$) {Lens};
+        \node[label,anchor=west] at ($(psd2) + (-0.5,0.3)$) {Camera};
+
+        \coordinate (mirrorimpact) at ({$2*(lens) - (impact)$} |- impact);
+        \draw[thin, dashed,shorten <=-0.4cm,shorten >=-0.5cm] (mirrorimpact) -- (lens);
+
+        \draw (psd2 -| impact) -- +(0,0.3);
+        \draw (psd2 -| mirrorimpact) -- +(0,0.3);
+        \draw[<->] ({$(psd2) + (0,0.2)$} -| impact) -- ({$(psd2) + (0,0.2)$} -| mirrorimpact) node[label, above,midway] {$f\cdot cot\alpha + u$};
+
+        \draw[thick,->] (lens) -- +(-1.5,0) node[label,left] {$x$};
+        \draw[thick,->] (lens) -- +(0,-1.5) node[label,below] {$z$};
+        \draw[thick,->] ($(psd)!0.5!(psd2)$) -- +(2,0) node[label,below] {$u$};
+    \end{tikzpicture}
+
             \end{column}
         \end{columns}
 
@@ -2024,7 +2093,8 @@
         \end{itemize}
 
         \begin{exampleblock}{}
-            For large  b, the chance that an illuminated point is not visible to the receiver increases
+            However, for large $b$, the chance that an illuminated point is not
+            visible to the receiver increases!
         \end{exampleblock}
 
     }
@@ -2038,9 +2108,8 @@
             \item a smaller field of view
             \item an improved range resolution
             \item less lens distortion
+            \item a larger sensor head
         \end{itemize}
-
-        However, large focal length means a larger sensor head.
     }
 }
 \end{frame}
@@ -2050,109 +2119,111 @@
 
 \begin{frame}{Camera}
 
-    Hardware
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
-    Two technologies: CCD or CMOS.
+            \textbf{Hardware}
 
-    Monochrome or colour.
+            \begin{itemize}
+                \item Two technologies: CCD or CMOS
+                \item Monochrome or colour
+                \item Resolution between 1 x 64 pixels and 4000 x 4000 pixels
+                \item Small, low-power and cheap
+                \item Prices anything between 40p and £3000
 
-    Resolution between 1 x 64 pixels and 4000 x 4000 pixels.
+                    \begin{itemize}
+                        \item Cameras have dropped significantly in price, and are the cheapest
+                            high-tech sensor around
+                    \end{itemize}
 
-    Small, low-power and cheap.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.7\linewidth]{camera1}
 
-    Prices anything between 40p and £3000.
+                \includegraphics[width=0.8\linewidth]{camera2}
 
-    \begin{itemize}
-
-        \item
-              Cameras have dropped significantly in price, and are the cheapest
-              high-tech sensor around.
-    \end{itemize}
-
+                \includegraphics[width=0.6\linewidth]{camera3}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Camera output}
 
-    Most cameras provide digital output.
+    Most cameras provide digital output:
 
     \begin{itemize}
 
         \item
-              USB1.0, USB1.1, USB2.0, Firewire (aka IEEE 1394 or i.Link, ethernet),
-              or any hardware bus or proprietary bus.
+            USB1.0, USB1.1, USB2.0, USB3.0, Firewire (aka IEEE 1394 -- mostly replaced by USB3.0), Ethernet,
+              or any hardware bus or proprietary bus (like on the Raspberry Pi).
     \end{itemize}
 
-    Some --mostly older- camera designs do not, and provide an analog (RGB
+    Some --mostly older-- camera designs do not, and provide an analog (RGB
     or composite) signal instead.
 
-    \begin{itemize}
+    $\rightarrow$ a \textbf{frame grabber} is needed to digitise the signal.
+    Matrox is the leading manufacturer of frame grabbers.
 
-        \item
-              A \textbf{frame grabber} is needed to digitise the signal.
-        \item
-              Matrox the leading manufacturer of frame grabbers.
-    \end{itemize}
+    \begin{center}
+        \includegraphics[width=0.25\linewidth]{matrox-framegrabber1}
+        \includegraphics[width=0.25\linewidth]{matrox-framegrabber2}
+    \end{center}
 
 \end{frame}
 
 \begin{frame}{Camera parameters}
 
-    Shutter speed
+    \textbf{Shutter speed}
 
-    \begin{itemize}
+    Rate at which an image is refreshed, \eg 25ms, 1/400 s.
 
-        \item
-              Rate at which an image is refreshed, \eg 25ms, 1/400 s.
-    \end{itemize}
+    \textbf{Iris position} (aka \textbf{aperture})
 
-    Iris position (aka aperture)
+    Size of the lens opening, mechanically operated. Allows more or less light
+    in.
 
-    \begin{itemize}
+    \textbf{Camera gain}
 
-        \item
-              Size of the lens opening, mechanically operated. Allows more or less
-              light in.
-    \end{itemize}
+    Amplification of the camera signal. \emph{Noise is amplified as well.}
 
-    Camera gain
+    \textbf{White balance} (aka color temperature)
 
-    \begin{itemize}
-
-        \item
-              Amplification of the camera signal. \textbf{Noise is amplified as
-              well.}
-    \end{itemize}
-
-    White balance (aka color temperature)
-
-    \begin{itemize}
-
-        \item
-              Mixture of blue, red and green components that define white. Often
-              needed to cancel out influences of illumination.
-    \end{itemize}
+    Mixture of blue, red and green components that define white. Often needed
+    to cancel out influences of illumination.
 
 \end{frame}
 
 \begin{frame}{CCD technology}
 
     \only<1>{
-        Charge-coupled device (CCD).
+        \textbf{Charge-coupled device} (\emph{CCD})
+    \begin{columns}
+        \begin{column}{0.55\linewidth}
 
         \begin{itemize}
 
-            \item
-                  Each pixel has a photodiode and a capacitor, the capacitor is charged
+            \item Each pixel has a photodiode and a capacitor, the capacitor is charged
                   or discharged as photons hit the light-sensitive silicon.
-            \item
-                  The charge in the capacitor is proportional to the light intensity.
-            \item
-                  The charge is read out at the corner of the chip's surface.
-            \item
-                  Charge is transferred over the chip' surface to that corner, like a
+            \item The charge in the capacitor is proportional to the light intensity.
+            \item The charge is read out at the corner of the chip's surface.
+            \item Charge is transferred over the chip' surface to that corner, like a
                   ``bucket brigade''.
         \end{itemize}
+            
+        \end{column}
+        \begin{column}{0.45\linewidth}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{ccd}
 
+                \source{https://en.wikipedia.org/wiki/File:Delta-Doped_Charged_Coupled_Devices_(CCD)_for_Ultra-Violet_and_Visible_Detection.jpg}{Wikipedia}
+            \end{center}
+
+            \href{http://www.optique-ingenieur.org/en/courses/OPI_ang_M05_C06/co/Contenu_04.html}{More details on CCD sensors}
+        \end{column}
+    \end{columns}
     }
     \only<2>{
 
@@ -2160,163 +2231,130 @@
 
         \begin{itemize}
 
-            \item
-                  Mechanical shutter: expensive and high power consumption.
-            \item
-                  Frame transfer CCD: one half of the chip's surface is opaque, charge
+            \item \emph{Mechanical shutter}: expensive and high power consumption.
+            \item \emph{Frame transfer CCD}: one half of the chip's surface is opaque, charge
                   is transferred there and then read out.
-            \item
-                  Interline architecture: every other line is opaque, faster shutter
+              \item \emph{Interline architecture}: every other line is opaque, faster shutter
                   speeds possible. Less sensitive to light.
         \end{itemize}
 
+
     }
     \only<3>{
+        Available sensors can function from far infrared (100$\mu$m) to X-rays
+        (1nm).
 
-        Sensitive to wavelengths 400nm to 1000nm.
-
-        \begin{itemize}
-
-            \item
-                  Human visual spectrum from 380nm to 780nm, so less sensitive to blue
-                  light and oversensitive to red and \textbf{infrared}.
-        \end{itemize}
+        Common sensors in the range 400nm -- 1000nm $\Rightarrow$ Human visual
+        spectrum from 380nm to 780nm, so \emph{less sensitive to blue light}
+        and \emph{oversensitive to red and infrared}.
 
     }
     \only<4>{
 
-        \textbf{CCD - advantages}
-
-        High quality, relatively low noise images.
-
-        High quantum efficiency
+        \textbf{CCD -- advantages}
 
         \begin{itemize}
+            \item high quality, relatively low noise images
+            \item high quantum efficiency
 
-            \item
-                  70 to 80\% of photons are converted into a charge, ideal for low light
-                  conditions.
-        \end{itemize}
+                \begin{itemize}
 
-        Integrating function of pixels.
+                    \item
+                        70 to 80\% of photons are converted into a charge, ideal for low light
+                        conditions.
+                \end{itemize}
 
-        \begin{itemize}
-
-            \item
-                  Can be used to measure for prolonged times in very dim settings.
+            \item \emph{integrating function} of pixels.
+                \begin{itemize}
+                    \item can be used to measure for prolonged times in very dim settings.
+                \end{itemize}
         \end{itemize}
     }
 
     \only<5>{
 
-
-        \textbf{CCD- disadvantages}
-
-        Large silicon size
+        \textbf{CCD -- disadvantages}
 
         \begin{itemize}
-
-            \item
-                  Due to circuitry to read out pixels.
+            \item integrating light measurement
+                \begin{itemize}
+                    \item in bright light, capacitors can \textbf{saturate}
+                    \item saturation leads to charge leaks from one pixel to
+                        the other: causes \textbf{blooming} the image
+                \end{itemize}
+            \item large silicon size due to circuitry to read out pixels
+            \item interfacing between CCD and CMOS technology is not straight-forward
+                \begin{itemize}
+                    \item hinders cheap hardware
+                \end{itemize}
+            \item complex clocking issues on chip
+            \item large dissipation
         \end{itemize}
-
-        Interfacing between CCD and CMOS technology is not straight-forward
-
-        \begin{itemize}
-
-            \item
-                  Hinders cheap hardware.
-        \end{itemize}
-
-        Complex clocking issues on chip.
-
-        Large dissipation.
-
-        Integrating light measurement
-
-        \begin{itemize}
-
-            \item
-                  In bright light, capacitors can become saturated. This causes blooming
-                  the image.
-        \end{itemize}
-
     }
 \end{frame}
 
 \begin{frame}{CMOS technology}
 
     \only<1>{
-        Complementary metal oxide semiconductor (CMOS)
+        \textbf{Complementary Metal Oxide Semiconductor} (\emph{CMOS})
 
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
         \begin{itemize}
 
-            \item
-                  Photodiode with circuitry that reads out light intensity.
-            \item
-                  \textbf{No} integrating measurement, but a \textbf{proportional}
+            \item Photodiode with circuitry that reads out light intensity.
+            \item \textbf{No} integrating measurement, but a \textbf{proportional}
                   measurement instead.
-            \item
-                  Pixel values are read out much like in RAM memory.
+            \item Pixel values are read out much like in RAM memory.
         \end{itemize}
+                
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{cmos}
+                \end{center}
+            \end{column}
+        \end{columns}
 
     }
     \only<2>{
-        \textbf{CMOS - advantages}
-
-        CMOS technology is mature and simple
+        \textbf{CMOS -- advantages}
 
         \begin{itemize}
-
-            \item
-                  Production costs are a fraction of that of CCD.
+            \item CMOS technology is mature and simple
+                \begin{itemize}
+                    \item Production costs are a fraction of that of CCD.
+                \end{itemize}
+            \item No complex clocking in chip.
+            \item Low power consumption.
+            \item Proportional measurement
+                \begin{itemize}
+                    \item $\rightarrow$ no saturation of pixels.
+                \end{itemize}
+            \item Smaller silicon size.
+            \item Random access to pixels (just like RAM).
+            \item Easy interfacing to CMOS technology.
+                \begin{itemize}
+                    \item CMOS circuitry, \eg for bus, can be integrated on the same silicon
+                        area.
+                \end{itemize}
         \end{itemize}
-
-        No complex clocking in chip.
-
-        Low power consumption.
-
-        Proportional measurement
-
-        \begin{itemize}
-
-            \item
-                  No saturation of pixels.
-        \end{itemize}
-
-        Smaller silicon size.
-
-        Random access to pixels (just like RAM).
-
-        Easy interfacing to CMOS technology.
-
-        \begin{itemize}
-
-            \item
-                  CMOS circuitry, \eg for bus, can be integrated on the same silicon
-                  area.
-        \end{itemize}
-
     }
     \only<3>{
-        \textbf{CMOS - disadvantages}
-
-        Each photodiode has CMOS circuitry which takes up silicon real estate,
-        but is not sensitive to incoming light.
+        \textbf{CMOS -- disadvantages}
 
         \begin{itemize}
-
-            \item
-                  CMOS camera is less sensitive than CCD.
-        \end{itemize}
-
-        CMOS has a larger pixel mismatch and is typically more noisy than CCD.
-
-        \begin{itemize}
-
-            \item
-                  This has improved considerably over the years, see CMOS in high-end
-                  \#\# digital cameras.
+            \item Each photodiode has CMOS circuitry which takes up silicon
+                real estate, but is not sensitive to incoming light
+                \begin{itemize}
+                    \item CMOS camera is less sensitive than CCD.
+                \end{itemize}
+            \item CMOS has a larger pixel mismatch and is typically more noisy than
+                CCD.
+                \begin{itemize}
+                    \item This has improved considerably over the years, see CMOS in high-end
+                        \#\# digital cameras.
+                \end{itemize}
         \end{itemize}
 
     }
@@ -2332,50 +2370,56 @@
 
         \begin{itemize}
 
-            \item
-                  Resolution, relative to monochrome camera, is reduced by 75\%.
-            \item
-                  Bayer (GRGB) or RGBE (E = Emerald) filter.
+            \item Resolution, relative to monochrome camera, is reduced by 75\%
+            \item Bayer (GRGB) or RGBE (E = Emerald) filter
         \end{itemize}
 
-        Bayer filter
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{bayer}
+
+                    Bayer filter
+                \end{center}
+
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{rgbe}
+
+                RGBE filter
+                \end{center}
+
+            \end{column}
+        \end{columns}
 
     }
     \only<2>{
 
-        RGBE filter
-
-    }
-    \only<3>{
-
         Three sensor cameras.
 
         \begin{itemize}
-
-            \item
-                  In expensive and professional colour cameras, the images is optically
+            \item In expensive and professional colour cameras, the images is optically
                   split in three.
-            \item
-                  Each copy is sent to a separate sensor, each sensor has a R, G, or B
+            \item Each copy is sent to a separate sensor, each sensor has a R, G, or B
                   filter.
         \end{itemize}
 
-        No resolution loss due to Bayer or RGBE filter.
+        $\Rightarrow$ No resolution loss due to Bayer or RGBE filter
 
-        No problem of misalignment of filter.
+        $\Rightarrow$ No problem of misalignment of filter
 
     }
 \end{frame}
 
 \begin{frame}{Omnidirectional camera}
 
-    \begin{itemize}
-
-        \item
               Most robots need 360° vision, this can be provided by a
               \textbf{omnidirectional camera}.
-    \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{omni}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Image processing and computer vision}
