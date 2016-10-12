@@ -2459,9 +2459,9 @@
             \item A camera typically forms a 2D mapping of a 3D environment.
             \item Reconstructing depth from a 2D image is in most cases impossible.
             \item A solution to this is using a \textbf{stereo camera} which can
-                  calculate the depth (\ie $z$ axis) of pixels.
+                calculate the depth (\ie $z$ axis) of pixels.
             \item Using two slightly different views from the same scene and a precise
-                  knowledge of camera parameters.
+                knowledge of camera parameters.
         \end{itemize}
 
         \begin{center}
@@ -2473,25 +2473,67 @@
 
     \only<2>{
 
-        \begin{multicols}{2}
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
 
-            \begin{center}
-                \includegraphics[height=0.8\paperheight]{stereo}
-            \end{center}
+                \resizebox{!}{0.8\paperheight}{
+                    \begin{tikzpicture} 
+                        [>=latex,label/.style={align=center,font=\footnotesize}]
 
-            \begin{align}
-                d & = EF + GH                                        \\
-                  & = BF (\frac{EF}{BF} + \frac{GH}{BF})             \\
-                  & = BF (\frac{EF}{BF} + \frac{GH}{DG})             \\
-                  & = BF (\frac{BC + CD}{AC})                        \\
-                  & = BF \frac{BD}{AC} = \frac{k}{z}  \text{, where}
-            \end{align}
+                        \coordinate (A) at (0,0) node[left] {A};
+                        \coordinate (E) at ($(A) + (255:10)$);
+                        \coordinate (H) at ($(A) + (285:10)$);
+                        \coordinate (C) at ($(A) + (0,-7)$);
+                        \node[anchor=south west] at (C) {C};
+                        \coordinate (B) at (intersection of A--E and C--{$(C) + (1,0)$});
+                        \node[anchor=south east] at (B) {B};
+                        \coordinate (D) at (intersection of A--H and C--{$(C) + (1,0)$});
+                        \node[anchor=south west] at (D) {D};
 
-            $k = BD \times BF = b \times f$\\
-            $z = AC$
+                        \coordinate (F) at (B |- E);
+                        \node[anchor=north] at (F) {F};
+                        \coordinate (G) at (D |- H);
+                        \node[anchor=north] at (G) {G};
 
-            $d$ is the \textbf{disparity}
-        \end{multicols}
+                        \draw[thick, blue] (A) -- (E) node[anchor=north,black] {E};
+                        \draw[thick, green] (A) -- (H) node[anchor=north, black] {H};
+                        \draw[black] (A) -- (C) node[label, right,midway] {$z$};
+                        \draw[>-<,thick, red,shorten <=-0.5cm, shorten >=-0.5cm] (B) -- (D);
+
+                        \draw[|-|,thick, red] ($(F) + (-1,0)$) -- ($(F) + (1,0)$);
+                        \draw[|-|,thick, red] ($(G) + (-1,0)$) -- ($(G) + (1,0)$);
+                        \draw (B) -- (F);
+                        \draw (D) -- (G);
+
+                        \draw[<->] ($(D)+(0,-0.2)$) -- ($(B)+(0,-0.2)$) node[label,midway,below] {baseline $b$};
+                        \draw[<->] ($(B)+(0.2,0)$) -- ($(F)+(0.2,0)$) node[label,midway, above,sloped] {focal length $f$};
+
+                        \node[label,below=0.5 of F] {\bf Left camera};
+                        \node[label,below=0.5 of G] {\bf Right camera};
+                        \node[label,above=0.5 of A] {\bf Object};
+
+                    \end{tikzpicture}
+                }
+
+
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{align}
+                    d & = EF + GH                                        \\
+                    & = BF (\frac{EF}{BF} + \frac{GH}{BF})             \\
+                    & = BF (\frac{EF}{BF} + \frac{GH}{DG})             \\
+                    & = BF (\frac{BC + CD}{AC})                        \\
+                    & = BF \frac{BD}{AC} = \frac{k}{z}  \text{, where}
+                \end{align}
+
+                $k = BD \times BF = b \times f$\\
+                $z = AC$
+
+                \vspace{1em}
+
+                $d$ is the \textbf{disparity}
+            \end{column}
+        \end{columns}
 
     }
     \only<3>{
