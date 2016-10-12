@@ -331,9 +331,94 @@
 
         \item The sampling rate has to be at least \textbf{twice as high} as the
               fastest changes. If not, you are going to miss relevant information.
+
               \begin{center}
-                  \includegraphics[width=0.8\linewidth]{nyquist}
-              \end{center}
+    \centering
+    \resizebox{\linewidth}{!}{
+        \begin{tikzpicture} 
+            [>=latex,
+            label/.style={align=left,font=\footnotesize}]
+            
+            \begin{axis}[
+                    anchor=origin,
+                    at={(0,0)},
+                    disabledatascaling,
+                    x=20cm,y=1cm,
+                    ytick=\empty, 
+                    xtick distance=0.125,
+                    minor tick num=2,
+                    xticklabel style={font=\tiny,
+                        anchor=north west,
+                        /pgf/number format/fixed,
+                        /pgf/number format/precision=3},
+                    no markers, samples=200,
+                    axis x line=middle,
+                    axis y line=left,
+                    ymin=-1.2,ymax=1.2,
+                    xmin=0,xmax=0.52,
+                ]
+                \only<1,3,5>{
+                    \addplot[ultra thick,domain=0:0.5] {sin(deg(16*pi*x))}; 
+                }
+            \end{axis}
+            
+            \only<1>{
+                \foreach \p in {0,1,...,6} {
+                    \coordinate (p\p) at (20*0.125/3*2*\p,{sin(deg(16*pi*0.125/3*2*\p))});
+                    \fill [red, opacity=0.5] (p\p) circle (2pt);
+                }
+                
+            }
+            \only<3>{
+                \foreach \p in {0,1,...,12} {
+                    \coordinate (p\p) at (20*0.125/3*\p,{sin(deg(16*pi*0.125/3*\p))});
+                    \fill [red, opacity=0.5] (p\p) circle (2pt);
+                }
+                
+            }
+            \only<5>{
+                \foreach \p in {0,1,...,12} {
+                    \coordinate (p\p) at
+                    ({20*0.125/3*(\p+0.3)},{sin(deg(16*pi*0.125/3*(\p+0.3)))});
+                    \fill [red, opacity=0.5] (p\p) circle (2pt);
+                }
+                
+            }
+            
+            
+            \draw [dashed] (p0) -- (p1);
+            \draw [dashed] (p1) -- (p2);
+            \draw [dashed] (p2) -- (p3);
+            \draw [dashed] (p3) -- (p4);
+            \draw [dashed] (p4) -- (p5);
+            \draw [dashed] (p5) -- (p6);
+            \only<3-6>{
+                \draw [dashed] (p6) -- (p7);
+                \draw [dashed] (p7) -- (p8);
+                \draw [dashed] (p8) -- (p9);
+                \draw [dashed] (p9) -- (p10);
+                \draw [dashed] (p10) -- (p11);
+                \draw [dashed] (p11) -- (p12);
+            }
+            \node[label] at (11.2,0) {time (ms)};
+            
+            \draw (0,-2) sin (0.25,-1.75) cos (0.5,-2) sin (0.75,-2.25) cos (1,-2)
+            node[label, right=0.3, black] {original signal\\(8kHz)};
+            
+            \only<1-2>{
+                \fill [red] (4,-2) circle (2pt) node[label, right=0.3, black] {sampled point\\(12kHz)};
+                \draw [dashed] (7,-2) -- ++(0.5,-0.3) -- ++(1,0.6) -- ++(0.5,-0.3)
+                node[label, right=0.3, black] {resulting signal\\(4kHz)};
+            }
+            \only<3-6>{
+                \fill [red] (4,-2) circle (2pt) node[label, right=0.3, black] {sampled point\\(24kHz)};
+                \draw [dashed] (7,-2) -- ++(0.25,-0.3) -- ++(0.5,0.6) -- ++(0.5,-0.6) --
+                ++(0.5,0.6) -- ++(0.25,-0.3)
+                node[label, right=0.3, black] {resulting signal\\(8kHz)};
+            }
+        \end{tikzpicture} 
+    }
+  \end{center}
 
         \item \eg if sound signal changes at 3kHz, you have to sample at at least
               6kHz to not miss anything of the signal.
@@ -355,9 +440,15 @@
                     \fill (\x+0.5,\y+0.5) rectangle (\x+1,\y+1);
                 }
             }
-            \draw[help lines] (1,0) grid (5,4);
             \draw (-4,0) rectangle (0,4);
-            \draw (1,0) rectangle (5,4);
+
+            \only<1>{
+                \draw[help lines] (1,0) grid (5,4);
+                \draw (1,0) rectangle (5,4);
+            }
+            \only<2>{
+                \filldraw (1,0) rectangle (5,4);
+            }
 
         \end{tikzpicture}
     \end{center}
@@ -437,7 +528,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section[Sensors Overview]{Overview of sensors often used on mobile robots}
-\tableofcontents[currentsection]
+%\tableofcontents[currentsection]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encoders}
 \begin{frame}{Wheel / Motor Encoders}
@@ -490,9 +581,11 @@
             \centering
 
             \includegraphics[width=0.6\linewidth]{encoders3}
+
             Home-made encoder
 
             \includegraphics[width=0.6\linewidth]{encoders5}
+
             Commercial encoder
 
         \end{column}
@@ -555,7 +648,7 @@
     Solid state compass, \eg Honeywell HMR3100:
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{compass}
+        \includegraphics[width=0.7\linewidth]{compass}
     \end{center}
     \small
     \url{http://datasheet.digchip.com/197/197-01540-0-HMR3100.pdf}
@@ -637,9 +730,9 @@
 
     But: gimble(s) are restrained by a torsional spring
 
-    \begin{beamercolorbox}{block body example}
+    \begin{exampleblock}{}
         enables to measure angular speeds instead of the orientation.
-    \end{beamercolorbox}
+    \end{exampleblock}
 
 \end{frame}
 
@@ -1360,7 +1453,7 @@
 
 \end{frame}
 
-\begin{frame}[plain]
+\begin{frame}{Sonar: signals}
 
     \centering
     \begin{tikzpicture} 
@@ -1533,7 +1626,7 @@
     \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.6\linewidth]{us_scan}
+        \includegraphics[width=0.55\linewidth]{us_scan}
 
         \source{https://books.google.co.uk/books?id=4of6AQAAQBAJ&pg=PA129}{Autonomous Mobile Robots, p.129}
     \end{center}
@@ -2599,7 +2692,7 @@
         }
         \only<2>{
 
-            \video{0.8\linewidth}{videos/structured_light.mp4}
+            \video{0.8\linewidth}{figs/structured_light.mp4}
 
             \begin{table}[htpb]
                 \centering
@@ -2718,61 +2811,6 @@
     \href{http://campar.in.tum.de/twiki/pub/Chair/TeachingSs11Kinect/2011-DSensors_LabCourse_Kinect.pdf}{TUM}
 
 \end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Skeleton Tracking}
-
-\imageframe[color=black]{skeleton/skel1}
-
-{
-    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
-    \begin{frame}{Skeleton Tracking}
-
-        \begin{center}
-            \includegraphics[width=0.3\linewidth]{skeleton/skel3}
-            \includegraphics[width=0.3\linewidth]{skeleton/skel2}
-            \includegraphics<2>[width=0.3\linewidth]{skeleton/skel1}
-        \end{center}
-\end{frame}
-}
-
-{
-    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
-
-\begin{frame}{Skeleton estimation}
-    \begin{enumerate}
-        \item Estimate body parts using a randomized decision forest
-        \item Estimate the skeleton
-    \end{enumerate}
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{skeleton/skeleton_estimation}
-    \end{center}
-\end{frame}
-}
-
-{
-    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
-
-\begin{frame}{Body parts}
-
-    {\bf Train a decision tree} from \approx 1M samples, computer-generated from
-    \approx 100K acquired pairs (depth image, motion capture). This allow
-    {\bf tagging} of body parts in the depth image.
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{skeleton/training}
-    \end{center}
-\end{frame}
-}
-
-\begin{frame}{Skeleton}
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{skeleton/skel4}\\
-        \includegraphics[width=0.8\linewidth]{skeleton/skel5}
-    \end{center}
-\end{frame}
-
 \begin{frame}{The Kinect One}
 
     The same, but better!
@@ -2905,6 +2943,61 @@
     \end{itemize}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Skeleton Tracking}
+
+\imageframe[color=black]{skeleton/skel1}
+
+{
+    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
+    \begin{frame}{Skeleton Tracking}
+
+        \begin{center}
+            \includegraphics[width=0.3\linewidth]{skeleton/skel3}
+            \includegraphics[width=0.3\linewidth]{skeleton/skel2}
+            \includegraphics<2>[width=0.3\linewidth]{skeleton/skel1}
+        \end{center}
+\end{frame}
+}
+
+{
+    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
+
+\begin{frame}{Skeleton estimation}
+    \begin{enumerate}
+        \item Estimate body parts using a randomized decision forest
+        \item Estimate the skeleton
+    \end{enumerate}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{skeleton/skeleton_estimation}
+    \end{center}
+\end{frame}
+}
+
+{
+    \paper{Source: John MacCormick, Shotton et al., CVPR 2011}
+
+\begin{frame}{Body parts}
+
+    {\bf Train a decision tree} from \approx 1M samples, computer-generated from
+    \approx 100K acquired pairs (depth image, motion capture). This allow
+    {\bf tagging} of body parts in the depth image.
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{skeleton/training}
+    \end{center}
+\end{frame}
+}
+
+\begin{frame}{Skeleton}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{skeleton/skel4}\\
+        \includegraphics[width=0.8\linewidth]{skeleton/skel5}
+    \end{center}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
