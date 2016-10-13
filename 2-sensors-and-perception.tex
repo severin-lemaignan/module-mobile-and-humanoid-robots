@@ -2109,8 +2109,8 @@
     
         \coordinate (target) at (0,0);
 
-        \coordinate (lens) at ($(target)+(\incidenceAngle:5)$);
-        \coordinate (transmitter) at ($(target)+(180-\incidenceAngle:5)$);
+        \coordinate (lens) at ($(target)+(\incidenceAngle-10:5.67)$);
+        \coordinate (transmitter) at ($(target)+(180-\incidenceAngle-10:5)$);
         \coordinate (psd) at ($(lens) + (-1.5,0.5)$);
         \coordinate (psd2) at ($(psd) + (3,0.3)$);
 
@@ -2118,7 +2118,7 @@
 
         \fill [red, opacity=0.5] (impact) circle (2pt);
 
-        \path (transmitter) pic[scale=0.5,rotate=-\incidenceAngle]{camera};
+        \path (transmitter) pic[scale=0.5,rotate=-\incidenceAngle-10]{camera};
         \draw[very thick,->] (transmitter) -- (target);
 
         \draw[dash pattern=on 2pt off 4pt on 6pt off 4pt] (transmitter) -- ($(lens) + (1.5,0)$);
@@ -2132,13 +2132,13 @@
 
         \draw[very thick, dashed,->] (target) -- (impact);
 
-        \draw[<->] (2.8,0.5 |- lens) -- (2.8,1 |- psd) node[label, right,midway] {$f$};
+        \draw[<->] (3.9,0.5 |- lens) -- (3.9,1 |- psd) node[label, right,midway] {$f$};
 
         \draw[<->] (lens |- 3,4) -- (transmitter |- 3,4) node[label,below,midway] {baseline $b$};
         \draw ($(lens) + (0,0.5)$) -- ($(lens) + (0,-1.1)$);
         \draw (transmitter) -- ($(transmitter) + (0,-1.1)$);
 
-        \draw (transmitter) + (0.5,0) arc [start angle=0, end angle=-\incidenceAngle, radius=0.5] node[midway,right] {$\alpha$};
+        \draw (transmitter) + (0.5,0) arc [start angle=0, end angle=-\incidenceAngle-10, radius=0.5] node[midway,right] {$\alpha$};
 
         \draw[thick] (psd) rectangle (psd2);
         \foreach \a in {0.1,0.2,...,3}
@@ -2152,18 +2152,17 @@
         \node[label,anchor=west] at ($(lens) + (0.5,-0.3)$) {Lens};
         \node[label,anchor=west] at ($(psd2) + (-0.5,0.3)$) {Camera};
 
-        \coordinate (mirrorimpact) at ({$2*(lens) - (impact)$} |- impact);
-        \draw[thin, dashed,shorten <=-0.4cm,shorten >=-0.5cm] (mirrorimpact) -- (lens);
+        %\coordinate (mirrorimpact) at ({$2*(lens) - (impact)$} |- impact);
+        %\draw[thin, dashed,shorten <=-0.4cm,shorten >=-0.5cm] (mirrorimpact) -- (lens);
 
-        \draw (psd2 -| impact) -- +(0,0.3);
-        \draw (psd2 -| mirrorimpact) -- +(0,0.3);
-        \draw[<->] ({$(psd2) + (0,0.2)$} -| impact) -- ({$(psd2) + (0,0.2)$} -| mirrorimpact) node[label, above,midway] {$f\cdot cot\alpha + u$};
+        %\draw (psd2 -| impact) -- +(0,0.3);
+        %\draw (psd2 -| mirrorimpact) -- +(0,0.3);
+        %\draw[<->] ({$(psd2) + (0,0.2)$} -| impact) -- ({$(psd2) + (0,0.2)$} -| mirrorimpact) node[label, above,midway] {$f\cdot cot\alpha + u$};
 
         \draw[thick,->] (lens) -- +(-1.5,0) node[label,left] {$x$};
         \draw[thick,->] (lens) -- +(0,-1.5) node[label,below] {$z$};
         \draw[thick,->] ($(psd)!0.5!(psd2)$) -- +(2,0) node[label,below] {$u$};
     \end{tikzpicture}
-
             \end{column}
         \end{columns}
 
@@ -2737,15 +2736,6 @@
     \end{center}
 \end{frame}
 
-
-\begin{frame}{Microsoft Kinect}
-
-    \textbf{Kinect 360} (also known as version 1). Released in 2010.
-
-    \textbf{Kinect One} (also known as version 2). Released in 2014.
-
-\end{frame}
-
 \begin{frame}{Kinect 360 - Primesense 3D camera}
 
     Infrared laser light pattern projected onto scene and filmed with CMOS
@@ -2811,70 +2801,64 @@
     \href{http://campar.in.tum.de/twiki/pub/Chair/TeachingSs11Kinect/2011-DSensors_LabCourse_Kinect.pdf}{TUM}
 
 \end{frame}
-\begin{frame}{The Kinect One}
 
-    The same, but better!
 
-    \begin{itemize}
+\begin{frame}{Time-of-Flight cameras}
+    \begin{center}
+        \includegraphics<1>[width=0.8\linewidth]{kinect_xbox_one}
 
-        \item
-              Faster full HD video stream
-        \item
-              Better microphones
-        \item
-              Higher depth fidelity
-        \item
-              Wider angle camera (70x60 degrees vs K1 57x43)
-        \item
-              Improved skeleton model (prediction)
-        \item
-              More skeleton points (26)/more people tracked (6 full)
-        \item
-              New development SDK
-        \item
-              More expensive, not as much support as yet
-        \item
-              CANNOT use Xbox version with PC like with v1!
-    \end{itemize}
+        \includegraphics<2>[width=0.6\linewidth]{tof2}
 
+
+        \includegraphics<2->[width=0.6\linewidth]{tof1.pdf}
+
+        \only<2>{
+            \source{https://en.wikipedia.org/wiki/Time-of-flight_camera}{Wikipedia}
+        }
+
+        \only<3->{
+            $t_D = 2 \cdot \frac{D}{c} = 2 \cdot \frac{2.5m}{300000000\frac{m}{s}} = 0.00000001666s = 16.66ns$
+        }
+        \only<4>{
+            $D = \frac{1}{2} \cdot c \cdot t_0 \cdot \frac {S2} {S1 + S2}$
+        }
+    \end{center}
 \end{frame}
 
-\begin{frame}{360 vs One Technology}
 
-    \begin{itemize}
 
-        \item
-              Kinect 360 project speckle pattern into environment, uses
-              triangulation (structured light) from near-IR
-    \end{itemize}
-
-    (WikiMedia)
-
+\begin{frame}{Comparison of (some) RGB-D cameras}
+    \begin{table}[]
+        \centering
+        \scriptsize
+        \begin{tabular}{@{}lllll@{}}
+            \toprule
+                             & Kinect 360 (v1)        & Kinect One (v2)   \\ \midrule
+            {\bf Range}            & 0.6m -- \textgreater5m & 1.37m -- 8m?      \\
+            {\bf Price (new)}      & £230                   & £118               \\
+            {\bf Depth resolution} & 640x480px, 11bits      & 512x424px, 13bits  \\
+            {\bf Libraries}        & libfreenect/OpenNI1    & libfreenect2       \\
+            {\bf horizontal FoV}   & 57                     & 70                 \\
+            {\bf vertical FoV}     & 43                     & 60                 \\
+            {\bf Microphones?}     & 4                      & 4                 \\ \bottomrule
+        \end{tabular}
+        \begin{tabular}{@{}lllll@{}}
+            \toprule
+                             & Intel RealSense SR300 & Intel RealSense R200        \\ \midrule
+            {\bf Range}            & 0.2m – 1.6m           & 0.6m -- 3.5m (10m outdoors) \\
+            {\bf Price (new)}      & £66 & £66                         \\
+            {\bf Depth resolution} & 640x480               & 640x480                     \\
+            {\bf Libraries}        & librealsense   & librealsense         \\
+            {\bf horizontal FoV}   & 77 & 77                          \\
+            {\bf vertical FoV}     & 43 & 47                          \\
+            {\bf Microphones?}     & 2 & 0                           \\ \bottomrule
+        \end{tabular}
+    \end{table}
 \end{frame}
 
-\begin{frame}{360 vs One Technology}
-
-    Kinect One uses Time-of-Flight (indirectly measured through phase shift
-    measurements).
-
-    Take 2 measurements -- eliminate ambiguity if light is absorbed
-
-    Ambient light rejection
-
-    \begin{itemize}
-
-        \item
-              Allows outdoor operation!
-    \end{itemize}
-
-    Excellent explanation
-    \href{http://www.gamasutra.com/blogs/DanielLau/20131127/205820/The_Science_Behind_Kinects_or_Kinect_10_versus_20.php}{here}
-
-\end{frame}
 
 \begin{frame}{How do we use it?}
 
-    \only<1>{
         2 main options:
 
         \begin{itemize}
@@ -2890,63 +2874,34 @@
         Microsoft SDK is best complemented with the Developer Tools (which has
         lots of great example applications)
 
-    }
-    \only<2>{
-        Lots of cables -- plug the Kinect into the power adapter, then the USB
-        to your computer
-
-        \begin{itemize}
-
-            \item
-                  Make sure the power is on before you plug it in to a PC, or it will
-                  see it only as a microphone
-        \end{itemize}
-
-    }
-    \only<3>{
-        The Microsoft SDK can be programmed with C\#.Net, VB.Net or VC++
-
-        \begin{itemize}
-
-            \item
-                  We recommend C\#, but C++ is possible as well
-        \end{itemize}
-
-        Or if you want to try, there are other options as well
-
-        \begin{itemize}
-
-            \item
-                  \href{https://processing.org/}{Processing} is a language for
-                  non-programmers with excellent support for Kinect (see
-                  \href{http://shiffman.net/p5/kinect/}{here})
-        \end{itemize}
-    }
 \end{frame}
 
-\begin{frame}{Programming principles}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Applications in robotics}
+
+\begin{frame}{Applications in robotics}
+    Two brief examples:
 
     \begin{itemize}
-
-        \item
-              SDK provides interface to find and use sensor in just a few lines
-        \item
-              Events fire when a new RGB frame or depth frame are ready for use, or
-              when audio source changes angle or energy
-        \item
-              We put a handler on these events to pick up the images
-        \item
-              We can then read out raw data values, convert images, or use the
-              processed data about skeletons/faces
-        \item
-              Continuous audio processing must be done manually in its own thread
+        \item 3D SLAM
+        \item Skeleton tracking
     \end{itemize}
-
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Skeleton Tracking}
+
+\subsection{3D SLAM}
+\begin{frame}{3D SLAM: Simultaneous Localization And Mapping}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{slam1}
+    \end{center}
+\end{frame}
+
+\imageframe[color=black]{slam2}
+\imageframe[color=black]{slam3}
+
+\subsection{Skeleton Tracking}
 
 \imageframe[color=black]{skeleton/skel1}
 
@@ -2997,11 +2952,6 @@
         \includegraphics[width=0.8\linewidth]{skeleton/skel5}
     \end{center}
 \end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Applications in robotics}
 
 \begin{frame}{In robotics applications}
 
