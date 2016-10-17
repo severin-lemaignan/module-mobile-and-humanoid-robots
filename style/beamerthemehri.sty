@@ -10,6 +10,7 @@
 \usepackage{etoolbox}
 \usepackage{eso-pic}
 \usepackage{tikz}
+\usepackage{amsmath}
 
 \usepackage{pgfkeys}
 
@@ -542,8 +543,9 @@ draw,rectangle callout,anchor=pointer,callout relative pointer={(#2:#3)}]
 at (#5) {#6};
 }
 
-\newcommand{\bubblemark}[1]{\tikz[overlay,remember picture,baseline=-0.5ex] \node (#1) {};}
-
+\NewDocumentCommand{\bubblemark}{O{-0.5ex} m}{%
+\tikz[overlay,remember picture,baseline=#1] \node (#2) {};
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \mode
