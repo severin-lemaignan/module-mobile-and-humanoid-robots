@@ -584,8 +584,8 @@ at $t$ (is the car braking or accelerating) and system dynamics
         \item $\mathbf{P}_{t\mid t}$: the \emph{error covariance matrix} (a measure of the estimated accuracy of the state estimate)
     \end{itemize}
 
-    \bubble<2>[200][5.5][3cm]{aposteriori}{the notation $\hat{\mathbf{x}}_{n\mid m}$
-    represents the estimate of $\mathbf{x}$ at time $n$ given observations up
+    \bubble<2>[200][5.5][4cm]{aposteriori}{the notation $\hat{\mathbf{x}}_{n\mid m}$
+    represents the \textbf{estimate} of $\mathbf{x}$ at time $n$ given observations up
     to and including at time $m \leq n$}
 
     }
@@ -595,14 +595,14 @@ at $t$ (is the car braking or accelerating) and system dynamics
         The Kalman filter continuously loops through two steps
 
     \begin{itemize}
-        \item The \textbf{time update} step.
+        \item The \textbf{state prediction} step.
         \item The \textbf{measurement update} step.
     \end{itemize}
 
     \centering
     \begin{tikzpicture}[>=latex]
 
-        \node[align=center] at (-2,0) (A) {Time update\\\emph{"Predict"}};
+        \node[align=center] at (-2,0) (A) {State prediction\\\emph{"Predict"}};
         \node[align=center] at (2,0) (B) {Measurement update\\\emph{"Correct"}};
         \draw[very thick, ->] (A) to[bend left=60] (B);
         \draw[very thick, ->] (B) to[bend left=60] (A);
@@ -617,9 +617,9 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \begin{itemize}
         \item \emph{A priori} means that the estimate is taken before any new sensor
             measurements have come in.
+        \item \textbf{Notation}: $\hat{\mathbf{x}}_{t\mid t-1}$
     \end{itemize}
 
-    Notation: $\hat{\mathbf{x}}_{t\mid t-1}$
 
     }
     \only<5>{
@@ -630,7 +630,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \begin{itemize}
         \item \emph{A posteriori} because the estimate is made after new sensor
             measurements have come in.
-        \item Noted $\hat{\mathbf{x}}_{t\mid t}$
+        \item \textbf{Notation}: $\hat{\mathbf{x}}_{t\mid t}$
     \end{itemize}
 }
 \end{frame}
@@ -638,33 +638,75 @@ at $t$ (is the car braking or accelerating) and system dynamics
 \begin{frame}{Predict step equations}
 
     \Huge\centering
-    $\hat{\mathbf{x}}_{t\mid t-1} = \mathbf{A}\cdot \hat{\mathbf{x}}_{t-1\mid t-1} + \mathbf{B}\cdot u_{t-1}$
+    $\hat{\mathbf{x}}_{t\mid \bubblemark[0pt]{up1}t-1} = \mathbf{A}\cdot \hat{\mathbf{x}}_{t-1\mid \bubblemark[0pt]{up2}t-1} + \mathbf{B}\cdot u_{t-1}$
 
     \vspace{2em}
-    $\mathbf{P}_{t\mid t-1} = \mathbf{A}\cdot \mathbf{P}_{t-1\mid t-1} \mathbf{A}^{\text{T}} + \mathbf{Q}$
+    $\mathbf{P}_{t\mid \bubblemark[0pt]{up3}t-1} = \mathbf{A}\cdot \mathbf{P}_{t-1\mid \bubblemark[0pt]{up4}t-1}\cdot \mathbf{A}^{\text{T}} + \bubblemark[0pt]{up5}\mathbf{Q}$
 
 
-%    \bubble<1>[230][0.5]{up1}{A priori estimate of the state at time $k$}
-%    \bubble<1>[230][0.5]{up2}{A posteriori estimate of the state at time $k-1$}
-%    \bubble<1>[230][0.5]{up3}{A priori estimate of the error covariance at time $k$}
-%    \bubble<1>[230][0.5]{up4}{A poseriori estimate of the error covariance at time $k-1$}
-%    \bubble<1>[230][0.5]{up5}{Process noise}
+    \bubble<1>[130][0.5][3cm]{up1}{A priori estimate of the state at time $t$}
+    \bubble<1>[130][0.5][4cm]{up2}{A posteriori estimate of the state at time $t-1$}
+    \bubble<1>[130][0.5][3cm]{up3}{A priori estimate of the error covariance at time $t$}
+    \bubble<1>[100][0.5][4cm]{up4}{A poseriori estimate of the error covariance at time $t-1$}
+    \bubble<1>[90][0.5][1.5cm]{up5}{Process noise}
 
 \end{frame}
 
-\begin{frame}{Measurement update equations}
 
-The Kalman gain, this needs to calculated first
+\begin{frame}{Correct step equations (measurement update)}
 
-The estimated state.
 
-Sensor
+    \Huge\centering
+    $\bubblemark[0pt]{up6}\mathbf{K}_t = \frac{\mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}}}{\mathbf{H}\cdot \mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R}_t}$
 
-noise
+    \vspace{2em}
+    \huge
+    $\hat{\mathbf{x}}_{t\mid \bubblemark[0pt]{up7}t} = \highlight<2>{\hat{\mathbf{x}}\bubblemark[-1ex]{up10}_{t\mid t-1}} + \highlight<3>{\mathbf{K}_t\cdot (\mathbf{z}_t - \mathbf{H}\bubblemark[-1ex]{up9}\cdot \hat{\mathbf{x}}_{t\mid t-1})}$
+
+    \vspace{2em}
+    $\mathbf{P}_{t|t} = (I - \mathbf{K}_t\cdot \mathbf{H})\cdot \mathbf{P}_{t|t-1}$
+
+
+    \bubble<1>[70][1][4cm]{up6}{The Kalman gain, this needs to calculated first}
+
+    \bubble<1>[130][0.5][3cm]{up7}{The \emph{a posteriori} estimated state}
+
+    \bubble<1>[50][0.5]{up8}{Sensor noise}
+
+    \bubble<3>[270][0.5][5cm]{up9}{(actual measurements - expected measurement) $\times$ Kalman gain}
+    \bubble<2>[270][0.5][4cm]{up10}{estimated state at last step}
 
 \end{frame}
 
 \begin{frame}{The Kalman filter loop}
+
+    \centering
+    \begin{tikzpicture}[>=latex]
+
+        \node[align=center,text width=5cm,anchor=north] at (-3.5,0) (A) {\emph{Prediction}\small
+                                                            \begin{enumerate}
+                                                                \item Project the state ahead \\
+                                                                $\hat{\mathbf{x}}_{t\mid t-1} = \mathbf{A}\cdot \hat{\mathbf{x}}_{t-1\mid t-1} + \mathbf{B}\cdot u_{t-1}$
+                                                                \item Project the error covariance ahead \\
+                                                                $\mathbf{P}_{t\mid t-1} = \mathbf{A}\cdot \mathbf{P}_{t-1\mid t-1}\cdot \mathbf{A}^{\text{T}} + \mathbf{Q}$
+                                                        \end{enumerate}
+                                                            };
+        \node[align=center,text width=6cm,anchor=north] at (2.5,0) (B) {\emph{Correction}\small
+                                            \begin{enumerate}
+                                                \item Compute Kalman gain \\
+                                                $\mathbf{K}_t = \mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}}(\mathbf{H}\cdot \mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R}_t)^{-1}$
+                                                \item Update estimate with measurement $z_t$ \\
+                                                $\hat{\mathbf{x}}_{t\mid t} = \hat{\mathbf{x}}_{t\mid t-1} + \mathbf{K}_t\cdot (\mathbf{z}_t - \mathbf{H}\cdot \hat{\mathbf{x}}_{t\mid t-1})$
+                                                \item Update the error covariance \\
+                                                $\mathbf{P}_{t|t} = (I - \mathbf{K}_t\cdot \mathbf{H})\cdot \mathbf{P}_{t|t-1}$
+                                            \end{enumerate}
+        };
+        \node[align=center,text width=4cm,anchor=north] at (-4,-5) (C) {\emph{Initial estimates} for $\hat{\mathbf{x}}_{t-1}$ and $\mathbf{P}_{t-1}$};
+
+        \draw[very thick, ->] (A) to[bend left=60] (B);
+        \draw[very thick, ->] (B) to[bend left=60] (A);
+        \draw[very thick, ->] (C) to (C.north |- A.south);
+    \end{tikzpicture}
 
 \end{frame}
 
