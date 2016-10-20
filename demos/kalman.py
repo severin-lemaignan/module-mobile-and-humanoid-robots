@@ -4,7 +4,9 @@ from threading import Thread
 import time
 import math
 from bokeh.models import ColumnDataSource
+from bokeh.models.widgets import Slider
 from bokeh.plotting import curdoc, figure, output_file, show
+from bokeh.layouts import row, widgetbox
 
 import numpy as np
 import numpy.matlib as mat
@@ -12,17 +14,20 @@ import numpy.random as rnd
 
 from tornado import gen
 
-INTERACTIVE=False
+INTERACTIVE=True
 
 COUNT = 300
 t = 0
 
 # The actual state of our system (constant value)
-#realx = [-0.37727] * COUNT
-realx = [math.sin(x/12.0) for x in range(0,COUNT-1)]
+realx = [-0.37727] * COUNT
+#realx = [math.sin(x/12.0) for x in range(0,COUNT-1)]
 
 # Our simulated measurements: realx + a normal (Gaussian) noise
-z = [[x + rnd.normal(0, 0.1)] for x in realx]
+def generate_noisy_data(data):
+    return [[x + rnd.normal(0, 0.1)] for x in data]
+
+z = generate_noisy_data(realx)
 
 # Our initial estimate of the system's state
 x = [mat.matrix([0])]
@@ -71,6 +76,18 @@ if not INTERACTIVE:
     show(p)
 
 else:
+
+    def update_data(attrname, old, new):
+        measures = [target.value] * (COUNT-t)
+        noisy_measures = generate_noisy_data(measures)
+
+        realx[t:] = measures
+        z[t:] = noisy_measures
+
+    target = Slider(title="Actual value", value=realx[0], start=-5.0, end=5.0, step=0.1)
+    target.on_change('value', update_data)
+
+
     # this must only be modified from a Bokeh session allback
     source = ColumnDataSource(data=dict(idx=[0], est=[x[0][0,0]],measure=z[0],real=[realx[0]]))
 
@@ -106,7 +123,7 @@ else:
     p.line(x='idx', y='real', source=source, legend="Real value", line_width=2, line_color="orange", line_dash="4 4")
     p.line(x='idx', y='est', source=source, legend="Kalman output", line_width=2, line_color="green")
 
-    doc.add_root(p)
+    doc.add_root(row(widgetbox(target),p,width=800))
 
     thread = Thread(target=blocking_task)
     thread.start()
