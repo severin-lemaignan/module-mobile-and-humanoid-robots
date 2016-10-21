@@ -1,0 +1,994 @@
+%!TEX program = xelatex
+
+\documentclass[compress]{beamer}
+%--------------------------------------------------------------------------
+% Common packages
+%--------------------------------------------------------------------------
+
+\definecolor{links}{HTML}{663000}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usepackage[english]{babel}
+\usepackage{pgfpages} % required for notes on second screen
+\usepackage{graphicx}
+
+\usepackage{multicol}
+
+\usepackage{tabularx,ragged2e}
+\usepackage{booktabs}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+\usetheme{hri}
+
+% Display the navigation bullet even without subsections
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,backgrounds,positioning,quotes}
+
+\graphicspath{{figs/}}
+
+\title{ROCO318 \newline Mobile and Humanoid Robots}
+\subtitle{Part 4 -- Localisation and Planning}
+
+\date{}
+\author{Séverin Lemaignan}
+\institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
+
+\begin{document}
+
+\licenseframe{github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+\maketitle
+
+\begin{frame}{Pose and navigation}
+
+Pose maintenance
+
+\begin{itemize}
+\item \textbf{Pose} (= position and orientation) \textbf{maintenance} is
+  keeping a precise as possible estimate of the robot's pose.
+\end{itemize}
+
+Getting from A to B.
+
+\begin{itemize}
+\item Different from inverse kinematics, where an efficient manner is
+  computed to get a robot in a certain state (position and orientation).
+  Inverse kinematics work on a small scale (\textless{} meter).
+\item Planning and navigation work on a larger scale (room, building,
+  roadmap, \ldots{}).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Planning and navigation -- traditional approach}
+
+Today's industrial robots can operate without any intelligence because
+their environment is static and very structured.
+
+In mobile robotics, cognition and reasoning is primarily of geometric
+nature, such as picking a safe path or determining where to go next.
+
+\begin{itemize}
+\item already been largely explored in literature for cases in which
+  complete information about the current situation and the environment
+  exists (e.g.
+  \href{http://en.wikipedia.org/wiki/Travelling_salesman_problem}{travelling
+  sales man problem} or
+  \href{http://en.wikipedia.org/wiki/Route_inspection_problem}{route
+  inspection problem}).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Kiva systems: Beacon based localisation}
+
+\begin{itemize}
+\item \url{http://www.youtube.com/watch?v=lWsMdN7HMuA}
+\end{itemize}
+
+\end{frame}
+
+\section{Monte-Carlo Localisation}
+
+\begin{frame}{Monte Carlo methods}
+
+Repeated random sampling to compute results.
+
+Used when it to difficult to calculate exact results
+
+\begin{itemize}
+\item The system is too complex and calculating it through it too
+  computationally expensive.
+\item There are too many variables and it is impossible to calculate all
+  posibilities.
+\end{itemize}
+
+Monte Carlo localisation is MC methods applied to robot localisation.
+
+\end{frame}
+
+\begin{frame}{Monte Carlo localisation - Example}
+
+\end{frame}
+
+\begin{frame}{MCL - introduction}
+
+\begin{itemize}
+\item MCL is a \href{http://en.wikipedia.org/wiki/Particle_filter}{particle
+  filter}, which uses a set \emph{St} of \emph{N} particles at time
+  \emph{t}. For small maps N is in the hundreds, for larger maps you
+  could have thousands of particles.
+\item Each particle si contains the pose of the particle and a posterior
+  belief.
+\item The sum of all beliefs is 1:
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{MCL -- Initialisation}
+
+The \emph{N} particles are distributed on the map
+
+\begin{itemize}
+\item If the robot's position is not known, they are distributed randomly
+  across the map with a probability \emph{p=}1\emph{/N}.
+\item If the robot's position is available, the initial particle
+  distribution could be Gaussian around the robot.
+\end{itemize}
+
+Monte Carlo Localisation runs through three steps
+
+\begin{itemize}
+\item Prediction phase (when the robot takes an action)
+\item Update phase (when sensor data comes in)
+\item Resampling phase
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{MCL -- Prediction phase (1)}
+
+\begin{itemize}
+\item The robot performs an \textbf{action.} All \emph{N} particles are
+  updated as follows
+\item Example: repeated application of theprediction rule leads to gradual
+  loss of pose accuracy.
+\end{itemize}
+
+Motion model: what is the probability of ending up in the location of
+particle \emph{st} after doing action \emph{a} at the location of
+particle \emph{st-1}
+
+Belief of ith particle at time \emph{t-1}
+
+Updated belief
+
+of particle \emph{i}
+
+\end{frame}
+
+\begin{frame}{MCL - Prediction phase (2)}
+
+The prediction phase essentially moves all particles.
+
+\begin{itemize}
+\item If the robot moves 10cm right and turn 10˚ cw, then all particles are
+  updated
+\end{itemize}
+
+This allows for a motion model to be implemented, by adding some noise.
+
+\begin{itemize}
+\item For example
+\item This motion model should be based on the kinematics of your robot.
+  E.g. for a differential drive robot you would have a pretty accurate
+  idea of how imprecise it is.
+\end{itemize}
+
+Note, belief is not changed
+
+\end{frame}
+
+\begin{frame}{MCL -- Update phase}
+
+\begin{itemize}
+\item The robot gets \textbf{new sensor data} in, all \emph{N} particles
+  updated as follows:
+\item The normalising constant \emph{} is calculated afterwards to make
+\end{itemize}
+
+Sensor model: what is the probability of seeing sensor reading \emph{zt}
+at position \emph{st}
+
+Normalisation constant: keeps to total \emph{p} value equal to 1.
+
+\end{frame}
+
+\begin{frame}{MCL -- Resampling phase}
+
+Generate a new set of particles by drawing randomly from the current
+set. Likelihood is determined by \emph{p} values. Set the \emph{p} value
+of these new samples to \emph{1/N}.
+
+\begin{itemize}
+\item You can think of drawing particles as a roulette wheel selection.
+  Particles with a higher \emph{p} value have a higher chance of being
+  selected into the new set. Also, a particle can be selected more than
+  once
+\end{itemize}
+
+\emph{p1}
+
+\emph{p2}
+
+\emph{p3}
+
+\emph{p4}
+
+\emph{p5}
+
+\emph{p7}
+
+\emph{p8}
+
+\emph{p9}
+
+\emph{p6}
+
+\end{frame}
+
+\begin{frame}{MCL -- Resamping phase (2)}
+
+In addition, it is useful to add a small number of uniformly distributed
+particles to the set of particles.
+
+This helps the algorithm recover when it loses track of the robot's
+position.
+
+\begin{itemize}
+\item This is know as thee ``kidnapped robot'' problem, and occurs when the
+  robot loses track of its position, due to a malfunction or power
+  outage.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Pseudocode (1)}
+
+\begin{block}{\% Initialise all N particles}
+
+\end{block}
+
+\begin{block}{for i=1:N}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{end for}
+
+\end{block}
+
+\begin{block}{forever do}
+
+\end{block}
+
+\begin{block}{\% Prediction phase}
+
+\end{block}
+
+\begin{block}{moverobot(\emph{x,y,α})}
+
+\end{block}
+
+\begin{block}{for i=1:N}
+
+\end{block}
+
+\begin{block}{move\_particle(i, \emph{x,y,α})}
+
+\end{block}
+
+\begin{block}{end for}
+
+\end{block}
+
+\begin{block}{}
+
+\begin{itemize}
+\item ~
+\end{itemize}
+
+\end{block}
+
+\begin{block}{\% Update phase}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{for i=1:N}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{end for}
+
+\end{block}
+
+\begin{block}{\% Normalise}
+
+\end{block}
+
+\begin{block}{for i=1:N}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{end for}
+
+\end{block}
+
+\begin{block}{\ldots{}}
+
+\begin{itemize}
+\item ~
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Pseudocode (2)}
+
+\begin{block}{\% Resample phase}
+
+\end{block}
+
+\begin{block}{for i=1:M}
+
+\end{block}
+
+\begin{block}{draw\_S1\_with\_high\_S.p}
+
+\end{block}
+
+\begin{block}{find\_S2\_with\_lowest\_S.p S2 = S1}
+
+\end{block}
+
+\begin{block}{end for}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\begin{block}{{[}END{]}}
+
+\end{block}
+
+\begin{block}{}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{MCL -- Some properties}
+
+Light on memory and computational resources.
+
+\begin{itemize}
+\item Markov Localisation uses much more memory, as it needs to keep track
+  of belief at each location of the map even the ones that have a low
+  belief. This also results in a computationally expensive algorithm.
+\end{itemize}
+
+``Any time'' algorithm: you can interrupt the algorithm and still get an
+estimate out.
+
+Powerful, yet efficient.
+
+Easy to implement.
+
+\end{frame}
+
+\begin{frame}{Example: museum pose maintenance}
+
+\begin{itemize}
+\item Monte Carlo using the ceiling of the Smithsonian museum
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Example: AIBO localising}
+
+Estimating the robots position using Rao-Blackwellised particle filters
+
+\begin{itemize}
+\item D. Fox, http://www.cs.washington.edu/ai/Mobile\_Robotics/Aibo
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{MCL -- Further reading}
+
+Frank Dellaert,~Dieter Fox, Wolfram Burgard, and~Sebastian Thrun,
+"\href{http://www.ri.cmu.edu/publication_view.html?pub_id=533}{Monte
+Carlo Localization for Mobile Robots}"~\emph{IEEE International
+Conference on Robotics and Automation (ICRA99)}, May, 1999.
+
+Videos of examples of MCL
+
+\begin{itemize}
+\item \url{http://www.youtube.com/watch?v=uU_1c_CxB1g}
+\item \url{http://www.youtube.com/watch?v=7K8dZwqBSSA}
+\item \url{https://www.youtube.com/watch?v=oKUYj1FWzN4}
+\item \url{https://www.youtube.com/watch?v=lCXv4yOcwf8}
+\end{itemize}
+
+\end{frame}
+
+\section{SLAM: simultaneous localisation and mapping}
+
+\begin{frame}{SLAM simultaneous localisation and mapping}
+
+Content for these slides is taken from
+\href{http://www.computerrobotvision.org/2010/slam_camp.html}{Jack
+Collier}
+
+\end{frame}
+
+\begin{frame}{What is SLAM?}
+
+Given an unknown environment and vehicle pose:
+
+\begin{itemize}
+\item Move through the environment
+\item Estimate the robot pose
+\item Generate a map of environmental features
+\end{itemize}
+
+Use the robot pose estimate to improve the map landmark position
+estimates
+
+Use the landmark estimates to improve the robot pose estimate
+
+\end{frame}
+
+\begin{frame}{Why is SLAM hard?}
+
+Chicken and egg problem
+
+\begin{itemize}
+\item If there is no map, how the robot localise itself. If the robot
+  doesn't know its location, how can it build up a map?
+\end{itemize}
+
+Odometry is not to be trusted
+
+\end{frame}
+
+\begin{frame}{Example}
+
+\begin{block}{\url{http://youtu.be/Q1ipn42rMh8}}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Commercial applications}
+
+\begin{itemize}
+\item \href{https://www.youtube.com/watch?v=bq5HZzGF3vQ}{Samsung vacuum
+  cleaning robot}
+\item \href{https://www.youtube.com/watch?v=bq5HZzGF3vQ}{iRobot having SLAM}
+\end{itemize}
+
+\end{frame}
+
+\section{Path planning on graph}
+
+\begin{frame}{Global path planning}
+
+Assumptions
+
+\begin{itemize}
+\item There exists a good enough map of the environment for navigation
+  (topological or metric or a mixture between both).
+\item The robot knows where it is on the map (using for example GPS or Monte
+  Carlo localisation).
+\end{itemize}
+
+First step:
+
+\begin{itemize}
+\item Representation of the environment by a road-map (graph), cells or a
+  potential field. The resulting discrete locations or cells allow then
+  to use standard planning algorithms.
+\end{itemize}
+
+Examples:
+
+\begin{itemize}
+\item Visibility Graph
+\item Voronoi Diagram
+\item Cell Decomposition -\textgreater{} Connectivity Graph
+\item Potential Field
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Path Planning: Configuration Space}
+
+\begin{itemize}
+\item State or configuration \emph{q} can be described with \emph{k} values
+  \emph{qi}
+\item \textbf{Configuration space} of a robot: a n-dimensional map of free
+  and occupied states.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs}
+
+Maps used by robots can be seen as interconnected nodes.
+
+Areas with paths between them are called \textbf{graphs.}
+
+\begin{itemize}
+\item \textbf{In maths, the paths are called edges, the areas are called
+  nodes.}
+\end{itemize}
+
+For example: a visibility graph
+
+Edges between nodes are the lines of sight from each corner to an
+obstacle to every other visible corner.
+
+\end{frame}
+
+\begin{frame}{Graphs: Voronoi graphs}
+
+\begin{itemize}
+\item Voronoi graph, distance to obstacles from every nodes is maximal.
+\item Works well as the robot's sensors get a get view of the environment.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: Voronoi diagram}
+
+\begin{itemize}
+\item SysQuake demo
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: Cell Decomposition}
+
+Divide space into simple, connected regions called cells
+
+Determine which open sells are adjacent and construct a connectivity
+graph
+
+Find cells in which the initial and goal configuration (state) lie and
+search for a path in the connectivity graph to join them.
+
+From the sequence of cells found with an appropriate search algorithm,
+compute a path within each cell.
+
+\begin{itemize}
+\item e.g. passing through the midpoints of cell boundaries or by sequence
+  of wall following movements.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: Cell Decomposition}
+
+\begin{itemize}
+\item Example: exact cell decomposition
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: Cell Decomposition}
+
+\begin{itemize}
+\item Example: approximate cell decomposition
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: Cell Decomposition}
+
+\begin{itemize}
+\item Adaptive cell decomposition: changes the size of each cell according
+  to the detail needed.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Graphs: representing}
+
+\begin{itemize}
+\item How is a graph represented in a computer? Graphical representation is
+  intuitive, but not straightforward to implement in a program.
+\item Graphs can be represented as a matrix:
+\end{itemize}
+
+
+    \begin{tikzpicture}[every edge quotes/.style={auto=right}]
+        \node at (0,0) (A) {$A$};
+        \node at (2,1) (B) {$B$};
+        \node at (0,2) (C) {$C$} edge["6m",left] (A)
+                                 edge["5m"] (B);
+        \node at (1,4) (D) {$D$} edge["10m"] (C);
+        \node at (2.5,3.5) (E) {$E$} edge["4m"] (D)
+                                     edge["8m"] (B)
+                                     edge["25m"] (A);
+
+        %\draw (A) --[label=25m] (E) --[label=4m] (D) --[label=10m] (B) --[label=5m] (C) --[label=6m] (A);
+        %\draw (E) --[label=8m] (B);
+    \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Searching graphs}
+
+Graphs can be searched, for example to find the shortest path between
+two nodes.
+
+Many different search algorithms exist
+
+\begin{itemize}
+\item \href{http://en.wikipedia.org/wiki/Breadth-first_search}{Breadth
+  first}
+\item \href{http://en.wikipedia.org/wiki/Depth-first_search}{Depth first}
+\item \href{http://en.wikipedia.org/wiki/A*_search_algorithm}{A*}
+\item \href{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Dijkstra's
+  shortest path}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Searching graphs - Dijkstra}
+
+\begin{itemize}
+\item Dijkstra's shortest path algorithm 1 \textbf{function} Dijkstra(G, w,
+  s) 2 \textbf{for each} node n \emph{// Initializations} 3 d{[}n{]} :=
+  infinity \emph{// Known distance from s to n} 4 previous{[}n{]} :=
+  undefined 5 d{[}s{]} := 0 \emph{// Distance from s to s} 6 S := empty
+  set \emph{// Set of all visited nodes} 7 Q := all nodes \emph{// Set
+  of all unvisited nodes} 8 \textbf{while} Q is not an empty set
+  \emph{// The algorithm itself} 9 u := Extract\_Min(Q) \emph{// Remove
+  best node} 10 S := S union \{u\} \emph{// Mark it `visited'} 11
+  \textbf{for each} edge (u,v) outgoing from u 12 \textbf{if} d{[}u{]} +
+  w(u,v) \textless{} d{[}v{]} \emph{// Relax (u,v)} 13 d{[}v{]} :=
+  d{[}u{]} + w(u,v) 14 previous{[}v{]} := u
+\item Extract\_Min returns the node n with the lowest value d.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Searching graphs - Dijkstra}
+
+\begin{block}{1 \textbf{function} Dijkstra(G, w, s) 2 \textbf{for each}
+node n \emph{// Initializations} 3 d{[}n{]} := infinity \emph{// Known
+distance from s to n} 4 previous{[}n{]} := undefined 5 d{[}s{]} := 0
+\emph{// Distance from s to s} 6 S := empty set \emph{// Set of all
+visited nodes} 7 Q := all nodes \emph{// Set of all unvisited nodes} 8
+\textbf{while} Q is not an empty set \emph{// The algorithm itself} 9 u
+:= Extract\_Min(Q) \emph{// Remove best node} 10 S := S union \{u\}
+\emph{// Mark it `visited'} 11 \textbf{for each} edge (u,v) outgoing
+from u 12 \textbf{if} d{[}u{]} + w(u,v) \textless{} d{[}v{]} \emph{//
+Relax (u,v)} 13 d{[}v{]} := d{[}u{]} + w(u,v) 14 previous{[}v{]} := u}
+
+\begin{itemize}
+\item Extract\_Min returns the node n with the lowest value d.
+\end{itemize}
+
+Start node
+
+Graph
+
+Weights
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Searching graphs -- Dijkstra}
+
+\begin{itemize}
+\item Reading out shortest path from s to t 1 S := empty sequence 2 u := t
+  // Goal 3 \textbf{while} defined previous{[}u{]} 4 insert u to the
+  beginning of S 5 u := previous{[}u{]}
+\item Returns the shortest path (if there are more than one, only one is
+  returned). Return empty if no path exists.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Dijkstra's algorithm: illustration}
+
+Dijkstra search for finding path between start (red) and goal (green)
+position (\href{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Wiki
+Commons}). Note how Dijkstra is expanding its search out from the
+starting position, without knowledge about which nodes could bring it
+closer to the goal.
+
+\end{frame}
+
+\begin{frame}{The cost of search}
+
+Maps can be huge
+
+\begin{itemize}
+\item For example, 100,000 m2 shopping mall, with a 10 x 10 cm map
+  resolution, requires 10 million nodes on the graph.
+\end{itemize}
+
+Search time can be problematic
+
+\begin{itemize}
+\item Dijkstra has order \emph{O}(N+V2). For example, for a map with 107
+  nodes and 108 vertices, it can take 107+102x8 ≈ 1016 calculations to
+  find a shortest path between two points.
+\item Some implementations are much more efficient. A* search is at worst
+  the same as Dijkstra, but can be polynomial in the number of nodes
+  \emph{O}(Nk) when a good heuristic is used. For example, if you can
+  choose between two nodes to explore, take the node closer to the goal.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{A* algorithm - illustration}
+
+A* search for finding path between start and goal position. A* uses a
+heuristic (here the distance to the goal
+\href{http://en.wikipedia.org/wiki/A*_search_algorithm}{--} it first
+expands to nodes closer to the goal) which gives it a chance of finding
+the solution in less time.
+\href{http://en.wikipedia.org/wiki/A*_search_algorithm}{(Wiki Commons})
+
+\end{frame}
+
+\section{Potential field path planning}
+
+\begin{frame}{Potential Field Path Planning}
+
+Robot is treated as a \emph{point under the influence} of an artificial
+potential field.
+
+\begin{itemize}
+\item Generated robot movement is similar to a ball rolling down the hill
+\item Goal generates attractive force
+\item Obstacle are repulsive forces.
+\end{itemize}
+
+Needed
+
+\begin{itemize}
+\item Location of robot.
+\item Location of obstacles.
+\item A good way is for these to be on a metric map.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Potential Field Path Planning}
+
+\end{frame}
+
+\begin{frame}{Potential Field Path Planning}
+
+Potential field generation
+
+Generation of potential field function \emph{U(q)}
+
+\begin{itemize}
+\item attracting (goal) and repulsing (obstacle) fields
+\item summing up the fields
+\item functions must be
+  \href{http://en.wikipedia.org/wiki/Differentiable_function}{differentiable}
+\end{itemize}
+
+Generate artificial force field \emph{F(q)}
+
+\begin{block}{\emph{}}
+
+\end{block}
+
+\begin{block}{\emph{}}
+
+\end{block}
+
+\begin{block}{\emph{}}
+
+Set robot speed (\emph{vx}, \emph{vy}) proportional to the force
+\emph{F}(\emph{q}) generated by the field
+
+\begin{itemize}
+\item the force field drives the robot to the goal
+\item if robot is assumed to be a point mass
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Potential Field Path Planning}
+
+Attractive potential field
+
+\begin{itemize}
+\item For example, a parabolic function representing the Euclidean distance
+  to the goal
+\item Attracting force converges linearly towards 0 (goal)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Potential Field Path Planning}
+
+Repulsing potential field
+
+Should generate a barrier around all the obstacle
+
+\begin{itemize}
+\item strong if close to the obstacle
+\item no influence if far from the obstacle
+\item Field is positive or zero and \emph{tends to infinity} as q gets
+  closer to the object
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Potential Field Path Planning}
+
+Notes:
+
+\begin{itemize}
+\item Local minima problem exists: robot can get stuck in places on the map
+  where the potential field has a local dip.
+\item problem is getting more complex if the robot is not considered as a
+  point mass
+\item If objects are convex there exists situations where several minimal
+  distances exist ® can result in oscillations
+\item Robot path oscillates, e.g. in narrow passages.
+\end{itemize}
+
+Sysquake demo
+
+Videos
+
+\begin{itemize}
+\item \url{http://www.youtube.com/watch?v=DxzRYYMjxKY}
+\item \url{http://www.youtube.com/watch?v=JnPfu7xHNt4}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Potential Field Path Planning}
+
+Extended Potential Field Path Planning
+
+Additionally a \emph{rotation potential field} and a \emph{task
+potential field} in introduced
+
+Rotation potential field
+
+\begin{itemize}
+\item force is also a function of robots orientation to the obstacle
+\end{itemize}
+
+Task potential field
+
+\begin{itemize}
+\item Filters out the obstacles that should not influence the robots
+  movements, i.e. only the obstacles in the sector Z in front of the
+  robot are considered
+\end{itemize}
+
+\end{frame}
+
+\section{Grassfire algorithm}
+
+\begin{frame}{Grassfire algorithm}
+
+\begin{itemize}
+\item Starting from a metric map, a wave front is expanded around the goal.
+\item Goal is reaches by travelling on descending values.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Grassfire algorithm}
+
+\end{frame}
+
+\begin{frame}{Grassfire algorithm}
+
+\end{frame}
+
+\begin{frame}{Grassfire algorithm}
+
+\begin{itemize}
+\item \textbf{function} Grassfire( M, goal )
+\item Q := goal // Put goal in queue
+\item M(goal) := 0 // Set goal value to 0
+\item \textbf{while} Q is not empty // Do until map filled
+\item a := dequeue from Q
+\item \textbf{for} n := \textbf{} all neighbours of a AND if neighbour no
+  value yet
+\item if n is not obstacle
+\item Q := Q enqueue n
+\item M(n) = M(a) + 1
+\end{itemize}
+
+Q is a
+\href{http://en.wikipedia.org/wiki/Queue_(abstract_data_type)}{queue
+data structure}, a first-in first-out list. The queue keeps track of
+which locations on the map still need to be visited.
+
+\end{frame}
+
+
+\begin{frame}{}
+    \begin{center}
+        \Large
+        That's all, folks!\\[2em]
+        \normalsize
+        Questions:\\
+        Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
+
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
