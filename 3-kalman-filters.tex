@@ -30,6 +30,15 @@
 \usetheme{hri}
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
+
+\newcommand{\colvec}[2][.8]{%
+  \scalebox{#1}{%
+    \renewcommand{\arraystretch}{.8}%
+    $\begin{bmatrix}#2\end{bmatrix}$%
+  }
+}
+
+
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning}
 
@@ -725,59 +734,140 @@ at $t$ (is the car braking or accelerating) and system dynamics
 
 \begin{frame}{Example 1: measuring a noisy yet constant value}
 
+    \only<1>{
 A Kalman filter to estimate the state of a system with \textbf{one
 variable}. For this demonstration, the variable remains
 \textbf{constant} (for example, measuring a voltage or a temperature).
 
-    \only<1>{
     \begin{center}
         \includegraphics[width=0.5\linewidth]{kalman-ex1-base}
     \end{center}
 }
 
-    \only<2-3>{
+    \only<2-5>{
 
         \textbf{Prediction}:
 
-    \only<2>{
     \large\centering
 
-    $\hat{\mathbf{x}}_{k\mid k-1} = \mathbf{F}\cdot \hat{\mathbf{x}}_{k-1\mid k-1} + \mathbf{B}\cdot u_{k-1}$
+    \only<2-5>{$\hat{\mathbf{x}}\bubblemark[0pt]{ex1-1}_{k\mid k-1} = \mathbf{F}\bubblemark[0pt]{ex1-2}\cdot \hat{\mathbf{x}}_{k-1\mid k-1} + \mathbf{B}\cdot u\bubblemark[0pt]{ex1-3}_{k-1} \only<4-5>{ = \hat{\mathbf{x}}_{k-1\mid k-1}}$}
+
+    \vspace{3em}
+    \only<2-5>{$\mathbf{P}_{k\mid k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}\bubblemark[0pt]{ex1-4} \only<5>{ = \mathbf{P}_{k\mid k-1} = \mathbf{P}_{k-1\mid k-1} + \colvec{0.0001}}$}
+    
+
+    \bubble<3>[70][0.5][1.5cm]{ex1-1}{$\mathbf{x}=\begin{bmatrix}x\end{bmatrix}$}
+    \bubble<3>[110][0.5][1.5cm]{ex1-2}{$\mathbf{F}=\begin{bmatrix}1\end{bmatrix}$}
+    \bubble<3>[110][0.5][1.5cm]{ex1-3}{$u=\begin{bmatrix}0\end{bmatrix}$}
+    \bubble<4>[110][0.5][2cm]{ex1-4}{$\mathbf{Q}$?\\ $\mathbf{Q}=\begin{bmatrix}0.0001\end{bmatrix}$}
+}
+    \only<6-10>{
+
+    \textbf{Correction}:
+
+    \large\centering
+
+    \bubblemark{ex1-6} % needed to avoid errors as ex1-6 is within an overlay
+
+    \only<6->{$\mathbf{K}_k = \frac{\mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}\bubblemark[0pt]{ex1-5}}}{\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R}} \only<7->{= \frac{\mathbf{P}_{k\mid k-1}}{\mathbf{P}_{k\mid k-1} + \bubblemark[0pt]{ex1-6}\mathbf{R}}} \only<8->{= \frac{\mathbf{P}_{k\mid k-1}}{\mathbf{P}_{k\mid k-1} + \colvec{0.01}}}$}
+    
 
     \vspace{2em}
-    $\mathbf{P}_{k\mid k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}$
-    
-    }
+
+    \only<6->{$\hat{\mathbf{x}}_{k\mid k} = \hat{\mathbf{x}}_{k\mid k-1} + \mathbf{K}_k\cdot (\mathbf{z}_k - \mathbf{H}\cdot \hat{\mathbf{x}}_{k\mid k-1}) \only<9->{= \hat{\mathbf{x}}_{k\mid k-1} + \mathbf{K}_k\cdot (\mathbf{z}_k - \hat{\mathbf{x}}_{k\mid k-1})}$}
+
+    \vspace{2em}
+    \only<6->{$\mathbf{P}_{k\mid k} = (I - \mathbf{K}_k\cdot \mathbf{H})\cdot \mathbf{P}_{k\mid k-1} \only<10>{= (\colvec{1} - \mathbf{K}_k) \cdot \mathbf{P}_{k\mid k-1}}$}
+
+
+    \bubble<6>[230][0.5][3cm]{ex1-5}{observation matrix $\mathbf{H}=\begin{bmatrix}1\end{bmatrix}$}
+    \bubble<7>[110][0.5][2cm]{ex1-6}{$\mathbf{R}$?\\ $\mathbf{R}=\begin{bmatrix}0.01\end{bmatrix}$}
 }
 
-\end{frame}
-
-\begin{frame}[fragile]{Example code}
-
-    \begin{pythoncode}
-
-# Our initial estimate of the system's state
-x_estimate_posterior(1) = -0.4;
-
-# The recursive Kalman filter process
-for k in range(2,COUNT):
-    # Time update phase
-    x_estimate_prior(k) = x_estimate_posterior(k-1)
-    P_prior(k) = P(k-1) + Q
-
-    # Measurement update phase
-    K(k) = P_prior(k) / ( P_prior(k) + R )
-    x_estimate_posterior(k) = x_estimate_prior(k) + \
-                  K(k) * (z(k) - x_estimate_prior(k))
-
-    P(k) = (1 - K(k)) * P_prior(k)
-    \end{pythoncode}
 
 \end{frame}
 
-\imageframe[scale=0.8]{kalman1}
+\begin{frame}[fragile]{In Python...}
 
-\begin{frame}{Example 2}
+\begin{pythoncode}
+import numpy.matlib as mat
+
+x = [[0]]; P = [[0]]
+
+Q = mat.matrix([0.0001]); R = mat.matrix([0.01])
+
+def kalman(t):
+    # Prediction phase
+    x_prior = x[k-1]
+    P_prior = P[k-1] + Q
+
+    # Measurement update (correction) phase
+    K = P_prior / ( P_prior + R )
+    x.append(x_prior + K * (z[k] - x_prior))
+    P.append((mat.identity(1) - K) * P_prior)
+
+
+\end{pythoncode}
+
+\end{frame}
+
+\imageframe[scale=0.8]{kalman-ex1-final}
+
+\begin{frame}{Example 2: free fall}
+
+    \only<1>{
+A Kalman filter to estimate the state of a system with \textbf{one
+    variable} (height). The variable \textbf{changes} under the effect of an external force (gravity).
+
+    \begin{center}
+        \includegraphics[width=0.5\linewidth]{kalman-ex1-base}
+    \end{center}
+}
+
+\only<2-3> {
+
+    \textbf{Free fall equations}
+
+    \begin{align*}
+        \ddot{y}(t) &= -g \\
+        \Rightarrow \dot{y}(t) &= \dot{y}(t_0) - g (t-t_0) \\
+        \Rightarrow y(t) &= y(t_0) + \dot{y}(t_0) (t-t_0) - \frac{g}{2} (t-t_0)^2 \\
+    \end{align*}
+
+    \only<3> {
+    As a discrete time system, with time increment $t-t_0 = 1$:
+
+    \begin{center}
+    $y_k = y_{k-1} + \dot{y}_{k-1} - \frac{g}{2}$
+    \end{center}
+
+    \alert{How to fit it into our process equations?}
+}
+}
+
+    \only<4-6>{
+
+        The trick consists in embeding the velocity in our state: $\mathbf{x} = \colvec{y \\ \dot{y}}$
+
+        \only<5->{
+            \begin{align*}
+                \colvec{y \\ \dot{y}}_{k\mid k-1} &= \mathbf{F}\cdot \colvec{y \\ \dot{y}}_{k-1\mid k-1} + \mathbf{B} \cdot u_{k-1} \\
+                                                  &= \begin{bmatrix}1 & 1 \\ 0 & 1\end{bmatrix} \cdot \begin{bmatrix}y \\ \dot{y}\end{bmatrix}_{k-1\mid k-1} + \begin{bmatrix}0.5 \\ 1\end{bmatrix} \cdot (-g)
+            \end{align*}
+        }
+        \only<6->{
+            Measurements:
+        
+            \begin{align*}
+                z_k &= \mathbf{H}\cdot \colvec{y \\ \dot{y}}_{k-1\mid k-1} + \mathbf{w}_k \\
+                    &= \begin{bmatrix}1 \\ 0\end{bmatrix} \cdot \begin{bmatrix}y \\ \dot{y}\end{bmatrix}_{k-1\mid k-1} + \mathbf{w}_k
+            \end{align*}
+
+        }
+    }
+\end{frame}
+
+\begin{frame}{Example 2: free fall}
 
   Kalman filter to estimate a moving value (one dimensional).
 
