@@ -249,16 +249,16 @@ A linear equation is a sum of input variables
                 \textbf{Multivariate}
 
             \[
-                p(x_k) = p(\begin{bmatrix}
+                p(x_n) = p(\begin{bmatrix}
                     x_1 \\
                     \vdots \\ 
-                    x_k
-                \end{bmatrix}) \sim \mathcal{N}_k(\mu, \Sigma\bubblemark[-2ex]{cov}):
+                    x_n
+                \end{bmatrix}) \sim \mathcal{N}_n(\mu, \Sigma\bubblemark[-2ex]{cov}):
             \]
 
         \[
-            p(x_k) =
-                \frac{1}{\sqrt{(2\pi)^{k}|\Sigma|}} e^{-\frac{1}{2}(x-\mu)^\mathrm{T}\Sigma^{-1}(x-\mu)}
+            p(x_n) =
+                \frac{1}{\sqrt{(2\pi)^{n}|\Sigma|}} e^{-\frac{1}{2}(x_n-\mu)^\mathrm{T}\Sigma^{-1}(x_n-\mu)}
             \]
     }
         \end{column}
@@ -331,7 +331,7 @@ A linear equation is a sum of input variables
     \bubble<1>[100]{prob}{Probability distribution}
 
     \bubble<2>[120][0.5]{gauss4}{For example, the $x$ and $y$ position of a robot}
-    \bubble<2>{cov}{$k \times k$ covariance matrix}
+    \bubble<2>{cov}{$n \times n$ covariance matrix}
 
 \end{frame}
 
@@ -425,6 +425,10 @@ $t+1$ depends on its position at time $t$, the control input
 at $t$ (is the car braking or accelerating) and system dynamics
 (it slows down due to friction).
 
+\pause
+
+    Instead of $t$, we use $k$ to denote \emph{discrete time steps}.
+
 \end{frame}
 
 \begin{frame}{The process equations (1)}
@@ -434,9 +438,9 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \vspace{4em}
 
     \Huge\centering
-    $x\bubblemark[-1ex]{pe1}_t = \bubblemark[0pt]{pe2}A \cdot x\bubblemark[-1ex]{pe3}_{t-1} + \bubblemark[0pt]{pe4}B \cdot u\bubblemark[-1ex]{pe5}_{t-1} + \bubblemark[0pt]{pe6}w_{t-1}$
+    $x\bubblemark[-1ex]{pe1}_k = \bubblemark[0pt]{pe2}F \cdot x\bubblemark[-1ex]{pe3}_{k-1} + \bubblemark[0pt]{pe4}B \cdot u\bubblemark[-1ex]{pe5}_{k-1} + \bubblemark[0pt]{pe6}w_{k-1}$
 
-    \bubble<1->[230]{pe1}{The state at time step $t$}
+    \bubble<1->[230]{pe1}{The state at time step $k$}
     \bubble<2->[50]{pe2}{$n \times n$ matrix changing the previous state into the current state}
     \bubble<1->[210][1]{pe3}{The state one time step ago}
     \bubble<3->[50]{pe4}{$n \times l$ matrix that maps the control input onto the state}
@@ -453,7 +457,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \vspace{3em}
 
     \Huge\centering
-    $\bubblemark[0pt]{pe7}z_t = H\bubblemark[0pt]{pe8} \cdot x_t + v\bubblemark[0pt]{pe9}_t$
+    $\bubblemark[0pt]{pe7}z_k = H\bubblemark[0pt]{pe8} \cdot x_k + v\bubblemark[0pt]{pe9}_k$
 
     \bubble<1>[50][0.5][3cm]{pe7}{Measurements, a vector of size $m$}
     \bubble<1>[110][0.5][2.5cm]{pe8}{$m \times n$ matrix mapping the state to the measurements}
@@ -464,13 +468,20 @@ at $t$ (is the car braking or accelerating) and system dynamics
 \begin{frame}{The process equations: recap of main models}
 
 \begin{itemize}
-    \item \textbf{State transition model} $A$: matrix $n \times n$ that describes how the state
-  changes from $t-1$ to $t$ without controls or noise.
+    \item \textbf{State transition model} $F$: matrix $n \times n$ that describes how the state
+  changes from $k-1$ to $k$ without controls or noise.
     \item \textbf{Control input model} $B$: matrix $n \times l$ that describes how the
-        control $u_{t-1}$ changes the state from $t-1$ to $t$.
+        control $u_{k-1}$ changes the state from $k-1$ to $k$.
     \item \textbf{Observation model} $H$: Matrix $m \times n$ that describes how to map the
-  state $x_t$ to the measurements $z_t$.
+  state $x_k$ to the measurements $z_k$.
 \end{itemize}
+
+\pause
+
+    \begin{itemize}
+        \item \textbf{Process noise model} $w_k$: a vector of size $n$
+        \item \textbf{Measurement noise model} $v_k$: a vector of size $m$
+    \end{itemize}
 
 \end{frame}
 
@@ -486,9 +497,9 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \]
 
 \only<1>{
-    If $cov(X,Y) > 0$, then $X$ and $Y$ tend move together. If
-        $cov(X,Y) < 0$ then $X$ and $Y$ have an opposite effect on
-        eachother. And $cov(X,Y) = 0$?
+    If $cov(X,Y) > 0$, then $X$ and $Y$ tend move together. \\
+    If $cov(X,Y) < 0$ then $X$ and $Y$ have an opposite effect on eachother. \\
+    And $cov(X,Y) = 0$?
 
     }
     \only<2>{
@@ -547,7 +558,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
 
 \begin{frame}{The process equations (3)}
 
-    The variables $w_t$ and $v_t$ contain the random noise on the state and
+    The variables $w_k$ and $v_k$ contain the random noise on the state and
     measurements. They (are assumed to) have a \textbf{normal} distribution.
 
     \vspace{3em}
@@ -580,8 +591,8 @@ at $t$ (is the car braking or accelerating) and system dynamics
     The state of the filter is represented by two variables:
 
     \begin{itemize}
-        \item $\hat{\mathbf{x}}_{t\mid t}$\bubblemark[-1ex]{aposteriori}: the state estimate at time $t$ given observations up to and including at time $t$
-        \item $\mathbf{P}_{t\mid t}$: the \emph{error covariance matrix} (a measure of the estimated accuracy of the state estimate)
+        \item $\hat{\mathbf{x}}_{k\mid k}$\bubblemark[-1ex]{aposteriori}: the state estimate at time $k$ given observations up to and including at time $k$
+        \item $\mathbf{P}_{k\mid k}$: the \emph{error covariance matrix} (a measure of the estimated accuracy of the state estimate)
     \end{itemize}
 
     \bubble<2>[200][5.5][4cm]{aposteriori}{the notation $\hat{\mathbf{x}}_{n\mid m}$
@@ -617,7 +628,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \begin{itemize}
         \item \emph{A priori} means that the estimate is taken before any new sensor
             measurements have come in.
-        \item \textbf{Notation}: $\hat{\mathbf{x}}_{t\mid t-1}$
+        \item \textbf{Notation}: $\hat{\mathbf{x}}_{k\mid k-1}$
     \end{itemize}
 
 
@@ -630,25 +641,25 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \begin{itemize}
         \item \emph{A posteriori} because the estimate is made after new sensor
             measurements have come in.
-        \item \textbf{Notation}: $\hat{\mathbf{x}}_{t\mid t}$
+        \item \textbf{Notation}: $\hat{\mathbf{x}}_{k\mid k}$
     \end{itemize}
 }
 \end{frame}
 
 \begin{frame}{Predict step equations}
 
-    \Huge\centering
-    $\hat{\mathbf{x}}_{t\mid \bubblemark[0pt]{up1}t-1} = \mathbf{A}\cdot \hat{\mathbf{x}}_{t-1\mid \bubblemark[0pt]{up2}t-1} + \mathbf{B}\cdot u_{t-1}$
+    \huge\centering
+    $\hat{\mathbf{x}}_{k\mid \bubblemark[0pt]{up1}k-1} = \mathbf{F}\cdot \hat{\mathbf{x}}_{k-1\mid \bubblemark[0pt]{up2}k-1} + \mathbf{B}\cdot u_{k-1}$
 
     \vspace{2em}
-    $\mathbf{P}_{t\mid \bubblemark[0pt]{up3}t-1} = \mathbf{A}\cdot \mathbf{P}_{t-1\mid \bubblemark[0pt]{up4}t-1}\cdot \mathbf{A}^{\text{T}} + \bubblemark[0pt]{up5}\mathbf{Q}$
+    $\mathbf{P}_{k\mid \bubblemark[0pt]{up3}k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid \bubblemark[0pt]{up4}k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}\bubblemark[0pt]{up5}$
 
 
-    \bubble<1>[130][0.5][3cm]{up1}{A priori estimate of the state at time $t$}
-    \bubble<1>[130][0.5][4cm]{up2}{A posteriori estimate of the state at time $t-1$}
-    \bubble<1>[130][0.5][3cm]{up3}{A priori estimate of the error covariance at time $t$}
-    \bubble<1>[100][0.5][4cm]{up4}{A poseriori estimate of the error covariance at time $t-1$}
-    \bubble<1>[90][0.5][1.5cm]{up5}{Process noise}
+    \bubble<1>[130][0.5][3cm]{up1}{A priori estimate of the state at time $k$}
+    \bubble<1>[130][0.5][4cm]{up2}{A posteriori estimate of the state at time $k-1$}
+    \bubble<1>[100][0.5][3cm]{up3}{A priori estimate of the error covariance at time $k$}
+    \bubble<1>[100][0.5][4cm]{up4}{A poseriori estimate of the error covariance at time $k-1$}
+    \bubble<1>[110][0.7][1.5cm]{up5}{Process noise}
 
 \end{frame}
 
@@ -657,14 +668,14 @@ at $t$ (is the car braking or accelerating) and system dynamics
 
 
     \Huge\centering
-    $\bubblemark[0pt]{up6}\mathbf{K}_t = \frac{\mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}}}{\mathbf{H}\cdot \mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R}_t}$
+    $\bubblemark[0pt]{up6}\mathbf{K}_k = \frac{\mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}}{\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R}}$
 
     \vspace{2em}
     \huge
-    $\hat{\mathbf{x}}_{t\mid \bubblemark[0pt]{up7}t} = \highlight<2>{\hat{\mathbf{x}}\bubblemark[-1ex]{up10}_{t\mid t-1}} + \highlight<3>{\mathbf{K}_t\cdot (\mathbf{z}_t - \mathbf{H}\bubblemark[-1ex]{up9}\cdot \hat{\mathbf{x}}_{t\mid t-1})}$
+    $\hat{\mathbf{x}}_{k\mid \bubblemark[0pt]{up7}k} = \highlight<2>{\hat{\mathbf{x}}\bubblemark[-1ex]{up10}_{k\mid k-1}} + \highlight<3>{\mathbf{K}_k\cdot (\mathbf{z}_k - \mathbf{H}\bubblemark[-1ex]{up9}\cdot \hat{\mathbf{x}}_{k\mid k-1})}$
 
     \vspace{2em}
-    $\mathbf{P}_{t|t} = (I - \mathbf{K}_t\cdot \mathbf{H})\cdot \mathbf{P}_{t|t-1}$
+    $\mathbf{P}_{k|k} = (I - \mathbf{K}_k\cdot \mathbf{H})\cdot \mathbf{P}_{k|k-1}$
 
 
     \bubble<1>[70][1][4cm]{up6}{The Kalman gain, this needs to calculated first}
@@ -681,44 +692,63 @@ at $t$ (is the car braking or accelerating) and system dynamics
 \begin{frame}{The Kalman filter loop}
 
     \centering
+    \resizebox{\linewidth}{!}{
     \begin{tikzpicture}[>=latex]
 
-        \node[align=center,text width=5cm,anchor=north] at (-3.5,0) (A) {\emph{Prediction}\small
+        \node[align=center,text width=5.2cm,anchor=north] at (-3.5,0) (A) {\emph{Prediction}\small
                                                             \begin{enumerate}
                                                                 \item Project the state ahead \\
-                                                                $\hat{\mathbf{x}}_{t\mid t-1} = \mathbf{A}\cdot \hat{\mathbf{x}}_{t-1\mid t-1} + \mathbf{B}\cdot u_{t-1}$
+                                                                $\hat{\mathbf{x}}_{k\mid k-1} = \mathbf{F}\cdot \hat{\mathbf{x}}_{k-1\mid k-1} + \mathbf{B}\cdot u_{k-1}$
                                                                 \item Project the error covariance ahead \\
-                                                                $\mathbf{P}_{t\mid t-1} = \mathbf{A}\cdot \mathbf{P}_{t-1\mid t-1}\cdot \mathbf{A}^{\text{T}} + \mathbf{Q}$
+                                                                $\mathbf{P}_{k\mid k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}$
                                                         \end{enumerate}
                                                             };
-        \node[align=center,text width=6cm,anchor=north] at (2.5,0) (B) {\emph{Correction}\small
+        \node[align=center,text width=6.2cm,anchor=north] at (2.5,0) (B) {\emph{Correction}\small
                                             \begin{enumerate}
                                                 \item Compute Kalman gain \\
-                                                $\mathbf{K}_t = \mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}}(\mathbf{H}\cdot \mathbf{P}_{t\mid t-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R}_t)^{-1}$
-                                                \item Update estimate with measurement $z_t$ \\
-                                                $\hat{\mathbf{x}}_{t\mid t} = \hat{\mathbf{x}}_{t\mid t-1} + \mathbf{K}_t\cdot (\mathbf{z}_t - \mathbf{H}\cdot \hat{\mathbf{x}}_{t\mid t-1})$
+                                                $\mathbf{K}_k = \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}(\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R})^{-1}$
+                                                \item Update estimate with\\ measurements $z_k$ \\
+                                                $\hat{\mathbf{x}}_{k\mid k} = \hat{\mathbf{x}}_{k\mid k-1} + \mathbf{K}_k\cdot (\mathbf{z}_k - \mathbf{H}\cdot \hat{\mathbf{x}}_{k\mid k-1})$
                                                 \item Update the error covariance \\
-                                                $\mathbf{P}_{t|t} = (I - \mathbf{K}_t\cdot \mathbf{H})\cdot \mathbf{P}_{t|t-1}$
+                                                $\mathbf{P}_{k\mid k} = (I - \mathbf{K}_k\cdot \mathbf{H})\cdot \mathbf{P}_{k\mid k-1}$
                                             \end{enumerate}
         };
-        \node[align=center,text width=4cm,anchor=north] at (-4,-5) (C) {\emph{Initial estimates} for $\hat{\mathbf{x}}_{t-1}$ and $\mathbf{P}_{t-1}$};
+        \node[align=center,text width=4cm,anchor=north] at (-4,-5) (C) {\emph{Initial estimates} for $\hat{\mathbf{x}}_{k-1}$ and $\mathbf{P}_{k-1}$};
 
         \draw[very thick, ->] (A) to[bend left=60] (B);
         \draw[very thick, ->] (B) to[bend left=60] (A);
         \draw[very thick, ->] (C) to (C.north |- A.south);
     \end{tikzpicture}
+    }
 
 \end{frame}
 
-\begin{frame}{Example 1}
+\begin{frame}{Example 1: measuring a noisy yet constant value}
 
 A Kalman filter to estimate the state of a system with \textbf{one
 variable}. For this demonstration, the variable remains
 \textbf{constant} (for example, measuring a voltage or a temperature).
 
-\begin{itemize}
-    \item See Python code and demo.
-\end{itemize}
+    \only<1>{
+    \begin{center}
+        \includegraphics[width=0.5\linewidth]{kalman-ex1-base}
+    \end{center}
+}
+
+    \only<2-3>{
+
+        \textbf{Prediction}:
+
+    \only<2>{
+    \large\centering
+
+    $\hat{\mathbf{x}}_{k\mid k-1} = \mathbf{F}\cdot \hat{\mathbf{x}}_{k-1\mid k-1} + \mathbf{B}\cdot u_{k-1}$
+
+    \vspace{2em}
+    $\mathbf{P}_{k\mid k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}$
+    
+    }
+}
 
 \end{frame}
 
