@@ -19,13 +19,15 @@ INTERACTIVE=True
 COUNT = 150
 t = 0
 
+NOISE_SIGMA=0.01
+
 # The actual state of our system (constant value)
 realx = [-0.37727] * COUNT
 #realx = [math.sin(x/12.0) for x in range(0,COUNT-1)]
 
 # Our simulated measurements: realx + a normal (Gaussian) noise
 def generate_noisy_data(data):
-    return [[x + rnd.normal(0, 0.1)] for x in data]
+    return [[x + rnd.normal(0, NOISE_SIGMA)] for x in data]
 
 z = generate_noisy_data(realx)
 
@@ -40,13 +42,13 @@ def reset_state():
 
     # Our initial estimate of the system's state
     x = [mat.zeros(1)]
-    P = [mat.zeros((1,1))]
+    P = [mat.matrix([0.001])]
 
 reset_state()
 
 # Initialise our matrices
 H = mat.identity(1)
-Q = mat.matrix([0.0001])
+Q = mat.zeros((1,1))
 R = mat.matrix([0.01])
 
 
@@ -91,11 +93,13 @@ else:
     pause = False
 
     def restart():
+        global pause
         print("Restarting the plot")
 
         reset_state()
 
         source.data=dict(idx=[0], est=[x[0][0,0]],measure=z[0],real=[realx[0]])
+        pause = False
 
     def togglepause():
         global pause
@@ -106,6 +110,13 @@ else:
         print("Updating target value to %s" % target.value)
         realx = [target.value] * COUNT
         z = generate_noisy_data(realx)
+
+    def set_noise_variance(attrname, old, new):
+        global NOISE_SIGMA,z
+        print("Updating noise variance to %s" % noisevariance.value)
+        NOISE_SIGMA = noisevariance.value
+        z = generate_noisy_data(realx)
+
 
     def set_measurement_noise(attrname, old, new):
         global R
@@ -119,10 +130,13 @@ else:
     pausebutton.on_click(togglepause)
 
 
-    target = Slider(title="Actual value", value=realx[0], start=-5.0, end=5.0, step=0.1)
+    target = Slider(title="Actual value", value=realx[0], start=-1.0, end=0.0, step=0.1)
     target.on_change('value', update_data)
 
-    measurementnoise = Slider(title="Measurement noise", value=R[0,0], start=0, end=0.1, step=0.001)
+    noisevariance = Slider(title="Noise variance", value=NOISE_SIGMA, start=0.001, end=0.2, step=0.001)
+    noisevariance.on_change('value', set_noise_variance)
+
+    measurementnoise = Slider(title="Measurement noise R", value=R[0,0], start=0.0001, end=0.1, step=0.001)
     measurementnoise.on_change('value', set_measurement_noise)
 
 
@@ -163,16 +177,16 @@ else:
 
                 t += 1
 
-                time.sleep(0.1)
+                time.sleep(0.2)
 
             time.sleep(0.2)
 
-    p = figure(x_range=[0, COUNT])
+    p = figure(x_range=[0, COUNT], y_range=[-1,0])
     l = p.circle(x='idx', y='measure', source=source, legend="Measurements")
     p.line(x='idx', y='real', source=source, legend="Real value", line_width=2, line_color="orange", line_dash="4 4")
     p.line(x='idx', y='est', source=source, legend="Kalman output", line_width=2, line_color="green")
 
-    doc.add_root(row(widgetbox(startbutton, pausebutton, target, measurementnoise),p,width=800))
+    doc.add_root(row(widgetbox(startbutton, pausebutton, target, noisevariance, measurementnoise),p,width=800))
 
     thread = Thread(target=blocking_task)
     thread.start()
