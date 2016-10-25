@@ -88,6 +88,8 @@ if not INTERACTIVE:
 
 else:
 
+    pause = False
+
     def restart():
         print("Restarting the plot")
 
@@ -95,23 +97,15 @@ else:
 
         source.data=dict(idx=[0], est=[x[0][0,0]],measure=z[0],real=[realx[0]])
 
+    def togglepause():
+        global pause
+        pause = not pause
+
     def update_data(attrname, old, new):
-
-        if attrname == "processnoise":
-            print("Updating process noise to %s" % processnoise.value)
-            Q = mat.matrix([processnoise.value])
-        elif attrname == "value":
-            print("Updating target value to %s" % target.value)
-            realx = [target.value] * COUNT
-            z = generate_noisy_data(realx)
-
-            #realx[t:] = measures
-            #z[t:] = noisy_measures
-
-    def set_process_noise(attrname, old, new):
-        global Q
-        print("Updating process noise to %s" % processnoise.value)
-        Q = mat.matrix([processnoise.value])
+        global realx,z
+        print("Updating target value to %s" % target.value)
+        realx = [target.value] * COUNT
+        z = generate_noisy_data(realx)
 
     def set_measurement_noise(attrname, old, new):
         global R
@@ -121,11 +115,12 @@ else:
     startbutton = Button(label="Restart", button_type="success")
     startbutton.on_click(restart)
 
+    pausebutton = Button(label="Pause", button_type="warning")
+    pausebutton.on_click(togglepause)
+
+
     target = Slider(title="Actual value", value=realx[0], start=-5.0, end=5.0, step=0.1)
     target.on_change('value', update_data)
-
-    processnoise = Slider(title="Process noise", value=Q[0,0], start=0, end=0.01, step=0.0001)
-    processnoise.on_change('value', set_process_noise)
 
     measurementnoise = Slider(title="Measurement noise", value=R[0,0], start=0, end=0.1, step=0.001)
     measurementnoise.on_change('value', set_measurement_noise)
@@ -149,6 +144,11 @@ else:
         while True: # run forever -> this allow to restart the plot even after we've reached COUNT
             
             while t < COUNT:
+
+                if pause:
+                    time.sleep(0.2)
+                    continue
+
                 # do some blocking computation
                 kalman(t)
 
@@ -163,7 +163,6 @@ else:
 
                 t += 1
 
-                print(t)
                 time.sleep(0.1)
 
             time.sleep(0.2)
@@ -173,7 +172,7 @@ else:
     p.line(x='idx', y='real', source=source, legend="Real value", line_width=2, line_color="orange", line_dash="4 4")
     p.line(x='idx', y='est', source=source, legend="Kalman output", line_width=2, line_color="green")
 
-    doc.add_root(row(widgetbox(startbutton, target,processnoise, measurementnoise),p,width=800))
+    doc.add_root(row(widgetbox(startbutton, pausebutton, target, measurementnoise),p,width=800))
 
     thread = Thread(target=blocking_task)
     thread.start()
