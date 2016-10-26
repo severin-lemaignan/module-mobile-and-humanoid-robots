@@ -3,10 +3,9 @@ import numpy.random as rnd
 
 COUNT=150
 
-NOISE_VARIANCE=0.06
-
 NOISE_VARIANCE=0.04
 
+# "scale" the gravity to have a nicer plot
 SCALE = 0.00001
 
 g = 9.8 * SCALE

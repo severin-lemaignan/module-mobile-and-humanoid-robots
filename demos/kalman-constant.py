@@ -69,7 +69,7 @@ for i in range(0, COUNT-1):
     k += 1
 
 # output to static HTML file
-output_file("lines.html")
+output_file("output.html")
 
 # create a new plot with a title and axis labels
 p = figure(x_axis_label='steps', y_axis_label='variable',y_range=[-1,1],x_range=[0,COUNT])
