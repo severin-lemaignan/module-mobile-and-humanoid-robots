@@ -58,9 +58,12 @@
 
 \begin{frame}{Part 3 -- Kalman filters}
 
-    For further reading, see \href{http://www.cs.unc.edu/~welch/kalman/}{Welch and Bishop (2001) An introduction to the
-    Kalman filter, SIGGRAPH 2001, ACM}.
-
+    For further reading, see:
+    \begin{itemize}
+        \item \href{http://www.cs.unc.edu/~welch/kalman/}{Welch and Bishop
+            (2001) An introduction to the Kalman filter, SIGGRAPH 2001, ACM}.
+        \item Autonomous Mobile Robots, chapter 5.6.8
+    \end{itemize}
     
 
 
@@ -631,7 +634,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \only<4->{
 
 
-        The \textbf{Predict} step uses the state estimate from the previous timestep to produce an estimate of the state \textbf{at the current timestep}. This is called the
+        The \textbf{Prediction} step uses the state estimate from the previous timestep to produce an estimate of the state \textbf{at the current timestep}. This is called the
     \textbf{a priori} estimate
 
     \begin{itemize}
@@ -641,10 +644,9 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \end{itemize}
 
 
-    }
-    \only<5>{
+    \onslide<5>{
 
-        The \textbf{Correct} step is run after new measurements have come
+        The \textbf{Correction} step is run after new measurements have come
     in an provide the \textbf{a posteriori} estimate.
 
     \begin{itemize}
@@ -652,8 +654,11 @@ at $t$ (is the car braking or accelerating) and system dynamics
             measurements have come in.
         \item \textbf{Notation}: $\hat{\mathbf{x}}_{k\mid k}$
     \end{itemize}
+    }
 }
 \end{frame}
+
+\imageframe{overview_kalman_filtering}
 
 \begin{frame}{Predict step equations}
 
@@ -667,7 +672,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
     \bubble<1>[130][0.5][3cm]{up1}{A priori estimate of the state at time $k$}
     \bubble<1>[130][0.5][4cm]{up2}{A posteriori estimate of the state at time $k-1$}
     \bubble<1>[100][0.5][3cm]{up3}{A priori estimate of the error covariance at time $k$}
-    \bubble<1>[100][0.5][4cm]{up4}{A poseriori estimate of the error covariance at time $k-1$}
+    \bubble<1>[100][0.5][4cm]{up4}{A posteriori estimate of the error covariance at time $k-1$}
     \bubble<1>[110][0.7][1.5cm]{up5}{Process noise}
 
 \end{frame}
@@ -676,25 +681,26 @@ at $t$ (is the car braking or accelerating) and system dynamics
 \begin{frame}{Correct step equations (measurement update)}
 
 
-    \Huge\centering
-    $\bubblemark[0pt]{up6}\mathbf{K}_k = \frac{\mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}}{\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R}}$
+    \huge\centering
+    $\mathbf{K}_{k\bubblemark[0pt]{up6}} = \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}\cdot (\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R})$
 
     \vspace{2em}
-    \huge
     $\hat{\mathbf{x}}_{k\mid \bubblemark[0pt]{up7}k} = \highlight<2>{\hat{\mathbf{x}}\bubblemark[-1ex]{up10}_{k\mid k-1}} + \highlight<3>{\mathbf{K}_k\cdot (\mathbf{z}_k - \mathbf{H}\bubblemark[-1ex]{up9}\cdot \hat{\mathbf{x}}_{k\mid k-1})}$
 
     \vspace{2em}
-    $\mathbf{P}_{k|k} = (I - \mathbf{K}_k\cdot \mathbf{H})\cdot \mathbf{P}_{k|k-1}$
+    $\mathbf{P}_{k\mid\bubblemark[0pt]{up11}k} = (I - \mathbf{K}_k\cdot \mathbf{H})\cdot \mathbf{P}_{k\mid k-1}$
 
 
-    \bubble<1>[70][1][4cm]{up6}{The Kalman gain, this needs to calculated first}
+    \bubble<1>[130][0.5][4cm]{up6}{The \textbf{Kalman gain}, this needs to calculated first}
 
     \bubble<1>[130][0.5][3cm]{up7}{The \emph{a posteriori} estimated state}
+    \bubble<1>[130][0.5][4cm]{up11}{The \emph{a posteriori} estimated covariance of our state}
 
     \bubble<1>[50][0.5]{up8}{Sensor noise}
 
     \bubble<3>[270][0.5][5cm]{up9}{(actual measurements - expected measurement) $\times$ Kalman gain}
     \bubble<2>[270][0.5][4cm]{up10}{estimated state at last step}
+
 
 \end{frame}
 
@@ -715,7 +721,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
         \node[align=center,text width=6.2cm,anchor=north] at (2.5,0) (B) {\emph{Correction}\small
                                             \begin{enumerate}
                                                 \item Compute Kalman gain \\
-                                                $\mathbf{K}_k = \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}(\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R})^{-1}$
+                                                $\mathbf{K}_k = \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}\cdot (\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R})^{-1}$
                                                 \item Update estimate with\\ measurements $z_k$ \\
                                                 $\hat{\mathbf{x}}_{k\mid k} = \hat{\mathbf{x}}_{k\mid k-1} + \mathbf{K}_k\cdot (\mathbf{z}_k - \mathbf{H}\cdot \hat{\mathbf{x}}_{k\mid k-1})$
                                                 \item Update the error covariance \\
@@ -753,13 +759,12 @@ variable}. For this demonstration, the variable remains
     \only<2-5>{$\hat{\mathbf{x}}\bubblemark[0pt]{ex1-1}_{k\mid k-1} = \mathbf{F}\bubblemark[0pt]{ex1-2}\cdot \hat{\mathbf{x}}_{k-1\mid k-1} + \mathbf{B}\cdot u\bubblemark[0pt]{ex1-3}_{k-1} \only<4-5>{ = \hat{\mathbf{x}}_{k-1\mid k-1}}$}
 
     \vspace{3em}
-    \only<2-5>{$\mathbf{P}_{k\mid k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}\bubblemark[0pt]{ex1-4} \only<5>{ = \mathbf{P}_{k\mid k-1} = \mathbf{P}_{k-1\mid k-1} + \colvec{0.0001}}$}
+    \only<2-5>{$\mathbf{P}_{k\mid k-1} = \mathbf{F}\cdot \mathbf{P}_{k-1\mid k-1}\cdot \mathbf{F}^{\text{T}} + \mathbf{Q}\bubblemark[0pt]{ex1-4} \only<5>{ = \mathbf{P}_{k-1\mid k-1}}$}
     
 
     \bubble<3>[70][0.5][1.5cm]{ex1-1}{$\mathbf{x}=\begin{bmatrix}x\end{bmatrix}$}
     \bubble<3>[110][0.5][1.5cm]{ex1-2}{$\mathbf{F}=\begin{bmatrix}1\end{bmatrix}$}
     \bubble<3>[110][0.5][1.5cm]{ex1-3}{$u=\begin{bmatrix}0\end{bmatrix}$}
-    \bubble<4>[110][0.5][2cm]{ex1-4}{$\mathbf{Q}$?\\ $\mathbf{Q}=\begin{bmatrix}0.0001\end{bmatrix}$}
 }
     \only<6-10>{
 
@@ -769,8 +774,13 @@ variable}. For this demonstration, the variable remains
 
     \bubblemark{ex1-6} % needed to avoid errors as ex1-6 is within an overlay
 
-    \only<6->{$\mathbf{K}_k = \frac{\mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}\bubblemark[0pt]{ex1-5}}}{\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R}} \only<7->{= \frac{\mathbf{P}_{k\mid k-1}}{\mathbf{P}_{k\mid k-1} + \bubblemark[0pt]{ex1-6}\mathbf{R}}} \only<8->{= \frac{\mathbf{P}_{k\mid k-1}}{\mathbf{P}_{k\mid k-1} + \colvec{0.01}}}$}
-    
+    \only<6->{
+    \begin{align*}
+        \mathbf{K}_k &= \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}\bubblemark[0pt]{ex1-5}}\cdot (\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \mathbf{R})^{-1} \\
+           \only<7->{&= \mathbf{P}_{k\mid k-1}\cdot (\mathbf{P}_{k\mid k-1} + \bubblemark[0pt]{ex1-6}\mathbf{R})^{-1}} \\
+           \only<8->{&= \mathbf{P}_{k\mid k-1}\cdot (\mathbf{P}_{k\mid k-1} + \colvec{0.01})^{-1}}
+    \end{align*}
+    }
 
     \vspace{2em}
 
@@ -790,25 +800,30 @@ variable}. For this demonstration, the variable remains
 \begin{frame}[fragile]{In Python...}
 
 \begin{pythoncode}
-import numpy.matlib as mat
+from numpy.matlib import matrix
 
-x = [[0]]; P = [[0]]
+# initial state estimate
+x = [matrix([0.])]
+P = [matrix([0.001])]
 
-Q = mat.matrix([0.0001]); R = mat.matrix([0.01])
+k = 1 # step
 
-def kalman(t):
+R = matrix([0.01]) # estimate of measurement noise
+
+def kalman(k):
     # Prediction phase
     x_prior = x[k-1]
-    P_prior = P[k-1] + Q
+    P_prior = P[k-1]
 
-    # Measurement update (correction) phase
+    # Correction phase
     K = P_prior / ( P_prior + R )
     x.append(x_prior + K * (z[k] - x_prior))
-    P.append((mat.identity(1) - K) * P_prior)
+    P.append((matrix([1.]) - K) * P_prior)
 
 
 \end{pythoncode}
 
+The complete examples are online.
 \end{frame}
 
 \imageframe[scale=0.8]{kalman-ex1-final}
@@ -820,7 +835,7 @@ A Kalman filter to estimate the state of a system with \textbf{one
     variable} (height). The variable \textbf{changes} under the effect of an external force (gravity).
 
     \begin{center}
-        \includegraphics[width=0.5\linewidth]{kalman-ex1-base}
+        \includegraphics[width=0.5\linewidth]{kalman-ex2-base}
     \end{center}
 }
 
@@ -847,7 +862,7 @@ A Kalman filter to estimate the state of a system with \textbf{one
 
     \only<4-6>{
 
-        The trick consists in embeding the velocity in our state: $\mathbf{x} = \colvec{y \\ \dot{y}}$
+        The trick consists in embedding the velocity in our state: $\mathbf{x} = \colvec{y \\ \dot{y}}$
 
         \only<5->{
             \begin{align*}
@@ -860,22 +875,38 @@ A Kalman filter to estimate the state of a system with \textbf{one
         
             \begin{align*}
                 z_k &= \mathbf{H}\cdot \colvec{y \\ \dot{y}}_{k-1\mid k-1} + \mathbf{w}_k \\
-                    &= \begin{bmatrix}1 \\ 0\end{bmatrix} \cdot \begin{bmatrix}y \\ \dot{y}\end{bmatrix}_{k-1\mid k-1} + \mathbf{w}_k
+                    &= \begin{bmatrix}1 & 0 \\ 0 & 0\end{bmatrix} \cdot \begin{bmatrix}y \\ \dot{y}\end{bmatrix}_{k-1\mid k-1} + \mathbf{w}_k
             \end{align*}
 
         }
     }
 \end{frame}
 
-\begin{frame}{Example 2: free fall}
+\begin{frame}[fragile]{In Python...}
 
-  Kalman filter to estimate a moving value (one dimensional).
+\begin{pythoncode}
+from numpy.matlib import matrix
 
-        \begin{center}
-            \includegraphics[width=0.7\linewidth]{kalman2}
-        \end{center}
+x = [[0.8, 0]]; P = [[0.01]]
+
+R = mat.matrix([0.01])
+
+def kalman(t):
+    # Prediction phase
+    x_prior = x[k-1]
+    P_prior = P[k-1]
+
+    # Measurement update (correction) phase
+    K = P_prior / ( P_prior + R )
+    x.append(x_prior + K * (z[k] - x_prior))
+    P.append((mat.identity(1) - K) * P_prior)
+
+
+\end{pythoncode}
 
 \end{frame}
+
+\imageframe{kalman-ex2-final}
 
 \begin{frame}{Example 3}
 

@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   sodipodi:docname="overview_kalman_filtering.svg"
+   inkscape:version="0.91 r13725"
+   sodipodi:version="0.32"
+   id="svg1901"
+   height="861"
+   width="1701">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="1405.5347"
+     inkscape:cy="446.44496"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="1920"
+     inkscape:window-height="1025"
+     inkscape:window-x="0"
+     inkscape:window-y="867"
+     showgrid="true"
+     inkscape:window-maximized="1"
+     showborder="true"
+     inkscape:showpageshadow="false"
+     fit-margin-top="10"
+     fit-margin-left="10"
+     fit-margin-bottom="10"
+     fit-margin-right="10">
+    <inkscape:grid
+       type="xygrid"
+       id="grid8064"
+       empspacing="5"
+       visible="false"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1903">
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart"
+       style="overflow:visible">
+      <path
+         id="path5471"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path5474"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <filter
+       inkscape:collect="always"
+       id="filter10120"
+       x="-0.82741934"
+       width="2.6548388"
+       y="-0.41370967"
+       height="1.8274194"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="13.790323"
+         id="feGaussianBlur10122" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter10192"
+       x="-0.55645162"
+       width="2.1129031"
+       y="-0.55645162"
+       height="2.1129031"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="9.2741935"
+         id="feGaussianBlur10194" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata1906">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Taso 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(422.53812,-183.98343)">
+    <g
+       transform="translate(1280,280)"
+       id="g10128">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)"
+         d="m -120,572.36218 -160,0 0,-160"
+         id="path10130"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:type="arc"
+         style="color:#000000;fill:#204a87;fill-opacity:1;fill-rule:nonzero;stroke:#204a87;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter10192);enable-background:accumulate"
+         id="path10134"
+         sodipodi:cx="940"
+         sodipodi:cy="792.36218"
+         sodipodi:rx="20"
+         sodipodi:ry="20"
+         d="m 960,792.36218 a 20,20 0 0 1 -20,20 20,20 0 0 1 -20,-20 20,20 0 0 1 20,-20 20,20 0 0 1 20,20 z"
+         transform="translate(-1160,-320)" />
+    </g>
+    <g
+       id="g8382"
+       transform="translate(-391.69232,414)">
+      <g
+         transform="translate(272.69883,-35.598455)"
+         id="g4185">
+        <g
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+           word-spacing="normal"
+           letter-spacing="normal"
+           font-size-adjust="none"
+           font-stretch="normal"
+           font-weight="normal"
+           font-variant="normal"
+           font-style="normal"
+           stroke-miterlimit="10.433"
+           xml:space="preserve"
+           transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+           id="g4187"><polygon
+             style="fill:#000000;stroke-width:0"
+             id="polygon4189"
+             points="464.95,433.83 470.73,438.91 476.47,433.83 477.36,434.72 470.73,441.5 464.06,434.72 " /></g>      </g>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         x="573.66217"
+         y="321.75632"
+         id="text3632-9-2"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3634-7-1"
+           x="573.66217"
+           y="321.75632"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'">x<tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub"
+   id="tspan3680-7">k|k</tspan></tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3736"
+         y="268.7233"
+         x="572.14691"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'"
+           y="268.7233"
+           x="572.14691"
+           id="tspan3738"
+           sodipodi:role="line"><tspan
+             style="font-size:60px"
+             id="tspan3742">P</tspan><tspan
+             id="tspan3740"
+             style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub">k|k</tspan></tspan></text>
+    </g>
+    <switch
+       allowReorder="yes"
+       id="switch3570">
+      <text
+         systemLanguage="uk"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight"
+         x="579.22656"
+         y="232.36218"
+         id="text4469"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4471"
+           x="579.22656"
+           y="232.36218"
+           style="font-weight:bold;text-align:center;text-anchor:middle">Крок передбачення</tspan><tspan
+           sodipodi:role="line"
+           x="579.22656"
+           y="282.36218"
+           style="font-style:normal;text-align:center;text-anchor:middle"
+           id="tspan4494">На базі, напр.,</tspan><tspan
+           sodipodi:role="line"
+           x="579.22656"
+           y="332.36218"
+           style="font-style:normal;text-align:center;text-anchor:middle"
+           id="tspan8403">фізичної моделі</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight"
+         x="579.22656"
+         y="232.36218"
+         id="text3576"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3578"
+           x="579.22656"
+           y="232.36218"
+           style="font-weight:500;text-align:center;text-anchor:middle;-inkscape-font-specification:'FlamaMedium Medium';font-family:FlamaMedium;font-style:normal;font-stretch:normal;font-variant:normal">Prediction step</tspan><tspan
+           sodipodi:role="line"
+           x="579.22656"
+           y="282.36218"
+           style="font-style:normal;text-align:center;text-anchor:middle"
+           id="tspan3580">Based on e.g.</tspan><tspan
+           sodipodi:role="line"
+           x="579.22656"
+           y="332.36218"
+           style="font-style:normal;text-align:center;text-anchor:middle"
+           id="tspan3582">physical model</tspan></text>
+    </switch>
+    <switch
+       allowReorder="yes"
+       id="switch3584">
+      <text
+         systemLanguage="uk"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="-20"
+         y="252.36218"
+         id="text4496"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="-20"
+           y="252.36218"
+           id="tspan8397">Апріорне знання</tspan><tspan
+           sodipodi:role="line"
+           x="-20"
+           y="302.36218"
+           id="tspan8409">про стан</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="-20"
+         y="252.36218"
+         id="text3589"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="-20"
+           y="252.36218"
+           id="tspan3591"
+           style="font-style:italic">Prior knowledge</tspan><tspan
+           sodipodi:role="line"
+           x="-20"
+           y="302.36218"
+           id="tspan3593"
+           style="font-style:italic">of state</tspan></text>
+    </switch>
+    <switch
+       allowReorder="yes"
+       id="switch3595">
+      <text
+         systemLanguage="uk"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight"
+         x="580.4328"
+         y="672.36218"
+         id="text8030"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan8032"
+           x="580.4328"
+           y="672.36218"
+           style="font-weight:bold;text-align:center;text-anchor:middle">Крок уточнення</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="722.36218"
+           style="font-weight:normal;text-align:center;text-anchor:middle"
+           id="tspan8036">Порівняти</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="772.36218"
+           style="font-weight:normal;text-align:center;text-anchor:middle"
+           id="tspan8038">передбачення</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="822.36218"
+           style="font-weight:normal;text-align:center;text-anchor:middle"
+           id="tspan3105">з вимірюваннями</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="872.36218"
+           id="tspan8034" /></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:FlamaLight;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         x="580.4328"
+         y="672.36218"
+         id="text3603"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3605"
+           x="580.4328"
+           y="672.36218"
+           style="font-weight:500;text-align:center;text-anchor:middle;-inkscape-font-specification:'FlamaMedium Medium';font-family:FlamaMedium;font-style:normal;font-stretch:normal;font-variant:normal">Correction step</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="722.36218"
+           style="font-weight:normal;text-align:center;text-anchor:middle"
+           id="tspan3607">Compare prediction</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="772.36218"
+           style="font-weight:normal;text-align:center;text-anchor:middle"
+           id="tspan3609">to measurements</tspan><tspan
+           sodipodi:role="line"
+           x="580.4328"
+           y="822.36218"
+           id="tspan3611" /></text>
+    </switch>
+    <switch
+       allowReorder="yes"
+       id="switch3613">
+      <text
+         systemLanguage="uk"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="880"
+         y="672.36218"
+         id="text8411"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan8413"
+           x="880"
+           y="672.36218">Вимірювання</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="880"
+         y="672.36218"
+         id="text3617"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3619"
+           x="880"
+           y="672.36218"
+           style="font-style:italic">Measurements</tspan></text>
+    </switch>
+    <g
+       id="g8679"
+       transform="translate(-193.54113,170.47714)">
+      <g
+         word-spacing="normal"
+         letter-spacing="normal"
+         font-size-adjust="none"
+         font-stretch="normal"
+         font-weight="normal"
+         font-variant="normal"
+         font-style="normal"
+         stroke-miterlimit="10.433"
+         xml:space="preserve"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         id="g8681"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><path
+           id="path8685"
+           d="m 542.15,417.65 0.17,0 0.17,0 0.16,0.01 0.09,0 0.08,0.01 0.07,0 0.08,0.01 0.08,0.01 0.07,0.01 0.07,0.02 0.07,0.02 0.07,0.02 0.06,0.02 0.06,0.02 0.06,0.03 0.06,0.03 0.05,0.04 0.05,0.03 0.04,0.05 0.05,0.04 0.04,0.05 0.03,0.06 0.02,0.03 0.01,0.03 0.01,0.03 0.02,0.03 0.01,0.04 0.01,0.03 0.01,0.04 0.01,0.04 0,0.04 0.01,0.04 0,0.04 0.01,0.04 0,0.05 0,0.04 c 0,1 -0.89,1 -1.8,1 h -37.01 c 2.73,2.1 4.09,4.14 4.48,4.78 2.25,3.44 2.64,6.58 2.64,6.63 0,0.59 -0.59,0.59 -1,0.59 -0.84,0 -0.89,-0.09 -1.09,-0.98 -1.14,-4.89 -4.08,-9.03 -9.72,-11.36 -0.55,-0.2 -0.74,-0.31 -0.74,-0.66 0,-0.34 0.25,-0.45 0.74,-0.64 5.19,-2.14 8.53,-6.03 9.76,-11.61 0.16,-0.61 0.21,-0.75 1.05,-0.75 0.41,0 1,0 1,0.6 0,0.11 -0.45,3.23 -2.55,6.57 -0.98,1.5 -2.43,3.24 -4.57,4.83 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /></g>    </g>
+    <switch
+       allowReorder="yes"
+       id="switch3628">
+      <text
+         systemLanguage="uk"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="90.363129"
+         y="472.36218"
+         id="text8784"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan8786"
+           x="90.363129"
+           y="472.36218">Наступний такт</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="90.363129"
+         y="472.36218"
+         id="text3632"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3634"
+           x="90.363129"
+           y="472.36218">Next timestep</tspan></text>
+    </switch>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 0,272.36218 60,0"
+       id="path8788"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path9482"
+       d="m 360,272.36218 60,0"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 580,352.36218 0,60"
+       id="path9484"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path9486"
+       d="m 580,552.36218 0,60"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 380,712.36218 -60,0"
+       id="path9488"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path9490"
+       d="m 860,712.36218 -60,0"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 220,626.36218 0,-60"
+       id="path9492"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path9494"
+       d="m 220,412.36218 0,-60"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)" />
+    <switch
+       allowReorder="yes"
+       id="switch3644">
+      <text
+         systemLanguage="uk"
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="219.83281"
+         y="892.36218"
+         id="text9496"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan9498"
+           x="219.83281"
+           y="892.36218">Вихідна оцінка</tspan><tspan
+           sodipodi:role="line"
+           x="219.83281"
+           y="942.36218"
+           id="tspan9500">стану</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:FlamaLight;-inkscape-font-specification:FlamaLight Bold"
+         x="219.83281"
+         y="892.36218"
+         id="text3649"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3651"
+           x="219.83281"
+           y="892.36218"
+           style="font-style:italic">Output estimate</tspan><tspan
+           sodipodi:role="line"
+           x="219.83281"
+           y="942.36218"
+           id="tspan3653"
+           style="font-style:italic">of state</tspan></text>
+    </switch>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 220,772.36218 0,60"
+       id="path9502"
+       inkscape:connector-curvature="0" />
+    <g
+       id="g10124"
+       transform="translate(-8.4405592,-144.57644)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path9504"
+         d="m -120,572.36218 -160,0 0,-160"
+         style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)" />
+      <path
+         transform="matrix(0.78898612,-0.61441102,0.61441102,0.78898612,-415.08927,-369.76827)"
+         d="m -360,812.36218 a 20,40 0 0 1 -20,40 20,40 0 0 1 -20,-40 20,40 0 0 1 20,-40 20,40 0 0 1 20,40 z"
+         sodipodi:ry="40"
+         sodipodi:rx="20"
+         sodipodi:cy="812.36218"
+         sodipodi:cx="-380"
+         id="path10106"
+         style="color:#000000;fill:#204a87;fill-opacity:1;fill-rule:nonzero;stroke:#204a87;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter10120);enable-background:accumulate"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g10196"
+       transform="translate(238.78125,443.12499)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path10198"
+         d="m -120,572.36218 -160,0 0,-160"
+         style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)" />
+      <path
+         transform="matrix(0.9390612,-0.34375,0.515625,1.4085918,-1511.2793,-310.62768)"
+         d="m 960,792.36218 a 20,20 0 0 1 -20,20 20,20 0 0 1 -20,-20 20,20 0 0 1 20,-20 20,20 0 0 1 20,20 z"
+         sodipodi:ry="20"
+         sodipodi:rx="20"
+         sodipodi:cy="792.36218"
+         sodipodi:cx="940"
+         id="path10200"
+         style="color:#000000;fill:#204a87;fill-opacity:1;fill-rule:nonzero;stroke:#204a87;stroke-width:3.26598644;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter10192);enable-background:accumulate"
+         sodipodi:type="arc" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="923.12469"
+       y="722.62433"
+       id="text3632-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3634-7"
+         x="923.12469"
+         y="722.62433"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'">z<tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub"
+   id="tspan3680">k</tspan></tspan></text>
+    <g
+       transform="translate(-35.978032,200.42857)"
+       id="g3744">
+      <g
+         id="g3746"
+         transform="translate(272.69883,-35.598455)">
+        <g
+           id="g3748"
+           transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+           xml:space="preserve"
+           stroke-miterlimit="10.433"
+           font-style="normal"
+           font-variant="normal"
+           font-weight="normal"
+           font-stretch="normal"
+           font-size-adjust="none"
+           letter-spacing="normal"
+           word-spacing="normal"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"><polygon
+             points="476.47,433.83 477.36,434.72 470.73,441.5 464.06,434.72 464.95,433.83 470.73,438.91 "
+             id="polygon3750"
+             style="fill:#000000;stroke-width:0" /></g>      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3752"
+         y="321.75632"
+         x="573.66217"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'"
+           y="321.75632"
+           x="573.66217"
+           id="tspan3754"
+           sodipodi:role="line">x<tspan
+   id="tspan3756"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub">k|k-1</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         x="572.14691"
+         y="268.7233"
+         id="text3758"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3760"
+           x="572.14691"
+           y="268.7233"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'"><tspan
+             id="tspan3762"
+             style="font-size:60px">P</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub"
+             id="tspan3764">k|k-1</tspan></tspan></text>
+    </g>
+    <g
+       transform="translate(-424.0172,-10.264075)"
+       id="g3766">
+      <g
+         id="g3768"
+         transform="translate(272.69883,-35.598455)">
+        <g
+           id="g3770"
+           transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+           xml:space="preserve"
+           stroke-miterlimit="10.433"
+           font-style="normal"
+           font-variant="normal"
+           font-weight="normal"
+           font-stretch="normal"
+           font-size-adjust="none"
+           letter-spacing="normal"
+           word-spacing="normal"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"><polygon
+             points="476.47,433.83 477.36,434.72 470.73,441.5 464.06,434.72 464.95,433.83 470.73,438.91 "
+             id="polygon3772"
+             style="fill:#000000;stroke-width:0" /></g>      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3774"
+         y="321.75632"
+         x="573.66217"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'"
+           y="321.75632"
+           x="573.66217"
+           id="tspan3776"
+           sodipodi:role="line">x<tspan
+   id="tspan3778"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub">k-1|k-1</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+         x="572.14691"
+         y="268.7233"
+         id="text3780"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3782"
+           x="572.14691"
+           y="268.7233"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'"><tspan
+             id="tspan3784"
+             style="font-size:60px">P</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub"
+             id="tspan3786">k-1|k-1</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="627.24054"
+         y="274.4353"
+         id="text3788"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="627.24054"
+           y="274.4353"
+           id="tspan3792" /></text>
+    </g>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3796"
+       y="528.67505"
+       x="116.05341"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:47.09376907px;line-height:125%;font-family:FlamaLight;-inkscape-font-specification:'FlamaLight Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       xml:space="preserve"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium'"
+         y="528.67505"
+         x="116.05341"
+         id="tspan3798"
+         sodipodi:role="line">k      k + 1<tspan
+   id="tspan3800"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:30.61094856px;font-family:FlamaMedium;-inkscape-font-specification:'FlamaMedium Medium';baseline-shift:sub" /></tspan></text>
+  </g>
+</svg>
