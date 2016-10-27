@@ -701,7 +701,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
 
 
     \huge\centering
-    $\mathbf{K}_{k\bubblemark[0pt]{up6}} = \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}\cdot (\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R})$
+    $\mathbf{K}_{k\bubblemark[0pt]{up6}} = \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}}\cdot (\mathbf{H}\cdot \mathbf{P}_{k\mid k-1}\cdot \mathbf{H}^{\text{T}} + \bubblemark[0pt]{up8}\mathbf{R})^{-1}$
 
     \vspace{2em}
     $\hat{\mathbf{x}}_{k\mid \bubblemark[0pt]{up7}k} = \highlight<2>{\hat{\mathbf{x}}\bubblemark[-1ex]{up10}_{k\mid k-1}} + \highlight<3>{\mathbf{K}_k\cdot (\mathbf{z}_k - \mathbf{H}\bubblemark[-1ex]{up9}\cdot \hat{\mathbf{x}}_{k\mid k-1})}$
