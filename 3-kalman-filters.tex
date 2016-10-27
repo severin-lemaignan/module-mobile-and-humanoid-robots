@@ -30,6 +30,13 @@
 \usetheme{hri}
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
+%% Display the navigation bullet even without subsections
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
 
 \newcommand{\colvec}[2][.8]{%
   \scalebox{#1}{%
@@ -132,12 +139,28 @@
 
 \end{frame}
 
+\section{Basic concepts}
+
+\begin{frame}{State}
+
+    The \textbf{state} of a process is a vector of real numbers capturing
+    the relevant information describing the process. $\mathbf{x} = \mathbb{R}^n$
+
+    For example
+
+    \begin{itemize}
+        \item The position and speed of a wheeled robot: $\mathbf{x}=[x, y, \theta, \dot{x}, \dot{y}, \dot{\theta}]$
+        \item The speed of a missile: $\mathbf{x}=[v, t_{thurst}]$
+    \end{itemize}
+
+\end{frame}
+
 \begin{frame}{Stochasticity}
 
     \textbf{The true state of a system is unknown}
 
     \begin{itemize}
-        \item We don't know the true speed of an air craft, or the true location
+        \item We don't know the true speed of an aircraft, or the true location
             of the robot.
     \end{itemize}
 
@@ -159,10 +182,11 @@ A linear equation is a sum of input variables
 
 \begin{itemize}
     \item   For example $f(x)=5x+3$ is linear, $f(x)=cos(x)$ is not.
-    \item A linear system can be written in matrix form as $Y=A\cdot X$ or
+    \item A linear system can be written in matrix form as $\mathbf{y}=A\cdot \mathbf{x}$ or
 \end{itemize}
 
 \[
+\mathbf{y} = 
 \begin{bmatrix}
     y_1 \\
     \vdots \\ 
@@ -183,7 +207,7 @@ A linear equation is a sum of input variables
 
 \end{frame}
 
-\begin{frame}{Normal}
+\begin{frame}{Normal distribution}
 
     \href{http://en.wikipedia.org/wiki/Normal_distribution}{Normal} or
     Gaussian
@@ -234,7 +258,7 @@ A linear equation is a sum of input variables
 
 \end{frame}
 
-\begin{frame}{Basic concepts: Gaussian or normal}
+\begin{frame}{Normal distribution (2)}
 
     The Kalman Filter assumes that \textbf{measurement and process noise are normal}
     (also known as Gaussian) and \textbf{independent}.
@@ -251,6 +275,7 @@ A linear equation is a sum of input variables
                 p\bubblemark[0pt]{prob}(x) \sim \mathcal{N}(\mu, \sigma^2):
             \]
 
+            \vspace{2em}
         \[
             p(x) \sim \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2 \sigma^2}}
             \]
@@ -261,7 +286,7 @@ A linear equation is a sum of input variables
                 \textbf{Multivariate}
 
             \[
-                p(x_n) = p(\begin{bmatrix}
+                p(\mathbf{x}) = p(\begin{bmatrix}
                     x_1 \\
                     \vdots \\ 
                     x_n
@@ -269,7 +294,7 @@ A linear equation is a sum of input variables
             \]
 
         \[
-            p(x_n) =
+            p(\mathbf{x}) =
                 \frac{1}{\sqrt{(2\pi)^{n}|\Sigma|}} e^{-\frac{1}{2}(x_n-\mu)^\mathrm{T}\Sigma^{-1}(x_n-\mu)}
             \]
     }
@@ -293,8 +318,13 @@ A linear equation is a sum of input variables
 
                     \end{axis}
 
-                    \node at (0.8,-0.2) {$\sigma$};
-                    \node at (-0.8,-0.2) {$-\sigma$};
+                    \node at (0.8,-0.2) {$\mu + \sigma$};
+                    \node at (-0.8,-0.2) {$\mu -\sigma$};
+                    \draw[thick] (0.8,0) -- +(0,4);
+                    \draw[thick] (-0.8,0) -- +(0,4);
+
+                    \draw[thick,<->] (-0.8,3.9) -- (0.8,3.9) node[midway,above] {\scriptsize 68\% within 1 stddev};
+
                     \node at (0.2,1) {$\mu$};
                     \node at (1,1) {\bubblemark{gauss3}};
                 \end{tikzpicture}
@@ -347,7 +377,7 @@ A linear equation is a sum of input variables
 
 \end{frame}
 
-\begin{frame}{Gaussian function (2)}
+\begin{frame}{Product of normal distributions}
 
     \begin{columns}
         \begin{column}{0.4\linewidth}
@@ -408,19 +438,78 @@ A linear equation is a sum of input variables
 
 \end{frame}
 
-\begin{frame}{Basic concepts: state}
+\begin{frame}{Covariance}
 
-The \textbf{state} of a process is a vector of real numbers capturing
-    the relevant information describing the process. $x = \mathbb{R}^n$
+    \only<1-2>{
+        \href{http://en.wikipedia.org/wiki/Covariance}{Covariance}: measure of how two variables change together.
 
-For example
+    Two series $X$ and $Y$ of values, each of size $n$.
 
-\begin{itemize}
-    \item The position and speed of a wheeled robot: $x=[x, y, \theta, \dot{x}, \dot{y}, \dot{\theta}]$
-    \item The speed of a missile: $x=[v, t_{thurst}]$
-\end{itemize}
+    \[
+        cov(X,Y) = \overline{(X-\bar{X})(Y-\bar{Y})} = \sum_{i=1}^{n}\frac{(x_i - \bar{X})(y_i - \bar{Y})}{n}
+    \]
 
+\only<1>{
+    If $cov(X,Y) > 0$, then $X$ and $Y$ tend move together. \\
+    If $cov(X,Y) < 0$ then $X$ and $Y$ have an opposite effect on eachother. \\
+    And $cov(X,Y) = 0$?
+
+    }
+    \only<2>{
+        Example: \footnotesize \\
+    \begin{align*}
+        X &= [4, 2, 3, 4, 5, 5, 3, 1, 1, 2] \\
+        Y &= [6, 4, 3, 5, 7, 8, 5, 3, 3, 2] \\
+        \bar{X} &= 3 \\
+        \bar{Y} &= 4.6 \\
+        X - \bar{X} &= [1, -1, 0, 1, 2, 2, 0, -2, -2, -1] \\
+        Y - \bar{Y} &= [1.4, -0.6, -1.6, 0.4, 2.4, 3.4, 0.4, -1.6, -1.6, -2.6] \\
+        (X-\bar{X})(Y-\bar{Y}) &= [-0.84, 1.56, 2.56, -0.24, 0.96, 1.36, -0.64, 5.76, 5.76, 6.76] \\
+        cov(X,Y) &= 2.3 \\
+    \end{align*}
+}
+    }
+    \only<3-4>{
+        A \href{http://en.wikipedia.org/wiki/Covariance_matrix}{covariance matrix}
+    is a matrix showing the covariance of two or more variables to each
+    other.
+
+    \begin{itemize}
+        \item If one variable changes, does the other variable change as well and in
+            what direction?
+        \item Example: altitude, temperature and air pressure
+    \end{itemize}
+
+    \begin{columns}
+        \begin{column}{0.4\linewidth}
+            \begin{tabular}{@{}lll@{}}
+                \toprule
+                altitude & T $^{\circ}C$ & pressure \\ \midrule
+                0        & 20          & 1            \\
+                1000     & 10          & 0.9          \\
+                2000     & 0           & 0.8          \\
+                3000     & -10         & 0.7          \\
+                4000     & -20         & 0.5          \\
+                5000     & -30         & 0.3          \\ \bottomrule
+            \end{tabular}
+
+        \end{column}
+        \begin{column}{0.6\linewidth}
+
+            \only<4>{
+                \begin{tabular}{@{}llll@{}}
+                    & \textbf{alt.} & \textbf{T} & \textbf{P} \\
+                    \textbf{alt.} & 2916667           & -29166.7      & -400              \\
+                    \textbf{T}     & -29166.7          & 291.667      & 4                 \\
+                    \textbf{P} & -400              & 4             & 0.057         
+                \end{tabular}
+            }
+        \end{column}
+    \end{columns}
+}
 \end{frame}
+
+\section{Kalman filter}
 
 \begin{frame}{The basics}
 
@@ -497,76 +586,6 @@ at $t$ (is the car braking or accelerating) and system dynamics
 
 \end{frame}
 
-\begin{frame}{Covariance}
-
-    \only<1-2>{
-        \href{http://en.wikipedia.org/wiki/Covariance}{Covariance}: measure of how two variables change together.
-
-    Two series $X$ and $Y$ of values, each of size $n$.
-
-    \[
-        cov(X,Y) = \overline{(X-\bar{X})(Y-\bar{Y})} = \sum_{i=1}^{n}\frac{(x_i - \bar{X})(y_i - \bar{Y})}{n}
-    \]
-
-\only<1>{
-    If $cov(X,Y) > 0$, then $X$ and $Y$ tend move together. \\
-    If $cov(X,Y) < 0$ then $X$ and $Y$ have an opposite effect on eachother. \\
-    And $cov(X,Y) = 0$?
-
-    }
-    \only<2>{
-        Example: \footnotesize \\
-    \begin{align*}
-        X &= [4, 2, 3, 4, 5, 5, 3, 1, 1, 2] \\
-        Y &= [6, 4, 3, 5, 7, 8, 5, 3, 3, 2] \\
-        \bar{X} &= 3 \\
-        \bar{Y} &= 4.6 \\
-        X - \bar{X} &= [1, -1, 0, 1, 2, 2, 0, -2, -2, -1] \\
-        Y - \bar{Y} &= [1.4, -0.6, -1.6, 0.4, 2.4, 3.4, 0.4, -1.6, -1.6, -2.6] \\
-        (X-\bar{X})(Y-\bar{Y}) &= [-0.84, 1.56, 2.56, -0.24, 0.96, 1.36, -0.64, 5.76, 5.76, 6.76] \\
-        cov(X,Y) &= 2.3 \\
-    \end{align*}
-}
-    }
-    \only<3-4>{
-        A \href{http://en.wikipedia.org/wiki/Covariance_matrix}{covariance matrix}
-    is a matrix showing the covariance of two or more variables to each
-    other.
-
-    \begin{itemize}
-        \item If one variable changes, does the other variable change as well and in
-            what direction?
-        \item Example: altitude, temperature and air pressure
-    \end{itemize}
-
-    \begin{columns}
-        \begin{column}{0.4\linewidth}
-            \begin{tabular}{@{}lll@{}}
-                \toprule
-                altitude & T $^{\circ}C$ & pressure \\ \midrule
-                0        & 20          & 1            \\
-                1000     & 10          & 0.9          \\
-                2000     & 0           & 0.8          \\
-                3000     & -10         & 0.7          \\
-                4000     & -20         & 0.5          \\
-                5000     & -30         & 0.3          \\ \bottomrule
-            \end{tabular}
-
-        \end{column}
-        \begin{column}{0.6\linewidth}
-
-            \only<4>{
-                \begin{tabular}{@{}llll@{}}
-                    & \textbf{alt.} & \textbf{T} & \textbf{P} \\
-                    \textbf{alt.} & 2916667           & -29166.7      & -400              \\
-                    \textbf{T}     & -29166.7          & 291.667      & 4                 \\
-                    \textbf{P} & -400              & 4             & 0.057         
-                \end{tabular}
-            }
-        \end{column}
-    \end{columns}
-}
-\end{frame}
 
 \begin{frame}{The process equations (3)}
 
@@ -737,6 +756,8 @@ at $t$ (is the car braking or accelerating) and system dynamics
     }
 
 \end{frame}
+
+\section{Examples}
 
 \begin{frame}{Example 1: measuring a noisy yet constant value}
 
