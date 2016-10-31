@@ -36,7 +36,7 @@
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
-\usetikzlibrary{mindmap,backgrounds,positioning}
+\usetikzlibrary{mindmap,backgrounds,positioning,patterns,calc}
 
 \graphicspath{{figs/part4/}}
 
@@ -68,45 +68,59 @@ Nourbakhsh (2004)
 
 \begin{frame}{Mobile robots with wheels}
 
-Wheels are the most appropriate solution for most applications.
+    Wheels are the most appropriate solution for most applications.
 
-\begin{itemize}
-    \item The robots are faster and consume less energy.
-\end{itemize}
+    $\rightarrow$ The robots are faster and consume less energy.
 
-Three wheels are sufficient and guarantee stability.
+    Three wheels are \emph{sufficient} and \emph{guarantee stability}.
 
-For more than three wheels a flexible suspension is required.
+    \onslide<2->{
+        For more than three wheels a flexible suspension is required.
+    }
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
-\begin{itemize}
-    \item Without a flexible suspension, only three wheels would make contact
-  with the ground, all other wheels would slip or not contact the
-  ground.
-\end{itemize}
+            \onslide<2->{
+            Without a flexible suspension, only three wheels would make contact
+            with the ground, all other wheels would slip or not contact the
+            ground.
+            }
+            \onslide<3>{
+            A large number of wheel types exist
 
-A large number of wheel types exist
+            \begin{itemize}
+                \item Selection of wheel type depends on the application.
+            \end{itemize}
+            }
 
-\begin{itemize}
-    \item Selection of wheel type depends on the application.
-\end{itemize}
+        \end{column}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{image1}
-    \end{center}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{image1}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
 \begin{frame}{Efficiency of rolling}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            Wheels on rails are almost 100 times more efficient than human walking.
 
-Wheels on rails are almost 100 times more efficient than human walking.
+            \begin{itemize}
+                \item Robot walking is about 15 times less efficient than human walking.
+            \end{itemize}
 
-\begin{itemize}
-    \item Robot walking is about 15 times less efficient than human walking.
-\end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{rolling}
-    \end{center}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{rolling}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Three wheel types}
@@ -123,63 +137,86 @@ Wheels on rails are almost 100 times more efficient than human walking.
 
 
     \only<1>{
-Has two offsets $d$ and $b$.
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
 
-The wheel allows steering or not?
+                Has two offsets $d$ and $b$.
 
-\begin{itemize}
-    \item Can the wheel's orientation be changed or not?
-\end{itemize}
+                The wheel allows steering or not?
 
-Is the wheel orientation steered or not?
+                \begin{itemize}
+                    \item Can the wheel's orientation be changed or not?
+                \end{itemize}
 
-\begin{itemize}
-    \item Active steering means that a motor changes the wheel's orientation,
-  passive means that the wheel just follows.
-\end{itemize}
+                Is the wheel orientation steered or not?
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{std_wheel1}
-    \end{center}
-}
+                \begin{itemize}
+                    \item Active steering means that a motor changes the wheel's orientation,
+                        passive means that the wheel just follows.
+                \end{itemize}
+
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{std_wheel1}
+                \end{center}
+            \end{column}
+        \end{columns}
+    }
 
     \only<2>{
-Passive fixed wheel.
 
-\begin{itemize}
-    \item No motors.
-\end{itemize}
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
 
-Passive or active caster wheel.
+                \textbf{Passive fixed wheel}
 
-\begin{itemize}
-    \item The wheel is off-center.
-    \item In the active case, the driving and steering motion is controlled by
-  two motors.
-\end{itemize}
+                \begin{itemize}
+                    \item No motors.
+                \end{itemize}
 
-Active wheel that can be oriented.
+                \textbf{Passive or active caster wheel}
 
-\begin{itemize}
-    \item This requires two motors, one for driving and one for steering.
-\end{itemize}
-}
+                \begin{itemize}
+                    \item The wheel is off-center.
+                    \item In the active case, the driving and steering motion is controlled by
+                        two motors.
+                \end{itemize}
+
+                \textbf{Active wheel that can be oriented}
+
+                \begin{itemize}
+                    \item This requires two motors, one for driving and one for steering.
+                \end{itemize}
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=0.7\linewidth]{std_wheel2}
+                \end{center}
+            \end{column}
+        \end{columns}
+    }
 
     \only<3>{
-    Examples
+        \textbf{Examples}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{wheel_ex1}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{wheel_ex1}
 
-        a) Passive fixed wheel
-    \end{center}
+                Passive fixed wheel
+            \end{center}
+        \end{column}
+        \begin{column}{0.5\linewidth}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{wheel_ex2}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{wheel_ex2}
 
-        b) Passive caster wheel
-
-    \end{center}
+                Passive caster wheel
+            \end{center}
+        \end{column}
+    \end{columns}
 }
 
 \only<4>{
@@ -199,16 +236,22 @@ constraint}.
 \begin{frame}{Type 2: Omnidirectional wheel}
 
     \only<1>{
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
+
 Omnidirectional wheel (= Swedish or Mecanum wheel).
 
 \begin{itemize}
     \item Three degrees of freedom; rotation around the (motorized) wheel axle,
   around the rollers and around the contact point.
 \end{itemize}
-
+            \end{column}
+            \begin{column}{0.5\linewidth}
     \begin{center}
         \includegraphics[width=0.8\linewidth]{omniwheel1}
     \end{center}
+            \end{column}
+        \end{columns}
 
     }
     \only<2>{
@@ -219,8 +262,8 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
 \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.4\linewidth]{omniwheel2}
-        \includegraphics[width=0.4\linewidth]{omniwheel3}
+        \includegraphics[height=0.4\paperheight]{omniwheel3}
+        \includegraphics[height=0.4\paperheight]{omniwheel2}
 
         \source{https://en.wikipedia.org/wiki/Mecanum_wheel}{Wikipedia}
     \end{center}
@@ -231,28 +274,38 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
 \begin{frame}{Type 2: Swedish wheel}
 
 
-\only<1>{
-Several possible configurations
+    \only<1>{
+        \begin{columns}
+            \begin{column}{0.6\linewidth}
 
-\begin{itemize}
-    \item Three motors, and three wheels.
-    \item Four motors and four wheels.
-\end{itemize}
+                Several possible configurations
 
-    \begin{center}
-        \includegraphics[width=0.4\linewidth]{swedishwheel1}
-        \includegraphics[width=0.4\linewidth]{swedishwheel2}
-    \end{center}
+                \begin{itemize}
+                    \item Three motors, and three wheels.
+                    \item Four motors and four wheels.
+                \end{itemize}
 
-}
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{swedishwheel1}
+                \end{center}
+
+            \end{column}
+            \begin{column}{0.4\linewidth}
+
+                \begin{center}
+                    \includegraphics[width=0.8\linewidth]{swedishwheel2}
+                \end{center}
+            \end{column}
+        \end{columns}
+    }
     \only<2>{
 
 \begin{itemize}
     \item Four wheels and four motors.
 
         \begin{center}
-            \includegraphics[width=0.4\linewidth]{swedishwheel3}
-            \includegraphics[width=0.4\linewidth]{swedishwheel4}
+            \includegraphics[width=0.45\linewidth]{swedishwheel3}
+            \includegraphics[width=0.45\linewidth]{swedishwheel4}
         \end{center}
 
     \item Airtrax lift truck
@@ -264,19 +317,21 @@ Several possible configurations
 
 \begin{frame}{Characteristics of Wheeled Robots and Vehicles}
 
-Stability of a vehicle is guaranteed with 3 wheels
+\emph{Stability of a vehicle is guaranteed with 3 wheels}
 
 \begin{itemize}
-    \item center of gravity is within the triangle with is formed by the ground
+    \item centre of gravity must stay within the triangle formed by the ground
   contact point of the wheels.
 \end{itemize}
 
 Stability is improved by 4 and more wheels
 
 \begin{itemize}
-    \item however, this arrangements are ``hyperstatic'' and require a flexible
+    \item however, this arrangements are \textbf{hyperstatic} and require a flexible
   suspension system.
 \end{itemize}
+
+\pause
 
 Bigger wheels allow to overcome higher obstacles
 
@@ -284,12 +339,10 @@ Bigger wheels allow to overcome higher obstacles
     \item but they require higher torque and reductions in the gear box.
 \end{itemize}
 
-Most arrangements are non-holonomic (see later)
+\pause
+Most arrangements are \textbf{non-holonomic}: require high control effort.
 
-\begin{itemize}
-    \item require high control effort
-\end{itemize}
-
+\pause
 Combining actuation and steering on one wheel makes the design complex
 and adds additional errors for odometry.
 
@@ -297,14 +350,69 @@ and adds additional errors for odometry.
 
 \begin{frame}{Different Arrangements of Wheels I}
 
-\begin{itemize}
-    \item Two wheels
-    \item Three wheels
-\end{itemize}
+Two wheels
+
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+        \begin{scope}
+            \draw[thick] (0,0) rectangle (3,1);
+            \draw[thick, pattern=north east lines] (0.2,0.4) rectangle +(0.6,0.2);
+            \draw[rotate around={40:(2.5,0.5)}] (2.5,0.3) rectangle +(0,0.4);
+            \draw[thick, rotate around={40:(2.5,0.5)}] (2.2,0.4) rectangle +(0.6,0.2);
+        \end{scope}
+
+        \begin{scope}[shift={(5,-0.25)}]
+            \draw[thick] (0,0) rectangle (1,1.5);
+            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+        \end{scope}
+    \end{tikzpicture} 
+
+
+Three wheels
+
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+        \begin{scope}[shift={(0,-3)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \draw[thick] (2.5,0.75) circle[radius=0.3];
+        \end{scope}
+
+        \begin{scope}[shift={(4,-3)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \draw[thick] (0.5,0.5) -- (0.5,1);
+            \draw[rotate around={40:(2.5,0.75)}] (2.5,0.55) rectangle +(0,0.4);
+            \draw[thick, rotate around={40:(2.5,0.75)}] (2.2,0.65) rectangle +(0.6,0.2);
+        \end{scope}
+
+        \begin{scope}[shift={(8,-3)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick] (0.2,1.2) rectangle +(0.6,-0.2);
+            \draw[rotate around={40:(2.5,0.75)}] (2.5,0.55) rectangle +(0,0.4);
+            \draw[thick, pattern=vertical lines, rotate around={40:(2.5,0.75)}] (2.2,0.65) rectangle +(0.6,0.2);
+        \end{scope}
+
+        \begin{scope}[shift={(1.5,-5)}]
+            \draw[thick] (0,0) circle[radius=1];
+            \foreach \p in {0,120,240} {
+                \draw[dashed] (0,0) -- (\p:1.4);
+                \draw[thick, pattern=north east lines,rotate=\p] ($(\p:1) + (\p + 90:0.3)$) -- ($(\p:1.2) + (\p + 90:0.3)$) -- ($(\p:1.2) - (\p + 90:0.3)$) -- ($(\p:1) - (\p + 90:0.3)$) -- cycle;
+            }
+        \end{scope}
+
+        \node at (5,-5) (synchro) {\includegraphics[width=3cm]{synchrodrive-simple}};
+
+    \end{tikzpicture}
 
 Omnidirectional drive
 
-Synchro drive aka omnidrive
+\bubble<1>{synchro}{Synchro drive aka omnidrive}
 
 \end{frame}
 
