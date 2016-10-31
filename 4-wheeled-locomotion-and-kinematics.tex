@@ -26,13 +26,19 @@
 \makeatother
 \setcounter{subsection}{1}
 
+\newcommand{\colvec}[2][.8]{%
+  \scalebox{#1}{%
+    \renewcommand{\arraystretch}{.8}%
+    $\begin{bmatrix}#2\end{bmatrix}$%
+  }
+}
 
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning}
 
-\graphicspath{{figs/}}
+\graphicspath{{figs/part4/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
 \subtitle{Part 4 - Wheeled locomotion and kinematics}
@@ -84,6 +90,10 @@ A large number of wheel types exist
     \item Selection of wheel type depends on the application.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{image1}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Efficiency of rolling}
@@ -94,6 +104,9 @@ Wheels on rails are almost 100 times more efficient than human walking.
     \item Robot walking is about 15 times less efficient than human walking.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{rolling}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Three wheel types}
@@ -108,6 +121,8 @@ Wheels on rails are almost 100 times more efficient than human walking.
 
 \begin{frame}{Type 1: Standard wheel}
 
+
+    \only<1>{
 Has two offsets $d$ and $b$.
 
 The wheel allows steering or not?
@@ -123,10 +138,12 @@ Is the wheel orientation steered or not?
   passive means that the wheel just follows.
 \end{itemize}
 
-\end{frame}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{std_wheel1}
+    \end{center}
+}
 
-\begin{frame}{Type 1: Standard wheel (2)}
-
+    \only<2>{
 Passive fixed wheel.
 
 \begin{itemize}
@@ -146,25 +163,28 @@ Active wheel that can be oriented.
 \begin{itemize}
     \item This requires two motors, one for driving and one for steering.
 \end{itemize}
+}
 
-\end{frame}
+    \only<3>{
+    Examples
 
-\begin{frame}{Type 1: Standard wheel (3)}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{wheel_ex1}
 
-\begin{itemize}
-    \item Examples
-\end{itemize}
+        a) Passive fixed wheel
+    \end{center}
 
-a) Passive fixed wheel
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{wheel_ex2}
 
-b) Passive caster wheel
+        b) Passive caster wheel
 
-\end{frame}
+    \end{center}
+}
 
-\begin{frame}{Type 1: Standard wheel (4)}
-
-Standard wheels are most used, but have a ``non-holonomic velocity
-constraint''.
+\only<4>{
+    Standard wheels are most used, but have a \textbf{non-holonomic velocity
+constraint}.
 
 \begin{itemize}
     \item Which just means that a wheel can only roll in the direction of the
@@ -172,10 +192,13 @@ constraint''.
     \item This constrains what a robot (or vehicle) can do.
 \end{itemize}
 
+}
+
 \end{frame}
 
-\begin{frame}{Type 2: Omnidirectional wheel (1)}
+\begin{frame}{Type 2: Omnidirectional wheel}
 
+    \only<1>{
 Omnidirectional wheel (= Swedish or Mecanum wheel).
 
 \begin{itemize}
@@ -183,22 +206,32 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
   around the rollers and around the contact point.
 \end{itemize}
 
-\end{frame}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{omniwheel1}
+    \end{center}
 
-\begin{frame}{Type 2: Omnidirectional wheel (1)}
-
+    }
+    \only<2>{
 \begin{itemize}
     \item The wheel is designed to let a vehicle move in any direction.
     \item Rollers are mounted at 0 or 45 angles to a line along the plane of
   the wheel.
 \end{itemize}
 
-(Wikimedia)
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{omniwheel2}
+        \includegraphics[width=0.4\linewidth]{omniwheel3}
+
+        \source{https://en.wikipedia.org/wiki/Mecanum_wheel}{Wikipedia}
+    \end{center}
+}
 
 \end{frame}
 
-\begin{frame}{Type 2: Swedish wheel (2)}
+\begin{frame}{Type 2: Swedish wheel}
 
+
+\only<1>{
 Several possible configurations
 
 \begin{itemize}
@@ -206,16 +239,27 @@ Several possible configurations
     \item Four motors and four wheels.
 \end{itemize}
 
-\end{frame}
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{swedishwheel1}
+        \includegraphics[width=0.4\linewidth]{swedishwheel2}
+    \end{center}
 
-\begin{frame}{Type 2: Swedish wheel (3)}
+}
+    \only<2>{
 
 \begin{itemize}
     \item Four wheels and four motors.
+
+        \begin{center}
+            \includegraphics[width=0.4\linewidth]{swedishwheel3}
+            \includegraphics[width=0.4\linewidth]{swedishwheel4}
+        \end{center}
+
     \item Airtrax lift truck
   (\href{http://www.youtube.com/watch?v=IlmKcohyXG0}{video})
 \end{itemize}
 
+}
 \end{frame}
 
 \begin{frame}{Characteristics of Wheeled Robots and Vehicles}
@@ -284,6 +328,9 @@ Hatched: powered wheels
     \item This point is called the ICC.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{icc}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Differential drive configuration}
@@ -299,15 +346,29 @@ Most used wheeled robot configuration
   heavy weights (the supporting wheels is critical here).
 \end{itemize}
 
-(cognitoware.com)
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{differentialdrive}
+        \source{cognitoware.com}{cognitoware}
+    \end{center}
 
 \end{frame}
 
 \begin{frame}{Some examples}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{differentialdrive_ex1}
+    \end{center}
 www.kadtronix.com
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{differentialdrive_ex2}
+    \end{center}
+
 Pioneer
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{differentialdrive_ex3}
+    \end{center}
 
 Segway
 
@@ -334,6 +395,10 @@ The orientation in space of the robot frame will always remain the same
   frame.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{synchrodrive}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Synchro Drive}
@@ -345,6 +410,11 @@ The orientation in space of the robot frame will always remain the same
   Interfaces, popular in the research labs.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{synchrodrive_ex1}
+        \includegraphics[width=0.4\linewidth]{synchrodrive_ex2}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Stepping / Walking with Wheels}
@@ -354,6 +424,10 @@ The orientation in space of the robot frame will always remain the same
   for the European Space Agency (ESA)
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{walkingwheels_ex1}
+        \includegraphics[width=0.4\linewidth]{walkingwheels_ex2}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Shrimp, a Mobile Robot with Excellent Climbing Abilities}
@@ -380,9 +454,23 @@ highly stable in rough terrain
 
 overcomes obstacles up to 2 times its wheel diameter
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{shrimp}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Shrimp}
+
+\begin{center}
+    \includegraphics[width=0.2\linewidth]{shrimp1}
+    \includegraphics[width=0.2\linewidth]{shrimp2}
+    \includegraphics[width=0.2\linewidth]{shrimp3}
+    \includegraphics[width=0.2\linewidth]{shrimp4}
+\end{center}
+
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{shrimp_leg}
+    \end{center}
 
 \end{frame}
 
@@ -395,6 +483,9 @@ overcomes obstacles up to 2 times its wheel diameter
     \item Very unpredictable rotation.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{tracked_drive}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Ackerman drive}
@@ -409,6 +500,9 @@ When turning, all wheels turn at different speeds.
     \item Is resolved for the back wheels by a differential gear.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{ackerman_drive}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Ackerman drive}
@@ -418,6 +512,11 @@ When turning, all wheels turn at different speeds.
   by\ldots{}
 \end{itemize}
 
+    \begin{align*}
+        a &= \frac{d_a}{tan(a_i)} - d_w \\
+        a_i &= tan^{-1}(\frac{d_a}{a}) \\
+        tan(a_s) &= \frac{d_a}{a + \frac{d_w}{2}}
+    \end{align*}
 \end{frame}
 
 \section{Kinematics}
@@ -456,8 +555,12 @@ environment
     \item There is no direct way to measure the robot's position
     \item Position must be integrated over time
     \item Leads to inaccuracies of the position (motion) estimate
-  \emph{-\textgreater{} a major challenge in mobile robotics}
+    $\rightarrow$ a major challenge in mobile robotics
 \end{itemize}
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{kinematics_ex1}
+    \end{center}
 
 \end{frame}
 
@@ -487,8 +590,8 @@ or robot position and orientation.
   rad/s, what should the wheels do?
 \end{itemize}
 
-Inverse Kinematics is harder because there are most often several
-(sometimes infinite) solutions to the problem.
+    \alert{Inverse Kinematics is harder because there are most often several
+    (sometimes infinite) solutions to the problem.}
 
 \begin{itemize}
     \item For example: you can reach a point with a robot hand with any number
@@ -502,12 +605,33 @@ Inverse Kinematics is harder because there are most often several
 Goal:
 
 \begin{itemize}
-    \item establish the robot speed as a function of the wheel speeds , steering
-  angles , steering speeds and the geometric parameters of the robot
+    \item establish the robot speed $\dot\xi = \begin{bmatrix} \dot{x} & \dot{y}
+    & \dot{\theta}\end{bmatrix}^T$  as a function of the wheel speeds
+        $\dot\varphi_i$, steering
+  angles $\beta_i$, steering speeds $\dot\beta_i$ and the geometric parameters of the robot
   (\emph{configuration coordinates}).
-    \item forward kinematics
+
+        \begin{center}
+            \includegraphics[width=0.4\linewidth]{kinematic_model}
+        \end{center}
+
+    \item forward kinematics:
+
+\[
+    \dot\xi = \colvec{\dot{x} \\ \dot{y} \\ \dot{\theta} } = f(\dot\varphi_1,\ldots,\dot\varphi_n,\beta_1,\ldots,\beta_m,\dot\beta_1,\ldots,\dot\beta_m)
+\]
+
     \item Inverse kinematics
-    \item Note that does not make sense. Why?
+
+\[
+        \colvec{\dot\varphi_1 & \ldots & \dot\varphi_n& \beta_1 & \ldots &
+        \beta_m & \dot\beta_1 & \ldots & \dot\beta_m}^T = f(\dot{x},
+        \dot{y},\dot\theta)
+\]
+
+    \item Note that 
+    $\colvec{x \\ y \\ \theta } =
+        f(\varphi_1,\ldots,\varphi_n,\beta_1,\ldots,\beta_m)$ does not make sense. Why?
 \end{itemize}
 
 \href{http://en.wikipedia.org/wiki/Transpose}{Transpose} of a matrix A
@@ -518,18 +642,28 @@ which it changes. Also written as
 
 \end{frame}
 
-\begin{frame}{}
+\begin{frame}{Representing robot position}
 
 Representing the robot within an arbitrary initial frame
 
 \begin{itemize}
-    \item Initial frame:
-    \item Robot frame:
-    \item Robot position:
-    \item Mapping between the two frames
+    \item Initial frame: ${X_I, Y_I}$
+    \item Robot frame: ${X_R, Y_R}$
+    \item Robot position: $\xi_I = \colvec{x & y & \theta}^T$
 \end{itemize}
 
-Representing Robot Position
+    \begin{center}
+        \includegraphics[width=0.2\linewidth]{robot_position}
+    \end{center}
+
+Mapping between the two frames:
+
+    \begin{align*}
+        \dot\xi_R &= R(\theta)\cdot \dot\xi_I = R(\theta)\cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} \\ 
+        R(\theta) &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
+                                    -sin\theta & cos\theta & 0 \\
+                                             0 &         0 & 1 \end{bmatrix}
+    \end{align*}
 
 \end{frame}
 
@@ -726,6 +860,10 @@ of rotations of wheels) is hard.
   rolled).
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{deadreckoning1}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Dead reckoning: simulation (2)}
@@ -734,6 +872,9 @@ of rotations of wheels) is hard.
     \item Robot taking a turn (left wheel speed = 1, right wheel speed = 1.005).
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{deadreckoning2}
+    \end{center}
 \end{frame}
 
 
