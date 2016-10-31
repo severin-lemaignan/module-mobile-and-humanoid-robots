@@ -1,0 +1,755 @@
+%!TEX program = xelatex
+
+\documentclass[compress]{beamer}
+%--------------------------------------------------------------------------
+% Common packages
+%--------------------------------------------------------------------------
+
+\definecolor{links}{HTML}{663000}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usepackage[english]{babel}
+\usepackage{pgfpages} % required for notes on second screen
+\usepackage{graphicx}
+
+\usepackage{multicol}
+
+\usepackage{tabularx,ragged2e}
+\usepackage{booktabs}
+
+\usetheme{hri}
+
+% Display the navigation bullet even without subsections
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,backgrounds,positioning}
+
+\graphicspath{{figs/}}
+
+\title{ROCO318 \newline Mobile and Humanoid Robots}
+\subtitle{Part 4 - Wheeled locomotion and kinematics}
+
+
+\date{}
+\author{Séverin Lemaignan}
+\institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
+
+\begin{document}
+
+\licenseframe{github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+\maketitle
+
+\begin{frame}{Part 4 -- Wheeled locomotion and kinematics}
+
+For further reading, see:
+    
+    \begin{itemize}
+        \item (Siciliano and Katib, 2008) or chapter 2 from Siegwart and
+Nourbakhsh (2004)
+    \end{itemize}
+\end{frame}
+
+\section{Wheeled robots}
+
+\begin{frame}{Mobile robots with wheels}
+
+Wheels are the most appropriate solution for most applications.
+
+\begin{itemize}
+    \item The robots are faster and consume less energy.
+\end{itemize}
+
+Three wheels are sufficient and guarantee stability.
+
+For more than three wheels a flexible suspension is required.
+
+\begin{itemize}
+    \item Without a flexible suspension, only three wheels would make contact
+  with the ground, all other wheels would slip or not contact the
+  ground.
+\end{itemize}
+
+A large number of wheel types exist
+
+\begin{itemize}
+    \item Selection of wheel type depends on the application.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Efficiency of rolling}
+
+Wheels on rails are almost 100 times more efficient than human walking.
+
+\begin{itemize}
+    \item Robot walking is about 15 times less efficient than human walking.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Three wheel types}
+
+\begin{itemize}
+    \item Standard wheel (including the caster wheel).
+    \item Omnidirectional wheel (aka \href{http://en.wikipedia.org/wiki/Mecanum_wheel}{Swedish or Mecanum wheel}).
+    \item Ball or spherical wheel.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Type 1: Standard wheel}
+
+Has two offsets $d$ and $b$.
+
+The wheel allows steering or not?
+
+\begin{itemize}
+    \item Can the wheel's orientation be changed or not?
+\end{itemize}
+
+Is the wheel orientation steered or not?
+
+\begin{itemize}
+    \item Active steering means that a motor changes the wheel's orientation,
+  passive means that the wheel just follows.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Type 1: Standard wheel (2)}
+
+Passive fixed wheel.
+
+\begin{itemize}
+    \item No motors.
+\end{itemize}
+
+Passive or active caster wheel.
+
+\begin{itemize}
+    \item The wheel is off-center.
+    \item In the active case, the driving and steering motion is controlled by
+  two motors.
+\end{itemize}
+
+Active wheel that can be oriented.
+
+\begin{itemize}
+    \item This requires two motors, one for driving and one for steering.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Type 1: Standard wheel (3)}
+
+\begin{itemize}
+    \item Examples
+\end{itemize}
+
+a) Passive fixed wheel
+
+b) Passive caster wheel
+
+\end{frame}
+
+\begin{frame}{Type 1: Standard wheel (4)}
+
+Standard wheels are most used, but have a ``non-holonomic velocity
+constraint''.
+
+\begin{itemize}
+    \item Which just means that a wheel can only roll in the direction of the
+  wheel and cannot slide sideways.
+    \item This constrains what a robot (or vehicle) can do.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Type 2: Omnidirectional wheel (1)}
+
+Omnidirectional wheel (= Swedish or Mecanum wheel).
+
+\begin{itemize}
+    \item Three degrees of freedom; rotation around the (motorized) wheel axle,
+  around the rollers and around the contact point.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Type 2: Omnidirectional wheel (1)}
+
+\begin{itemize}
+    \item The wheel is designed to let a vehicle move in any direction.
+    \item Rollers are mounted at 0 or 45 angles to a line along the plane of
+  the wheel.
+\end{itemize}
+
+(Wikimedia)
+
+\end{frame}
+
+\begin{frame}{Type 2: Swedish wheel (2)}
+
+Several possible configurations
+
+\begin{itemize}
+    \item Three motors, and three wheels.
+    \item Four motors and four wheels.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Type 2: Swedish wheel (3)}
+
+\begin{itemize}
+    \item Four wheels and four motors.
+    \item Airtrax lift truck
+  (\href{http://www.youtube.com/watch?v=IlmKcohyXG0}{video})
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Characteristics of Wheeled Robots and Vehicles}
+
+Stability of a vehicle is guaranteed with 3 wheels
+
+\begin{itemize}
+    \item center of gravity is within the triangle with is formed by the ground
+  contact point of the wheels.
+\end{itemize}
+
+Stability is improved by 4 and more wheels
+
+\begin{itemize}
+    \item however, this arrangements are ``hyperstatic'' and require a flexible
+  suspension system.
+\end{itemize}
+
+Bigger wheels allow to overcome higher obstacles
+
+\begin{itemize}
+    \item but they require higher torque and reductions in the gear box.
+\end{itemize}
+
+Most arrangements are non-holonomic (see later)
+
+\begin{itemize}
+    \item require high control effort
+\end{itemize}
+
+Combining actuation and steering on one wheel makes the design complex
+and adds additional errors for odometry.
+
+\end{frame}
+
+\begin{frame}{Different Arrangements of Wheels I}
+
+\begin{itemize}
+    \item Two wheels
+    \item Three wheels
+\end{itemize}
+
+Omnidirectional drive
+
+Synchro drive aka omnidrive
+
+\end{frame}
+
+\begin{frame}{Different Arrangements of Wheels II}
+
+\begin{itemize}
+    \item Four wheels
+\end{itemize}
+
+White: free moving wheels
+
+Hatched: powered wheels
+
+\end{frame}
+
+\begin{frame}{Instantaneous centre of curvature (ICC)}
+
+\begin{itemize}
+    \item In order for all wheels of a vehicle to \textbf{roll} without
+  slipping, the axes of all wheels need to intersect in one point.
+    \item This point is called the ICC.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Differential drive configuration}
+
+Most used wheeled robot configuration
+
+\begin{itemize}
+    \item Cheap (two motor on two drive wheels, one support wheel).
+    \item Motors do driving and steering together.
+    \item Excellent steering behaviour.
+    \item Turn on the spot.
+    \item However, relatively poor straight forward driving and cannot carry
+  heavy weights (the supporting wheels is critical here).
+\end{itemize}
+
+(cognitoware.com)
+
+\end{frame}
+
+\begin{frame}{Some examples}
+
+www.kadtronix.com
+
+Pioneer
+
+Segway
+
+\end{frame}
+
+\begin{frame}{Synchro Drive}
+
+All wheels are actuated synchronously by one motor
+
+\begin{itemize}
+    \item defines the speed of the vehicle
+\end{itemize}
+
+All wheels steered synchronously by a second motor
+
+\begin{itemize}
+    \item sets the heading of the vehicle
+\end{itemize}
+
+The orientation in space of the robot frame will always remain the same
+
+\begin{itemize}
+    \item It is therefore not possible to control the orientation of the robot
+  frame.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Synchro Drive}
+
+\begin{itemize}
+    \item Only for indoor robots.
+    \item Very precise and excellent dead reckoning capabilities.
+    \item Example: PR2 from Willow Garage, B12, B21 robots by Real World
+  Interfaces, popular in the research labs.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Stepping / Walking with Wheels}
+
+\begin{itemize}
+    \item SpaceCat, and micro-rover for Mars, developed by Mecanex Sa and EPFL
+  for the European Space Agency (ESA)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Shrimp, a Mobile Robot with Excellent Climbing Abilities}
+
+Objective
+
+\begin{itemize}
+    \item Passive locomotion concept for rough terrain
+\end{itemize}
+
+Results: The Shrimp
+
+6 wheels
+
+\begin{itemize}
+    \item one fixed wheel in the rear
+    \item two boogies on each side
+    \item one front wheel with spring suspension
+\end{itemize}
+
+robot measures around 60 cm in length and 20 cm in height
+
+highly stable in rough terrain
+
+overcomes obstacles up to 2 times its wheel diameter
+
+\end{frame}
+
+\begin{frame}{Shrimp}
+
+\end{frame}
+
+\begin{frame}{Tracked drive}
+
+\begin{itemize}
+    \item Same principle as differential drive, but instead of wheels the robot
+  has tracks.
+    \item Good grip, low slippage. Excellent for rough terrain.
+    \item Very unpredictable rotation.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Ackerman drive}
+
+Four wheels, just as a car.
+
+Front wheels for steering.
+
+When turning, all wheels turn at different speeds.
+
+\begin{itemize}
+    \item Is resolved for the back wheels by a differential gear.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Ackerman drive}
+
+\begin{itemize}
+    \item Front wheels need different steering angle, to avoid slippage. Given
+  by\ldots{}
+\end{itemize}
+
+\end{frame}
+
+\section{Kinematics}
+
+\begin{frame}{Kinematics vs dynamics}
+
+\href{http://en.wikipedia.org/wiki/Kinematics}{Kinematics} describes the
+motion of objects or systems (combination of objects), but does not take
+forces into account. No mass, friction, gravity, momentum, \ldots{}
+
+\href{http://en.wikipedia.org/wiki/Analytical_dynamics}{Dynamics} take
+forces into account.
+
+\begin{itemize}
+    \item \href{http://www.youtube.com/watch?v=kEed8DVO21I}{Weightlifting
+  robot}, using dynamics to overcome the weight limitation.
+\end{itemize}
+
+Kinematics is simpler than dynamics. This module only considers
+kinematics.
+
+\end{frame}
+
+\begin{frame}{Mobile robot kinematics}
+
+Aim
+
+Description of mechanical behavior of the robot for \emph{control}
+
+Similar to robot manipulator kinematics
+
+However, a mobile robot can move unbounded with respect to its
+environment
+
+\begin{itemize}
+    \item There is no direct way to measure the robot's position
+    \item Position must be integrated over time
+    \item Leads to inaccuracies of the position (motion) estimate
+  \emph{-\textgreater{} a major challenge in mobile robotics}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Forward and inverse kinematics}
+
+\textbf{Forward kinematics}
+
+Calculate the position, orientation and speed of robot as a function of
+its wheel angles and speeds.
+
+\begin{itemize}
+    \item Example 1: inverse kinematics in a robot arm tells you the position of
+  the robot hand in function of the joint angles.
+    \item Example 2: when you know the speed of the left and right wheel of a
+  differential drive robot, you know the velocity of the robot body.
+\end{itemize}
+
+\textbf{Inverse kinematics}
+
+Calculate the wheel angles and speeds to achieve a certain robot speed
+or robot position and orientation.
+
+\begin{itemize}
+    \item Example 1: if the robot hand needs to be in position (x,y,z), what
+  joint angles should the robot arm have?
+    \item Example 2: if the you want the robot to drive at v m/s and rotate at θ
+  rad/s, what should the wheels do?
+\end{itemize}
+
+Inverse Kinematics is harder because there are most often several
+(sometimes infinite) solutions to the problem.
+
+\begin{itemize}
+    \item For example: you can reach a point with a robot hand with any number
+  of joint angles.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{A kinematics model}
+
+Goal:
+
+\begin{itemize}
+    \item establish the robot speed as a function of the wheel speeds , steering
+  angles , steering speeds and the geometric parameters of the robot
+  (\emph{configuration coordinates}).
+    \item forward kinematics
+    \item Inverse kinematics
+    \item Note that does not make sense. Why?
+\end{itemize}
+
+\href{http://en.wikipedia.org/wiki/Transpose}{Transpose} of a matrix A
+is written as AT : write rows of A as columns.
+
+A dot above a variable refers to its derivative in time: the speed at
+which it changes. Also written as
+
+\end{frame}
+
+\begin{frame}{}
+
+Representing the robot within an arbitrary initial frame
+
+\begin{itemize}
+    \item Initial frame:
+    \item Robot frame:
+    \item Robot position:
+    \item Mapping between the two frames
+\end{itemize}
+
+Representing Robot Position
+
+\end{frame}
+
+\begin{frame}{Example}
+
+\begin{itemize}
+    \item Robot aligned with YI
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Kinematics of a wheeled robot}
+
+The kinematics of a robot can be understood by looking at the kinematics
+of the individual wheels.
+
+But we need to assume some stringent constraints
+
+\begin{itemize}
+    \item Movement on a horizontal plane
+    \item Point contact of the wheels
+    \item Wheels not deformable
+    \item Pure rolling
+    \item No slipping, skidding or sliding
+    \item No friction for rotation around contact point
+    \item Steering axes orthogonal to the surface
+    \item Wheels connected by rigid frame (chassis)
+\end{itemize}
+
+If these constraints are not met, our calculations will be off.
+
+\end{frame}
+
+\section{Differential drive}
+
+\begin{frame}{Forward kinematics of differential drive (1)}
+
+Differential drive robot
+
+\begin{itemize}
+    \item Two wheels with radius $r$.
+    \item Distance between wheels is $2\cdot l$.
+    \item Orientation wrt inertial basis is $\theta$.
+    \item Turning speed of wheels is
+\end{itemize}
+
+Robot's overall speed in global reference frame
+
+$P$
+
+$l$
+
+$l$
+
+$\theta$
+
+\end{frame}
+
+\begin{frame}{Forward kinematics of differential drive (2)}
+
+The speed of a wheel over ground is
+
+Consider one wheel turning, the other wheel stationary.
+
+\begin{itemize}
+    \item The robot will pivot around the other wheel and the instantaneous
+  contribution of the rotating wheel will be that point $p$ has a
+  speed $v_p$.
+\end{itemize}
+
+$v$
+
+$r$
+
+$p$
+
+$l$
+
+$l$
+
+\end{frame}
+
+\begin{frame}{Forward kinematics of differential drive (3)}
+
+The contribution of both wheels can be added together. So, when both
+wheel spin, the robot's mid point moves at
+
+\begin{itemize}
+    \item For example, if wheel 1 has speed and wheel 2 then the robot will turn
+  on the spot and have no translational speed:
+\end{itemize}
+
+The speed in the robot reference frame is
+
+The robot cannot move sideways in a differential drive configuration
+
+\end{frame}
+
+\begin{frame}{Forward kinematics of differential drive (4)}
+
+The rotational component of can be computed by adding the instantaneous
+contribution of each wheel to the robots rotational velocity.
+
+\begin{itemize}
+    \item Rotational velocity
+\end{itemize}
+
+For the left wheel and for the right wheel
+
+Rotational velocity of robot after adding these two
+
+\end{frame}
+
+\begin{frame}{Forward kinematics of differential drive (5)}
+
+\begin{itemize}
+    \item Written in matrix form this is
+    \item This can be remapped to the initial frame by
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Forward kinematics of differential drive: practical
+approach}
+
+Sampling interval $I$ for wheel encoders. Encoders report wheel
+increment $N_L$ and $N_R$.
+
+Assume that
+
+\begin{itemize}
+    \item $r$ = wheel radius.
+    \item $C_e$ = encoder resolution (in pulses per revolution).
+    \item $n$ = gear ratio between motor and wheel.
+    \item $c_m$ = conversion factor from encoder ticks to wheel
+  displacement.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+    \item Incremental travel distance at time $i$ for left and right wheel
+  is
+    \item Incremental linear displacement for robot's centerpoint $C$ is
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+    \item Incremental change of orientation is with $b$ the wheelbase,
+  measured between the contact points of the wheels with the ground.
+    \item The robots new state is
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+    \item Rotation radius R is
+\end{itemize}
+
+$R$
+
+b
+
+\end{frame}
+
+\begin{frame}{Differential drive}
+
+Driving behaviour of differential wheel configuration is not very good.
+
+It has poor ``open loop'' driving behaviour.
+
+Dead reckoning (keeping track of the robot's position using the number
+of rotations of wheels) is hard.
+
+\begin{itemize}
+    \item Errors build up, as dead reckoning is integrative: small errors in
+  parameters or encoder measurements becomes amplified over time.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Dead reckoning: simulation (1)}
+
+\begin{itemize}
+    \item Straight driving.
+    \item Varying noise (i.e. variation on reported distance a wheel has
+  rolled).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Dead reckoning: simulation (2)}
+
+\begin{itemize}
+    \item Robot taking a turn (left wheel speed = 1, right wheel speed = 1.005).
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{}
+    \begin{center}
+        \Large
+        That's all, folks!\\[2em]
+        \normalsize
+        Questions:\\
+        Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
+
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
