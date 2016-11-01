@@ -529,82 +529,103 @@ Six wheels
 
 \begin{frame}{Instantaneous centre of curvature (ICC)}
 
-\begin{itemize}
-    \item In order for all wheels of a vehicle to \textbf{roll} without
-  slipping, the axes of all wheels need to intersect in one point.
-    \item This point is called the ICC.
-\end{itemize}
+In order for all wheels of a vehicle to \textbf{roll} without
+slipping, the axes of all wheels need to intersect in one point.
+
+This point is called the ICC.
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{icc}
+        \includegraphics[width=0.7\linewidth]{icc}
     \end{center}
 \end{frame}
 
 \begin{frame}{Differential drive configuration}
 
-Most used wheeled robot configuration
+    \begin{columns}
+        \begin{column}{0.6\linewidth}
 
-\begin{itemize}
-    \item Cheap (two motor on two drive wheels, one support wheel).
-    \item Motors do driving and steering together.
-    \item Excellent steering behaviour.
-    \item Turn on the spot.
-    \item However, relatively poor straight forward driving and cannot carry
-  heavy weights (the supporting wheels is critical here).
-\end{itemize}
+            Most used wheeled robot configuration
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{differentialdrive}
-        \source{cognitoware.com}{cognitoware}
-    \end{center}
+            \begin{itemize}
+                \item Cheap (two motor on two drive wheels, one support wheel).
+                \item Motors do driving and steering together.
+                \item Excellent steering behaviour.
+                \item Turn on the spot.
+                \item However, relatively poor straight forward driving and cannot carry
+                    heavy weights (the supporting wheels is critical here).
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.4\linewidth}
+
+        \begin{center}
+            \includegraphics[width=0.8\linewidth]{differentialdrive}
+
+            \source{cognitoware.com}{cognitoware}
+        \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
 \begin{frame}{Some examples}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{differentialdrive_ex1}
-    \end{center}
-www.kadtronix.com
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{differentialdrive_ex2}
-    \end{center}
+            \begin{center}
+                \includegraphics[width=0.7\linewidth]{differentialdrive_ex1}
 
-Pioneer
+                \source{www.kadtronix.com}{kadtronix}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{differentialdrive_ex3}
-    \end{center}
 
-Segway
+                \includegraphics[width=0.4\linewidth]{differentialdrive_ex3}
 
+                Segway
+            \end{center}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.7\linewidth]{differentialdrive_ex2}
+
+                Pioneer
+            \end{center}
+
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Synchro Drive}
 
-All wheels are actuated synchronously by one motor
+    \begin{columns}
+        \begin{column}{0.6\linewidth}
 
-\begin{itemize}
-    \item defines the speed of the vehicle
-\end{itemize}
+            All wheels are actuated synchronously by one motor
 
-All wheels steered synchronously by a second motor
+            \begin{itemize}
+                \item defines the speed of the vehicle
+            \end{itemize}
 
-\begin{itemize}
-    \item sets the heading of the vehicle
-\end{itemize}
+            All wheels steered synchronously by a second motor
 
-The orientation in space of the robot frame will always remain the same
+            \begin{itemize}
+                \item sets the heading of the vehicle
+            \end{itemize}
 
-\begin{itemize}
-    \item It is therefore not possible to control the orientation of the robot
-  frame.
-\end{itemize}
+            The orientation in space of the robot frame will always remain the same
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{synchrodrive}
-    \end{center}
+            \begin{itemize}
+                \item It is therefore not possible to control the orientation of the robot
+                    frame.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.4\linewidth}
+
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{synchrodrive}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
@@ -618,8 +639,11 @@ The orientation in space of the robot frame will always remain the same
 \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.4\linewidth]{synchrodrive_ex1}
-        \includegraphics[width=0.4\linewidth]{synchrodrive_ex2}
+        \includegraphics[height=0.4\paperheight]{pr2}
+        \hspace{1em}
+        \includegraphics[height=0.4\paperheight]{synchrodrive_ex1}
+        \hspace{1em}
+        \includegraphics[height=0.4\paperheight]{b21}
     \end{center}
 
 \end{frame}
