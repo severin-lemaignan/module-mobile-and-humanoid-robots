@@ -363,10 +363,13 @@ Two wheels
         \end{scope}
 
         \begin{scope}[shift={(5,-0.25)}]
+            \coordinate (hatchedwheel) at (0.8,0.5);
             \draw[thick] (0,0) rectangle (1,1.5);
             \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
             \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
         \end{scope}
+
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(180:1)}] at (hatchedwheel) {Hatched: powered wheels};
     \end{tikzpicture} 
 
 
@@ -391,6 +394,7 @@ Three wheels
         \end{scope}
 
         \begin{scope}[shift={(8,-3)}]
+            \coordinate (freewheel) at (0.8,1.2);
             \draw[thick] (0,0) rectangle (3,1.5);
             \draw[thick] (0.2,0.3) rectangle +(0.6,0.2);
             \draw[thick] (0.2,1.2) rectangle +(0.6,-0.2);
@@ -399,6 +403,7 @@ Three wheels
         \end{scope}
 
         \begin{scope}[shift={(1.5,-5)}]
+            \coordinate (omni) at (0.75,0.75);
             \draw[thick] (0,0) circle[radius=1];
             \foreach \p in {0,120,240} {
                 \draw[dashed] (0,0) -- (\p:1.4);
@@ -408,23 +413,117 @@ Three wheels
 
         \node at (5,-5) (synchro) {\includegraphics[width=3cm]{synchrodrive-simple}};
 
+
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(200:1)}] at (freewheel) {Empty: free wheel};
+
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(180:1)},right=1 of synchro] {Synchro drive aka omnidrive};
+
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=4cm, opacity=0.8,text opacity=1,draw,rectangle callout,anchor=pointer,callout relative pointer={(200:0.5)}] at (omni) {Omnidrirectional drive};
+
+
     \end{tikzpicture}
 
-Omnidirectional drive
 
-\bubble<1>{synchro}{Synchro drive aka omnidrive}
 
 \end{frame}
 
 \begin{frame}{Different Arrangements of Wheels II}
 
-\begin{itemize}
-    \item Four wheels
-\end{itemize}
+Four wheels
 
-White: free moving wheels
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
-Hatched: powered wheels
+        \begin{scope}[shift={(0,0)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \draw[thick] (0.5,0.5) -- (0.5,1);
+
+            \begin{scope}[rotate around={10:(2.5,0.75)}, shift={(2.5,0.75)}]
+                \draw[thick] (-0.3,0.25) rectangle +(0.6,0.2);
+                \draw[thick] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \draw[thick] (0,0.25) -- (0,-0.25);
+            \end{scope}
+
+        \end{scope}
+
+        \begin{scope}[shift={(4,0)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick] (0.2,1.2) rectangle +(0.6,-0.2);
+
+            \begin{scope}[rotate around={10:(2.5,0.75)}, shift={(2.5,0.75)}]
+                \draw[thick, pattern=vertical lines] (-0.3,0.25) rectangle +(0.6,0.2);
+                \draw[thick, pattern=vertical lines] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \draw[thick] (0,0.25) -- (0,-0.25);
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[shift={(8,0)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \begin{scope}[rotate around={-10:(.5,0.75)}, shift={(.5,0.75)}]
+                \draw[thick, pattern=vertical lines] (-0.3,0.25) rectangle +(0.6,0.2);
+                \draw[thick, pattern=vertical lines] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \draw[thick] (0,0.25) -- (0,-0.25);
+            \end{scope}
+            \begin{scope}[rotate around={10:(2.5,0.75)}, shift={(2.5,0.75)}]
+                \draw[thick, pattern=vertical lines] (-0.3,0.25) rectangle +(0.6,0.2);
+                \draw[thick, pattern=vertical lines] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \draw[thick] (0,0.25) -- (0,-0.25);
+            \end{scope}
+        \end{scope}
+
+        \begin{scope}[shift={(2,-3)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \draw[thick, pattern=north east lines] (2.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (2.2,1.2) rectangle +(0.6,-0.2);
+        \end{scope}
+
+        \begin{scope}[shift={(6,-3)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
+            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \draw[thick] (2.5,0.35) circle[radius=0.2];
+            \draw[thick] (2.5,1.15) circle[radius=0.2];
+        \end{scope}
+
+    \end{tikzpicture} 
+
+Six wheels
+
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+        \begin{scope}[shift={(2,0)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick] (0.35,0.35) circle[radius=0.2];
+            \draw[thick] (0.35,1.15) circle[radius=0.2];
+            \draw[thick] (2.65,0.35) circle[radius=0.2];
+            \draw[thick] (2.65,1.15) circle[radius=0.2];
+            \draw (1,0.55) rectangle +(0,0.4);
+            \draw[thick,pattern=north west lines] (0.7,0.65) rectangle +(0.6,0.2);
+            \draw (2,0.55) rectangle +(0,0.4);
+            \draw[thick,pattern=north west lines] (1.7,0.65) rectangle +(0.6,0.2);
+        \end{scope}
+
+        \begin{scope}[shift={(6,0)}]
+            \draw[thick] (0,0) rectangle (3,1.5);
+            \draw[thick] (0.35,0.35) circle[radius=0.2];
+            \draw[thick] (0.35,1.15) circle[radius=0.2];
+            \draw[thick] (2.65,0.35) circle[radius=0.2];
+            \draw[thick] (2.65,1.15) circle[radius=0.2];
+            \draw[thick,pattern=north west lines] (1.2,1.3) rectangle +(0.6,-0.2);
+            \draw[thick,pattern=north west lines] (1.2,0.2) rectangle +(0.6,0.2);
+        \end{scope}
+
+
+    \end{tikzpicture} 
+
+
 
 \end{frame}
 
