@@ -35,7 +35,7 @@
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
-\usetikzlibrary{mindmap,backgrounds,positioning}
+\usetikzlibrary{mindmap,backgrounds,positioning,calc,patterns}
 
 \graphicspath{{figs/}}
 
