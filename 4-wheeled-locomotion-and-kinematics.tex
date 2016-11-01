@@ -721,33 +721,34 @@ overcomes obstacles up to 2 times its wheel diameter
 
 \begin{frame}{Ackerman drive}
 
-Four wheels, just as a car.
+    \only<1>{
+        Four wheels, just as a car.
 
-Front wheels for steering.
+    Front wheels for steering.
 
-When turning, all wheels turn at different speeds.
+    When turning, all wheels turn at different speeds.
 
-\begin{itemize}
-    \item Is resolved for the back wheels by a differential gear.
-\end{itemize}
+    \begin{itemize}
+        \item Is resolved for the back wheels by a differential gear.
+    \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{ackerman_drive}
+        \includegraphics[width=0.6\linewidth]{ackerman_drive}
     \end{center}
-\end{frame}
+}
+    \only<2>{
 
-\begin{frame}{Ackerman drive}
-
-\begin{itemize}
-    \item Front wheels need different steering angle, to avoid slippage. Given
-  by\ldots{}
-\end{itemize}
+        \begin{itemize}
+            \item Front wheels need different steering angle, to avoid slippage. Given
+                by\ldots{}
+        \end{itemize}
 
     \begin{align*}
         a &= \frac{d_a}{tan(a_i)} - d_w \\
         a_i &= tan^{-1}(\frac{d_a}{a}) \\
         tan(a_s) &= \frac{d_a}{a + \frac{d_w}{2}}
     \end{align*}
+}
 \end{frame}
 
 \section{Kinematics}
@@ -773,103 +774,116 @@ kinematics.
 
 \begin{frame}{Mobile robot kinematics}
 
-Aim
+    \begin{columns}
+        \begin{column}{0.6\linewidth}
+            Aim: description of mechanical behavior of the robot for \emph{control}
 
-Description of mechanical behavior of the robot for \emph{control}
+            Similar to robot manipulator kinematics
 
-Similar to robot manipulator kinematics
+            However, a mobile robot can move unbounded with respect to its
+            environment
 
-However, a mobile robot can move unbounded with respect to its
-environment
+            \begin{itemize}
+                \item There is no direct way to measure the robot's position
+                \item Position must be integrated over time
+                \item Leads to inaccuracies of the position (motion) estimate
+                    $\rightarrow$ a major challenge in mobile robotics
+            \end{itemize}
 
-\begin{itemize}
-    \item There is no direct way to measure the robot's position
-    \item Position must be integrated over time
-    \item Leads to inaccuracies of the position (motion) estimate
-    $\rightarrow$ a major challenge in mobile robotics
-\end{itemize}
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{kinematics_ex1}
-    \end{center}
+        \end{column}
+        \begin{column}{0.4\linewidth}
+            \begin{center}
+                \includegraphics[width=\linewidth]{kinematics_ex1}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
 \begin{frame}{Forward and inverse kinematics}
 
-\textbf{Forward kinematics}
 
-Calculate the position, orientation and speed of robot as a function of
-its wheel angles and speeds.
+    \only<1>{
+        \textbf{Forward kinematics}
 
-\begin{itemize}
-    \item Example 1: inverse kinematics in a robot arm tells you the position of
-  the robot hand in function of the joint angles.
-    \item Example 2: when you know the speed of the left and right wheel of a
-  differential drive robot, you know the velocity of the robot body.
-\end{itemize}
+    Calculate the position, orientation and speed of robot as a function of
+    its wheel angles and speeds.
 
-\textbf{Inverse kinematics}
+    \begin{itemize}
+        \item Example 1: inverse kinematics in a robot arm tells you the position of
+            the robot hand in function of the joint angles.
+        \item Example 2: when you know the speed of the left and right wheel of a
+            differential drive robot, you know the velocity of the robot body.
+    \end{itemize}
 
-Calculate the wheel angles and speeds to achieve a certain robot speed
-or robot position and orientation.
+}
+    \only<2>{
+        \textbf{Inverse kinematics}
 
-\begin{itemize}
-    \item Example 1: if the robot hand needs to be in position (x,y,z), what
-  joint angles should the robot arm have?
-    \item Example 2: if the you want the robot to drive at v m/s and rotate at θ
-  rad/s, what should the wheels do?
-\end{itemize}
+    Calculate the wheel angles and speeds to achieve a certain robot speed
+    or robot position and orientation.
+
+    \begin{itemize}
+        \item Example 1: if the robot hand needs to be in position (x,y,z), what
+            joint angles should the robot arm have?
+        \item Example 2: if the you want the robot to drive at v m/s and rotate at θ
+            rad/s, what should the wheels do?
+    \end{itemize}
 
     \alert{Inverse Kinematics is harder because there are most often several
     (sometimes infinite) solutions to the problem.}
 
-\begin{itemize}
-    \item For example: you can reach a point with a robot hand with any number
-  of joint angles.
-\end{itemize}
-
+    \begin{itemize}
+        \item For example: you can reach a point with a robot hand with any number
+            of joint angles.
+    \end{itemize}
+}
 \end{frame}
 
 \begin{frame}{A kinematics model}
 
-Goal:
-
-\begin{itemize}
-    \item establish the robot speed $\dot\xi = \begin{bmatrix} \dot{x} & \dot{y}
+    Goal: establish the robot speed $\dot\xi = \begin{bmatrix} \dot{x} & \dot{y}
     & \dot{\theta}\end{bmatrix}^T$  as a function of the wheel speeds
         $\dot\varphi_i$, steering
-  angles $\beta_i$, steering speeds $\dot\beta_i$ and the geometric parameters of the robot
-  (\emph{configuration coordinates}).
+    angles $\beta_i$, steering speeds $\dot\beta_i$ and the geometric parameters of the robot
+    (\emph{configuration coordinates}).
 
-        \begin{center}
-            \includegraphics[width=0.4\linewidth]{kinematic_model}
-        \end{center}
+        \begin{columns}
+            \begin{column}{0.7\linewidth}
+                Forward kinematics:
 
-    \item forward kinematics:
+                \[
+                    \dot\xi = \colvec{\dot{x} \\ \dot{y} \\ \dot{\theta} } = f(\dot\varphi_1,\ldots,\dot\varphi_n,\beta_1,\ldots,\beta_m,\dot\beta_1,\ldots,\dot\beta_m)
+                \]
 
-\[
-    \dot\xi = \colvec{\dot{x} \\ \dot{y} \\ \dot{\theta} } = f(\dot\varphi_1,\ldots,\dot\varphi_n,\beta_1,\ldots,\beta_m,\dot\beta_1,\ldots,\dot\beta_m)
-\]
+            \end{column}
+            \begin{column}{0.3\linewidth}
+                \begin{center}
+                    \includegraphics[width=\linewidth]{kinematic_model}
+                \end{center}
 
-    \item Inverse kinematics
+            \end{column}
+        \end{columns}
 
-\[
+
+        \pause
+
+    Inverse kinematics:
+
+    $
         \colvec{\dot\varphi_1 & \ldots & \dot\varphi_n& \beta_1 & \ldots &
         \beta_m & \dot\beta_1 & \ldots & \dot\beta_m}^T = f(\dot{x},
         \dot{y},\dot\theta)
-\]
+    $
 
-    \item Note that 
-    $\colvec{x \\ y \\ \theta } =
+Note that  $\colvec{x \\ y \\ \theta } =
         f(\varphi_1,\ldots,\varphi_n,\beta_1,\ldots,\beta_m)$ does not make sense. Why?
-\end{itemize}
 
-\href{http://en.wikipedia.org/wiki/Transpose}{Transpose} of a matrix A
-is written as AT : write rows of A as columns.
-
-A dot above a variable refers to its derivative in time: the speed at
-which it changes. Also written as
+        %\href{http://en.wikipedia.org/wiki/Transpose}{Transpose} of a matrix A
+        %is written as AT : write rows of A as columns.
+        %
+        %A dot above a variable refers to its derivative in time: the speed at
+        %which it changes. Also written as
 
 \end{frame}
 
@@ -877,15 +891,15 @@ which it changes. Also written as
 
 Representing the robot within an arbitrary initial frame
 
+    \begin{columns}
+        \begin{column}{0.6\linewidth}
 \begin{itemize}
     \item Initial frame: ${X_I, Y_I}$
     \item Robot frame: ${X_R, Y_R}$
     \item Robot position: $\xi_I = \colvec{x & y & \theta}^T$
 \end{itemize}
 
-    \begin{center}
-        \includegraphics[width=0.2\linewidth]{robot_position}
-    \end{center}
+            \vspace{1em}
 
 Mapping between the two frames:
 
@@ -896,13 +910,48 @@ Mapping between the two frames:
                                              0 &         0 & 1 \end{bmatrix}
     \end{align*}
 
+            
+        \end{column}
+        \begin{column}{0.4\linewidth}
+
+    \begin{center}
+        \includegraphics[width=0.9\linewidth]{robot_position}
+    \end{center}
+        \end{column}
+    \end{columns}
+
+
+
 \end{frame}
 
-\begin{frame}{Example}
+\begin{frame}{Example: robot aligned with $Y_I$}
+    \begin{columns}
+        \begin{column}{0.6\linewidth}
 
-\begin{itemize}
-    \item Robot aligned with YI
-\end{itemize}
+    \begin{align*}
+        R(\theta) &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
+                                    -sin\theta & cos\theta & 0 \\
+                                             0 &         0 & 1 \end{bmatrix}
+    \end{align*}
+
+            
+        \end{column}
+        \begin{column}{0.4\linewidth}
+
+    \begin{center}
+        \includegraphics[width=0.9\linewidth]{robot_position_simple}
+    \end{center}
+        \end{column}
+    \end{columns}
+
+
+    \begin{align*}
+        \dot\xi_R &= R(\frac{\pi}{2})\cdot \dot\xi_I = \begin{bmatrix} 0 & 1 & 0 \\
+                                                                      -1 & 0 & 0 \\
+                                                                       0 & 0 & 1 \end{bmatrix} \cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} =  \colvec{\dot{y} \\ -\dot{x} \\ \dot\theta} 
+    \end{align*}
+
+
 
 \end{frame}
 
@@ -932,98 +981,233 @@ If these constraints are not met, our calculations will be off.
 
 \begin{frame}{Forward kinematics of differential drive (1)}
 
-Differential drive robot
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
-\begin{itemize}
-    \item Two wheels with radius $r$.
-    \item Distance between wheels is $2\cdot l$.
-    \item Orientation wrt inertial basis is $\theta$.
-    \item Turning speed of wheels is
-\end{itemize}
 
-Robot's overall speed in global reference frame
+            Differential drive robot
 
-$P$
+            \begin{itemize}
+                \item Two wheels with radius $r$
+                \item Distance between wheels is $2\cdot l$
+                \item Orientation wrt inertial basis is $\theta$
+                \item Turning speed of wheels is $\dot\varphi_1, \dot\varphi_2$
+            \end{itemize}
 
-$l$
+        \end{column}
+        \begin{column}{0.5\linewidth}
 
-$l$
 
-$\theta$
+            \resizebox{0.8\linewidth}{!}{
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                    \begin{scope}[rotate=20, shift={(2,0)}]
+                        \coordinate (O) at (0,0) node[label, left] {C};
+                        \fill[thick] (O) circle[radius=0.05];
+                        \draw (O) -- (0,1.1) node[label,midway,right] {l};
+                        \draw (O) -- (0,-1.1) node[label,midway,right] {l};
+                        \draw[thick] (-0.5,-1) rectangle (2,1);
+                        \draw[thick] (1.5,0) circle[radius=0.3];
+
+                        \fill ($(0, 1.1) - (0.4,0)$) rectangle +(0.8,0.3);
+                        \fill ($(0, -1.1) - (0.4,0)$) rectangle +(0.8,-0.3);
+
+                        \draw[->] (O) -- +(2.5,0);
+                        \draw[<-] (O) + (1,0) arc [start angle=0, end angle=-20, radius=1] node[midway,below] {$\theta$};
+                    \end{scope}
+                    \draw[->] (O) -- +(3,0);
+
+                \end{tikzpicture}
+            }
+
+        \end{column}
+    \end{columns}
+
+    Robot's overall speed in global reference frame:
+
+    \[
+        \dot\xi_I = \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} = f(l, r, \theta,
+        \dot\varphi_1, \dot\varphi_2)
+        \]
 
 \end{frame}
 
 \begin{frame}{Forward kinematics of differential drive (2)}
 
-The speed of a wheel over ground is
+    The speed of a wheel over ground is
 
-Consider one wheel turning, the other wheel stationary.
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \resizebox{0.6\linewidth}{!}{%
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
-\begin{itemize}
-    \item The robot will pivot around the other wheel and the instantaneous
-  contribution of the rotating wheel will be that point $p$ has a
-  speed $v_p$.
-\end{itemize}
 
-$v$
+                \draw[thick] (0,0) circle[radius=1];
 
-$r$
 
-$p$
+                \draw[->] (-1.2,0) arc [start angle=180, end angle=90, radius=1.2] node[midway,left] {$\dot\varphi$};
 
-$l$
+                    \draw (0,0) -- +(120:1) node[label, midway,right] {$r$};
+                    \draw[->] (0,0) -- +(0:1.4) node[label,right] {$\vec{v}$};
 
-$l$
+                \end{tikzpicture}
+            }
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \[
+                \dot\varphi [rad/s]\cdot r [m] = v [m/s]
+            \]
+        \end{column}
+    \end{columns}
+    Consider one wheel turning, the other wheel stationary.
+    \vspace{1em}
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+The robot will pivot around the other wheel and the instantaneous
+            contribution of the rotating wheel will be that point $p$ has a
+            speed $v_p$.
+
+            \[
+                v_p = \frac{1}{2}\cdot v_1 = \frac{1}{2}\cdot \dot\varphi_1\cdot r
+                \]
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \resizebox{0.6\linewidth}{!}{%
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                        \coordinate (O) at (0,0) node[label, left] {C};
+                        \fill[thick] (O) circle[radius=0.05];
+                        \draw (O) -- (0,1.1) node[label,midway,left] {l};
+                        \draw (O) -- (0,-1.1) node[label,midway,left] {l};
+                        \draw[thick] (-0.5,-1) rectangle (2,1);
+                        \draw[thick] (1.5,0) circle[radius=0.3];
+
+                        \fill ($(0, 1.1) - (0.4,0)$) rectangle +(0.8,0.3);
+                        \fill ($(0, -1.1) - (0.4,0)$) rectangle +(0.8,-0.3);
+
+                        \coordinate (wheel1) at (0,1.25);
+                        \coordinate (wheel2) at (0,-1.25);
+                        \draw[->] (wheel1) -- +(0.8,0) node[label,right] {$v_1$};
+                        \draw[dashed] (wheel2) -- ($(wheel1) +(0.8,0)$);
+                        \draw[->] (O) -- +(0.4,0) node[label,right] {$v_p$};
+
+                \end{tikzpicture}
+            }
+
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
 \begin{frame}{Forward kinematics of differential drive (3)}
 
-The contribution of both wheels can be added together. So, when both
-wheel spin, the robot's mid point moves at
+    The contribution of both wheels can be added together. So, when both
+    wheel spin, the robot's mid point moves at
 
-\begin{itemize}
-    \item For example, if wheel 1 has speed and wheel 2 then the robot will turn
-  on the spot and have no translational speed:
-\end{itemize}
+    \[
+    v_p = \frac{1}{2}\cdot \dot\varphi_1\cdot r + \frac{1}{2}\cdot \dot\varphi_2\cdot r
+    \]
 
-The speed in the robot reference frame is
 
-The robot cannot move sideways in a differential drive configuration
+            \begin{itemize}
+                \item In particular, if wheel 1 has speed $\dot\varphi_1 = a$ and wheel 2 $\dot\varphi_2 = -a$ then the robot will turn
+                    on the spot and have no translational speed: $v_p = 0$.
+            \end{itemize}
+
+    \pause
+
+    The speed in the robot reference frame is:
+
+    \begin{align*}
+        \dot{x}_R &= v_p \\
+        \dot{y}_R &= 0\bubblemark{nosideways}
+    \end{align*}
+
+    \bubble<1>{nosideways}{The robot cannot move sideways in a differential drive configuration}
 
 \end{frame}
 
 \begin{frame}{Forward kinematics of differential drive (4)}
 
-The rotational component of can be computed by adding the instantaneous
+    The rotational component $\dot\theta_R$ of $\dot\xi_R$ can be computed by adding the instantaneous
 contribution of each wheel to the robots rotational velocity.
 
-\begin{itemize}
-    \item Rotational velocity
-\end{itemize}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \centering
+            \resizebox{0.3\linewidth}{!}{%
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
-For the left wheel and for the right wheel
 
-Rotational velocity of robot after adding these two
+                \draw[thick] (0,0) circle[radius=0.1];
+
+
+                \draw[->] (-0.3,0) arc [start angle=180, end angle=40, radius=0.3];
+
+                    \draw[thick] (0,0) -- +(120:1) node[label, midway,right] {$r$};
+                    \draw[thick, ->] (120:1) -- +(30:.4) node[label,right] {$\vec{v}$};
+
+                \end{tikzpicture}
+            }
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \[
+                \omega [rad/s] = \frac{v [m/s]}{l [m]}
+            \]
+        \end{column}
+    \end{columns}
+
+
+For the left wheel and for the right wheel:
+\[
+    \omega_1 = \frac{\dot\varphi_1\cdot r}{2l};\qquad \omega_2 = -\frac{\dot\varphi_2\cdot r}{2l};
+\]
+
+Rotational velocity of robot after adding these two:
+
+\[
+    \dot\theta = \frac{r}{2l}\cdot (\dot\varphi_1 - \dot\varphi_2)
+\]
 
 \end{frame}
 
 \begin{frame}{Forward kinematics of differential drive (5)}
 
-\begin{itemize}
-    \item Written in matrix form this is
-    \item This can be remapped to the initial frame by
-\end{itemize}
+Written in matrix form this is:
+
+\[
+    \dot\xi_R = \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} = \colvec{r\cdot (\dot\varphi_1 + \dot\varphi_2) \\ 0 \\ \frac{r}{2l}\cdot (\dot\varphi_1 - \dot\varphi_2)}
+\]
+
+
+This can be remapped to the initial frame by:
+
+\[
+    \dot\xi_I = R(\theta)^{-1}\cdot \dot\xi_R
+\]
 
 \end{frame}
 
-\begin{frame}{Forward kinematics of differential drive: practical
-approach}
+\begin{frame}{Practical approach}
 
+    \only<1>{
 Sampling interval $I$ for wheel encoders. Encoders report wheel
 increment $N_L$ and $N_R$.
 
-Assume that
+Assume that:
+    \[
+        c_m = \frac{2\pi r}{n\cdot C_e}
+        \]
 
 \begin{itemize}
     \item $r$ = wheel radius.
@@ -1032,39 +1216,77 @@ Assume that
     \item $c_m$ = conversion factor from encoder ticks to wheel
   displacement.
 \end{itemize}
+}
+    \only<2>{
 
-\end{frame}
+Incremental travel distance at time $i$ for left and right wheel is:
 
-\begin{frame}{}
+\begin{align*}
+    \Delta U_{L,i} &= c_m\cdot N_{L,i} \\
+    \Delta U_{R,i} &= c_m\cdot N_{R,i}
+\end{align*}
 
-\begin{itemize}
-    \item Incremental travel distance at time $i$ for left and right wheel
-  is
-    \item Incremental linear displacement for robot's centerpoint $C$ is
-\end{itemize}
+Incremental linear displacement for robot's centerpoint $C$ is:
 
-\end{frame}
+\[
+        \Delta U_{i} = \frac{\Delta U_{L,i} + \Delta U_{R,i}}{2}
+\]
+}
+    \only<3>{
 
-\begin{frame}{}
+Incremental change of orientation is
+        
+        
+\[
+        \Delta \theta_{i} = \frac{\Delta U_{L,i} - \Delta U_{R,i}}{b}
+\]
 
-\begin{itemize}
-    \item Incremental change of orientation is with $b$ the wheelbase,
-  measured between the contact points of the wheels with the ground.
-    \item The robots new state is
-\end{itemize}
+        
+        with $b = 2l$ the wheelbase, measured between the contact points of the wheels with the ground.
 
-\end{frame}
+    The robots new state is:
 
-\begin{frame}{}
+\begin{align*}
+    \theta_i &= \theta_{i-1} + \Delta\theta_i \\
+    x_i &= x_{i-1} + \Delta U_i\cdot cos(\theta_i) \\
+    y_i &= y_{i-1} + \Delta U_i\cdot sin(\theta_i) 
+\end{align*}
 
-\begin{itemize}
-    \item Rotation radius R is
-\end{itemize}
+}
 
-$R$
+    \only<4>{
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
+    Rotation radius $R$ is:
 
-b
+\begin{align*}
+    \omega &= \frac{v_L}{R - l} = \frac{v_R}{R + l} \\
+    \Rightarrow R &= l\cdot \frac{\Delta U_R + \Delta U_L}{\Delta U_R - \Delta U_L}
+\end{align*}
 
+            \end{column}
+            \begin{column}{0.5\linewidth}
+            \centering
+            \resizebox{0.8\linewidth}{!}{%
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                    \draw[thick] (0,0) -- (0:5.5);
+                    \draw[thick,->] (0,0) -- (50:4) node[label,midway,left] {R};
+                    \draw[->] (0:4) arc [start angle=0, end angle=60, radius=4];
+
+                    \draw (3,-0.5) rectangle (5,1.5);
+                    \fill (2.9,-0.4) rectangle (2.7,0.4);
+                    \fill (5.1,-0.4) rectangle (5.3,0.4);
+                    \draw (3,0) -- (5,0) node[label, midway, below] {$b=2l$};
+                \end{tikzpicture}
+            }
+
+            \end{column}
+        \end{columns}
+
+    }
 \end{frame}
 
 \begin{frame}{Differential drive}
