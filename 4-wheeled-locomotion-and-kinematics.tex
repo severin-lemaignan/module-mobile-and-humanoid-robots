@@ -669,6 +669,8 @@ This point is called the ICC.
     \end{center}
 \end{frame}
 
+\videoframe{figs/part4/shrimp.mp4?start=10}
+
 \begin{frame}{Shrimp, a Mobile Robot with Excellent Climbing Abilities}
 
 Objective
@@ -901,9 +903,38 @@ kinematics.
 
             \end{column}
             \begin{column}{0.3\linewidth}
-                \begin{center}
-                    \includegraphics[width=\linewidth]{kinematic_model}
-                \end{center}
+
+            \resizebox{\linewidth}{!}{
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_I$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_I$};
+
+                    \begin{scope}[rotate=40, shift={(3,0)}]
+                        \coordinate (O) at (0,0) node[label, left] {C};
+                        \fill[thick] (O) circle[radius=0.05];
+                        \draw (O) -- (0,1.1);
+                        \draw (O) -- (0,-1.1);
+                        \draw[thick] (-0.5,-1) rectangle (2,1);
+                        \draw[thick] (1.5,0) circle[radius=0.3];
+
+                        \fill ($(0, 1.1) - (0.4,0)$) rectangle +(0.8,0.3);
+                        \fill ($(0, -1.1) - (0.4,0)$) rectangle +(0.8,-0.3);
+
+                        \draw[<-] (O) + (1,0) arc [start angle=0, end angle=-40, radius=1] node[label,below] {$\theta$};
+
+                        \draw[thick,->] (0,0) -- (3,0) node[label,right]{$v(t)$};
+                        \draw[ultra thick, dotted] (0,0) parabola[bend at start] (4,-2) node[label,right]{$s(t)$};
+                        \draw[ultra thick, dotted] (0,0) parabola[bend at start] (-2,1);
+
+                    \end{scope}
+                    \draw[dashed] (O) -- +(1.5,0);
+
+
+                \end{tikzpicture}
+            }
 
             \end{column}
         \end{columns}
@@ -932,38 +963,67 @@ Note that  $\colvec{x \\ y \\ \theta } =
 
 \begin{frame}{Representing robot position}
 
-Representing the robot within an arbitrary initial frame
+    Representing the robot within an arbitrary initial frame
 
     \begin{columns}
         \begin{column}{0.6\linewidth}
-\begin{itemize}
-    \item Initial frame: ${X_I, Y_I}$
-    \item Robot frame: ${X_R, Y_R}$
-    \item Robot position: $\xi_I = \colvec{x & y & \theta}^T$
-\end{itemize}
+            \begin{itemize}
+                \item Initial frame: ${X_I, Y_I}$
+                \item Robot frame: ${X_R, Y_R}$
+                \item Robot position: $\xi_I = \colvec{x & y & \theta}^T$
+            \end{itemize}
 
             \vspace{1em}
 
-Mapping between the two frames:
+            Mapping between the two frames:
 
-    \begin{align*}
-        \dot\xi_R &= R(\theta)\cdot \dot\xi_I = R(\theta)\cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} \\ 
-        R(\theta) &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
-                                    -sin\theta & cos\theta & 0 \\
-                                             0 &         0 & 1 \end{bmatrix}
-    \end{align*}
+            \begin{align*}
+                \dot\xi_R &= R(\theta)\cdot \dot\xi_I = R(\theta)\cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} \\ 
+                R(\theta) &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
+                    -sin\theta & cos\theta & 0 \\
+                0 &         0 & 1 \end{bmatrix}
+            \end{align*}
 
-            
+
         \end{column}
         \begin{column}{0.4\linewidth}
 
-    \begin{center}
-        \includegraphics[width=0.9\linewidth]{robot_position}
-    \end{center}
+            \resizebox{\linewidth}{!}{
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_I$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_I$};
+
+                    \begin{scope}[rotate=20, shift={(3,2)}]
+                        \coordinate (O) at (0,0) node[label, left] {C};
+                        \fill[thick] (O) circle[radius=0.05];
+                        \draw (O) -- (0,1.1);
+                        \draw (O) -- (0,-1.1);
+                        \draw[thick] (-0.5,-1) rectangle (2,1);
+                        \draw[thick] (1.5,0) circle[radius=0.3];
+
+                        \fill ($(0, 1.1) - (0.4,0)$) rectangle +(0.8,0.3);
+                        \fill ($(0, -1.1) - (0.4,0)$) rectangle +(0.8,-0.3);
+
+                        \draw[<-] (O) + (1,0) arc [start angle=0, end angle=-20, radius=1] node[label,below] {$\theta$};
+
+                        \draw[thick,->] (0,0) -- (3,0) node[label,right]{$X_R$};
+                        \draw[thick, ->] (0,0) -- (0,3) node[label,above]{$Y_R$};
+
+
+                    \end{scope}
+                    \draw[dashed] (O) -- +(1.5,0);
+
+                    \draw[dashed] (O) -- (O -| 0,0) node[left,label] {$y$};
+                    \draw[dashed] (O) -- (O |- 0,0) node[below,label] {$x$};
+
+                \end{tikzpicture}
+            }
+
         \end{column}
     \end{columns}
-
-
 
 \end{frame}
 
@@ -974,16 +1034,48 @@ Mapping between the two frames:
     \begin{align*}
         R(\theta) &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
                                     -sin\theta & cos\theta & 0 \\
-                                             0 &         0 & 1 \end{bmatrix}
+                                             0 &         0 & 1 \end{bmatrix} \\
+                \theta &= 90^\circ = \frac{\pi}{2}
     \end{align*}
 
             
         \end{column}
         \begin{column}{0.4\linewidth}
 
-    \begin{center}
-        \includegraphics[width=0.9\linewidth]{robot_position_simple}
-    \end{center}
+            \resizebox{\linewidth}{!}{
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_I$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_I$};
+
+                    \begin{scope}[rotate=90, shift={(2,-3)}]
+                        \coordinate (O) at (0,0) node[label, left] {C};
+                        \fill[thick] (O) circle[radius=0.05];
+                        \draw (O) -- (0,1.1);
+                        \draw (O) -- (0,-1.1);
+                        \draw[thick] (-0.5,-1) rectangle (2,1);
+                        \draw[thick] (1.5,0) circle[radius=0.3];
+
+                        \fill ($(0, 1.1) - (0.4,0)$) rectangle +(0.8,0.3);
+                        \fill ($(0, -1.1) - (0.4,0)$) rectangle +(0.8,-0.3);
+
+                        \draw[<-] (O) + (0.8,0) arc [start angle=0, end angle=-90, radius=0.8] node[label,below] {$\theta$};
+
+                        \draw[thick,->] (0,0) -- (3,0) node[label,right]{$X_R$};
+                        \draw[thick, ->] (0,0) -- (0,2.5) node[label,above]{$Y_R$};
+
+
+                    \end{scope}
+                    \draw[dashed] (O) -- +(1,0);
+
+                    \draw[dashed] (O) -- (O -| 0,0) node[left,label] {$y$};
+                    \draw[dashed] (O) -- (O |- 0,0) node[below,label] {$x$};
+
+                \end{tikzpicture}
+            }
+
         \end{column}
     \end{columns}
 
@@ -1058,7 +1150,7 @@ If these constraints are not met, our calculations will be off.
                         \fill ($(0, -1.1) - (0.4,0)$) rectangle +(0.8,-0.3);
 
                         \draw[->] (O) -- +(2.5,0);
-                        \draw[<-] (O) + (1,0) arc [start angle=0, end angle=-20, radius=1] node[midway,below] {$\theta$};
+                        \draw[<-] (O) + (1,0) arc [start angle=0, end angle=-20, radius=1] node[label,below] {$\theta$};
                     \end{scope}
                     \draw[->] (O) -- +(3,0);
 
