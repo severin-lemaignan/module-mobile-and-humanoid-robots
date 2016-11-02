@@ -7,6 +7,7 @@ TARGET=$(TEXTARGETS:.tex=.pdf)
 
 DOT=$(wildcard figs/*.dot)
 SVG=$(wildcard figs/*.svg)
+SVG+=$(wildcard figs/*/*.svg)
 
 MODE ?= batchmode
 

@@ -411,14 +411,22 @@ Three wheels
             }
         \end{scope}
 
-        \node at (5,-5) (synchro) {\includegraphics[width=3cm]{synchrodrive-simple}};
+        \begin{scope}[shift={(5.5,-5)}]
+            \draw[thick] (0,0) circle[radius=1];
+            \foreach \p in {0,120,240} {
+                \draw[dashed] (0,0) -- (\p:1.4);
+                \draw[thick, pattern=north east lines] ((\p:0.8) circle[radius=0.15];
+            }
+        \end{scope}
+
+        \node at (10,-5) (synchro) {\includegraphics[width=3cm]{synchrodrive-simple}};
 
 
         \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(200:1)}] at (freewheel) {Empty: free wheel};
 
-        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(180:1)},right=1 of synchro] {Synchro drive aka omnidrive};
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(200:0.5)},right=1 of synchro] {Synchro drive aka omnidrive};
 
-        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=4cm, opacity=0.8,text opacity=1,draw,rectangle callout,anchor=pointer,callout relative pointer={(200:0.5)}] at (omni) {Omnidrirectional drive};
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=4cm, opacity=0.8,text opacity=1,draw,rectangle callout,anchor=pointer,callout relative pointer={(200:0.5)}] at (omni) {Omnidirectional drive};
 
 
     \end{tikzpicture}
@@ -750,6 +758,41 @@ overcomes obstacles up to 2 times its wheel diameter
     \end{align*}
 }
 \end{frame}
+
+\begin{frame}{Balldrive}
+    \begin{center}
+        \includegraphics<1>[width=0.9\linewidth]{balldrive-cellulo}
+        \includegraphics<2>[width=0.9\linewidth]{magnetic_ball_drive}
+        \includegraphics<3>[width=0.9\linewidth]{balldrive-cellulo-model}
+
+        \source{http://ayberkozgur.com/_media/publications:balldrive.pdf}{\"Ozg\"ur et al., Permanent Magnet-Assisted Omnidirectional Ball Drive}
+    \end{center}
+\end{frame}
+
+\videoframe[0.56]{figs/part4/cellulo.mp4?start=3}
+
+\begin{frame}{Balldrive vs. omniwheels}
+    \begin{columns}
+        \begin{column}{0.4\linewidth}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{balldrive-omniwheel}
+            \end{center}
+        \end{column}
+        \begin{column}{0.6\linewidth}
+            \includegraphics[width=\linewidth]{balldrive-vs-omniwheel}
+        \end{column}
+    \end{columns}
+
+    \begin{center}
+
+        \source{http://ayberkozgur.com/_media/publications:balldrive.pdf}{\"Ozg\"ur et al., Permanent Magnet-Assisted Omnidirectional Ball Drive}
+    \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Kinematics}
 
