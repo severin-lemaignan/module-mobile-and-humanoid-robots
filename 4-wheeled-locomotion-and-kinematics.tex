@@ -415,7 +415,7 @@ Three wheels
             \draw[thick] (0,0) circle[radius=1];
             \foreach \p in {0,120,240} {
                 \draw[dashed] (0,0) -- (\p:1.4);
-                \draw[thick, pattern=north east lines] ((\p:0.8) circle[radius=0.15];
+                \draw[thick, pattern=north east lines] (\p:0.8) circle[radius=0.15];
             }
         \end{scope}
 
@@ -909,8 +909,8 @@ kinematics.
                     [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
 
-                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_I$};
-                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_I$};
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_W$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_W$};
 
                     \begin{scope}[rotate=40, shift={(3,0)}]
                         \coordinate (O) at (0,0) node[label, left] {C};
@@ -963,14 +963,14 @@ Note that  $\colvec{x \\ y \\ \theta } =
 
 \begin{frame}{Representing robot position}
 
-    Representing the robot within an arbitrary initial frame
+    Representing the robot within an arbitrary world frame
 
     \begin{columns}
         \begin{column}{0.6\linewidth}
             \begin{itemize}
-                \item Initial frame: ${X_I, Y_I}$
+                \item World frame: ${X_W, Y_W}$
                 \item Robot frame: ${X_R, Y_R}$
-                \item Robot position: $\xi_I = \colvec{x & y & \theta}^T$
+                \item Robot position: $\xi_W = \colvec{x & y & \theta}^T$
             \end{itemize}
 
             \vspace{1em}
@@ -978,7 +978,7 @@ Note that  $\colvec{x \\ y \\ \theta } =
             Mapping between the two frames:
 
             \begin{align*}
-                \dot\xi_R &= R(\theta)\cdot \dot\xi_I = R(\theta)\cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} \\ 
+                \dot\xi_R &= R(\theta)\cdot \dot\xi_W = R(\theta)\cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} \\ 
                 R(\theta) &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
                     -sin\theta & cos\theta & 0 \\
                 0 &         0 & 1 \end{bmatrix}
@@ -993,8 +993,8 @@ Note that  $\colvec{x \\ y \\ \theta } =
                     [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
 
-                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_I$};
-                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_I$};
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_W$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_W$};
 
                     \begin{scope}[rotate=20, shift={(3,2)}]
                         \coordinate (O) at (0,0) node[label, left] {C};
@@ -1027,7 +1027,7 @@ Note that  $\colvec{x \\ y \\ \theta } =
 
 \end{frame}
 
-\begin{frame}{Example: robot aligned with $Y_I$}
+\begin{frame}{Example: robot aligned with $Y_W$}
     \begin{columns}
         \begin{column}{0.6\linewidth}
 
@@ -1047,8 +1047,8 @@ Note that  $\colvec{x \\ y \\ \theta } =
                     [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
 
-                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_I$};
-                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_I$};
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_W$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_W$};
 
                     \begin{scope}[rotate=90, shift={(2,-3)}]
                         \coordinate (O) at (0,0) node[label, left] {C};
@@ -1081,7 +1081,7 @@ Note that  $\colvec{x \\ y \\ \theta } =
 
 
     \begin{align*}
-        \dot\xi_R &= R(\frac{\pi}{2})\cdot \dot\xi_I = \begin{bmatrix} 0 & 1 & 0 \\
+        \dot\xi_R &= R(\frac{\pi}{2})\cdot \dot\xi_W = \begin{bmatrix} 0 & 1 & 0 \\
                                                                       -1 & 0 & 0 \\
                                                                        0 & 0 & 1 \end{bmatrix} \cdot \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} =  \colvec{\dot{y} \\ -\dot{x} \\ \dot\theta} 
     \end{align*}
@@ -1163,7 +1163,7 @@ If these constraints are not met, our calculations will be off.
     Robot's overall speed in global reference frame:
 
     \[
-        \dot\xi_I = \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} = f(l, r, \theta,
+        \dot\xi_W = \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} = f(l, r, \theta,
         \dot\varphi_1, \dot\varphi_2)
         \]
 
@@ -1325,10 +1325,10 @@ Written in matrix form this is:
 \]
 
 
-This can be remapped to the initial frame by:
+This can be remapped to the world frame by:
 
 \[
-    \dot\xi_I = R(\theta)^{-1}\cdot \dot\xi_R
+    \dot\xi_W = R(\theta)^{-1}\cdot \dot\xi_R
 \]
 
 \end{frame}
@@ -1449,7 +1449,7 @@ of rotations of wheels) is hard.
 \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.7\linewidth]{deadreckoning1}
+        \includegraphics[width=0.8\linewidth]{deadreckoning1}
     \end{center}
 
 \end{frame}
@@ -1465,6 +1465,187 @@ of rotations of wheels) is hard.
     \end{center}
 \end{frame}
 
+\section{Omnidirectional robot}
+
+\begin{frame}{Kinematics of an omnidirectional robot: robot frame}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \small
+            \bubblemark{angularspeed}
+            \onslide<7->{
+                \begin{align*}
+                    v_i &= \dot\varphi_i\cdot r \\
+                        &= -\dot{x}_R\cdot sin(\alpha_i) + \dot{y}_R\cdot cos(\alpha_i) \only<8->{+ \bubblemark[-1ex]{angularspeed}\highlight<8>{l\cdot \dot\theta}}\\
+            \only<9->{
+                    \dot\varphi\cdot r &= \colvec{\dot\varphi_1 \\ \dot\varphi_2 \\ \dot\varphi_3}\cdot r \\
+                                   &= \begin{bmatrix} -sin\alpha_1 & cos\alpha_1 & l \\
+                                       -sin\alpha_2 & cos\alpha_2 & l \\
+                                   -sin\alpha_3 & cos\alpha_3 & l \end{bmatrix}\cdot \colvec{\dot{x}_R \\ \dot{y}_R \\ \dot\theta}\\
+                                   &= \begin{bmatrix} 0 & 1 & l \\
+                                       -\frac{\sqrt{3}}{2} & -\frac{1}{2} & l \\
+                                   \frac{\sqrt{3}}{2} & -\frac{1}{2} & l \end{bmatrix}\cdot \colvec{\dot{x}_R \\ \dot{y}_R \\ \dot\theta}
+            }
+            \end{align*}
+            \only<7-8>{
+                with $r$ the wheels radius and $\dot\varphi_i$ the angular velocity of each wheel.
+                
+                \only<8->{$l$ is the distance between the wheels' contact points with the ground and the centre.}
+            }
+            \bubble<8>[290][0.5][4cm]{angularspeed}{velocity component due to the robot's rotation}
+
+            }
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \resizebox{\linewidth}{!}{
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+                    \only<1-5,7->{
+                        \pgfmathsetmacro{\vang}{40}
+                        \pgfmathsetmacro{\vmag}{3}
+                    }
+                    \only<6>{
+                        \pgfmathsetmacro{\vang}{-50}
+                        \pgfmathsetmacro{\vmag}{3.5}
+                    }
+
+                        \coordinate (O) at (0,0);
+
+                        \draw[thick,->] (0,0) -- (3,0) node[label,right]{$X_R$};
+                        \draw[thick, ->] (0,0) -- (0,3) node[label,above]{$Y_R$};
+
+
+                        \draw[thick] (0,0) circle[radius=2];
+                        \draw[blue, ultra thick, ->] (0,0) -- (\vang:\vmag) node[label,above]{$\vec{v}_R$};
+
+                        \onslide<1,7->{
+                            \draw[->] (1,0) arc [start angle=0, end angle=120, radius=1] node[label,left,anchor=north east] {$\alpha_2 = \frac{2\pi}{3}$};
+                            \draw[->] (0.9,0) arc [start angle=0, end angle=-120, radius=0.9] node[label,midway,below] {$\alpha_3 = -\frac{2\pi}{3}$};
+                        }
+                        \onslide<7->{
+                            \node[label,anchor=south] at (0.75,0) {$l$};
+                            \draw[blue,dashed] (\vang:\vmag) -- (0,0 -| \vang:\vmag) node[label, below] {$\dot{x}_R$};
+                            \draw[blue,dashed] (\vang:\vmag) -- (0,0 |- \vang:\vmag) node[label, left] {$\dot{y}_R$};
+
+                        }
+
+                        \foreach \p in {1,2,3} {
+                            \pgfmathsetmacro{\ang}{(\p-1)*120}
+                            \only<1>{
+                                \draw[->] ($(\ang:2.2)+(\ang-90:0.25)$) arc [start angle=\ang-80, end angle=\ang+90, radius=0.25];
+                            }
+                            \only<1,7->{
+                                \draw[dashed] (0,0) -- (\ang:2.2);
+                            }
+                            \coordinate (w\p) at (\ang:1.5);
+                            % -> balldrive
+                            %\draw[thick, pattern=north east lines] (\ang:1.5) circle[radius=0.3];
+                            % -> wheels
+                            \fill[thick] ($(\ang:1.7) + (\ang + 90:0.5)$) -- ($(\ang:1.3) + (\ang + 90:0.5)$) -- ($(\ang:1.3) - (\ang + 90:0.5)$) -- ($(\ang:1.7) - (\ang + 90:0.5)$) -- cycle;
+
+                            \onslide<2-4>{
+                                \coordinate (a\p) at ($(w\p) + (\ang+90:3)$);
+                                \coordinate (b\p) at ($(w\p) + (\ang+90:-3)$);
+                                \draw[thin] (a\p) -- (b\p);
+                            }
+                            \onslide<3-4>{
+                                \draw[black!30,thin,->] (w\p) -- +(\vang:\vmag) node[label,above] {$v_R$};
+                                \coordinate (tip\p) at ($(w\p)+(\vang:\vmag)$);
+                                \coordinate (projx\p) at ($(a\p)!(tip\p)!(b\p)$); % compute the projection with calc's projection syntax
+                                \draw[black!30,dashed] (tip\p) -- (projx\p);
+                            }
+                            \onslide<4->{
+                                \draw[red,thick, ->] (w\p) -- (projx\p) node[label,anchor=south] {$v_\p$};
+                            }
+
+                        }
+
+
+
+                \end{tikzpicture} 
+                }
+        \end{column}
+    \end{columns}
+            \onslide<9>{
+                $\Rightarrow$ we can determine the wheels angular velocities to obtain a specific robot velocity.
+            }
+\end{frame}
+
+\begin{frame}{Kinematics of an omnidrive robot: world frame}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+
+            \small
+        This can be remapped to the world frame by:
+
+
+            \begin{align*}
+                \dot\xi_W &= \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} \\
+                          &= R(\theta)^{-1}\cdot \dot\xi_R \\
+                          &= \begin{bmatrix} cos\theta & sin\theta & 0 \\
+                                            -sin\theta & cos\theta & 0 \\
+                                                     0 &         0 & 1 \end{bmatrix}^{-1}\cdot \colvec{\dot{x}_R \\ \dot{y}_R \\ \dot\theta} \\
+            \end{align*}
+
+        \end{column}
+
+        \begin{column}{0.5\linewidth}
+
+                \resizebox{\linewidth}{!}{
+                \begin{tikzpicture} 
+                    [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+                    \draw[->] (0,0) -- (6,0) node[label,right]{$X_W$};
+                    \draw[->] (0,0) -- (0,5) node[label,above]{$Y_W$};
+
+                    \begin{scope}[rotate=20, shift={(4,2)}]
+                        \coordinate (O) at (0,0) node[label, left,anchor=north east] {C};
+
+                        \draw[thick] (0,0) circle[radius=2];
+                        \foreach \p in {1,2,3} {
+                            \pgfmathsetmacro{\ang}{(\p-1)*120}
+                            %\draw[dotted] (0,0) -- (\ang:2.2);
+                            % -> balldrive
+                            %\draw[thick, pattern=north east lines] (\ang:1.5) circle[radius=0.3];
+                            % -> wheels
+                            \fill[thick] ($(\ang:1.7) + (\ang + 90:0.5)$) -- ($(\ang:1.3) + (\ang + 90:0.5)$) -- ($(\ang:1.3) - (\ang + 90:0.5)$) -- ($(\ang:1.7) - (\ang + 90:0.5)$) -- cycle;
+                            \draw[red,thick, ->] (\ang:1.5) -- +(\ang+90:1) node[label,anchor=south] {$v_\p$};
+                    }
+
+                        \node[label,anchor=south] at (0.75,0) {$l$};
+
+                        \draw[<-] (O) + (1,0) arc [start angle=0, end angle=-20, radius=1] node[label,below] {$\theta$};
+
+                        \draw[thick,->] (0,0) -- (3,0) node[label,right]{$X_R$};
+                        \draw[thick, ->] (0,0) -- (0,3) node[label,above]{$Y_R$};
+
+
+                    \end{scope}
+
+                    \draw[dashed] (O) -- +(1.1,0);
+
+                    \draw[dashed] (O) -- (O -| 0,0) node[left,label] {$y$};
+                    \draw[dashed] (O) -- (O |- 0,0) node[below,label] {$x$};
+
+                \end{tikzpicture} 
+            }
+        \end{column}
+    \end{columns}
+
+    \onslide<2>{
+    \[
+    \Rightarrow \dot\xi_W = \begin{bmatrix}     cos\theta &    sin\theta & 0 \\
+                                                 -sin\theta &    cos\theta & 0 \\
+                                                          0 &            0 & 1 \end{bmatrix}^{-1}\cdot
+                        \begin{bmatrix}                   0 &            1 & l \\
+                                        -\frac{\sqrt{3}}{2} & -\frac{1}{2} & l \\
+                                            \frac{\sqrt{3}}{2} & -\frac{1}{2} & l \end{bmatrix}^{-1}\cdot \colvec{r\cdot \dot\varphi_1 \\ r\cdot \dot\varphi_2 \\ r\cdot \dot\varphi_3}
+    \]
+    }
+
+\end{frame}
 
 \begin{frame}{}
     \begin{center}
