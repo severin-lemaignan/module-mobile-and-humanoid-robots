@@ -59,8 +59,8 @@
 For further reading, see:
     
     \begin{itemize}
-        \item (Siciliano and Katib, 2008) or chapter 2 from Siegwart and
-Nourbakhsh (2004)
+        \item (Siciliano and Katib, 2008)
+        \item Autonomous Mobile Robots, chapters 2 and 3, (Siegwart and Nourbakhsh, 2004)
     \end{itemize}
 \end{frame}
 
@@ -127,6 +127,11 @@ Nourbakhsh (2004)
 
 \begin{itemize}
     \item Standard wheel (including the caster wheel).
+        \begin{itemize}
+            \item fixed wheel
+            \item free wheel (\emph{passive steering})
+            \item steering wheel (\emph{active} steering)
+        \end{itemize}
     \item Omnidirectional wheel (aka \href{http://en.wikipedia.org/wiki/Mecanum_wheel}{Swedish or Mecanum wheel}).
     \item Ball or spherical wheel.
 \end{itemize}
@@ -138,27 +143,31 @@ Nourbakhsh (2004)
 
     \only<1>{
         \begin{columns}
-            \begin{column}{0.5\linewidth}
+            \begin{column}{0.6\linewidth}
 
-                Has two offsets $d$ and $b$.
-
-                The wheel allows steering or not?
+                Characterised by two offsets $d$ and $b$
 
                 \begin{itemize}
-                    \item Can the wheel's orientation be changed or not?
-                \end{itemize}
+                    \item \textbf{Active wheel?}
 
-                Is the wheel orientation steered or not?
+                    $\rightarrow$ the wheel is driven by a motor or spins freely
 
-                \begin{itemize}
-                    \item Active steering means that a motor changes the wheel's orientation,
-                        passive means that the wheel just follows.
+                    \item \textbf{The wheel allows steering or not?}
+
+                    $\rightarrow$ can the wheel's orientation be changed or not
+
+                    \item \textbf{Is the wheel orientation steered or not?}
+
+                    $\rightarrow$ \emph{active steering} means that a motor changes
+                    the wheel's orientation; \emph{passive steering} means that the wheel just
+                    follows
+
                 \end{itemize}
 
             \end{column}
-            \begin{column}{0.5\linewidth}
+            \begin{column}{0.4\linewidth}
                 \begin{center}
-                    \includegraphics[width=0.8\linewidth]{std_wheel1}
+                    \includegraphics[width=\linewidth]{std_wheel1}
                 \end{center}
             \end{column}
         \end{columns}
@@ -224,9 +233,11 @@ Nourbakhsh (2004)
 constraint}.
 
 \begin{itemize}
-    \item Which just means that a wheel can only roll in the direction of the
-  wheel and cannot slide sideways.
-    \item This constrains what a robot (or vehicle) can do.
+    \item just means that the wheel can only roll in the direction of the
+  wheel and cannot slide sideways
+    \item still 2 degrees of freedom: roll in the wheel plane; rotation around
+        the contact point axis
+    \item This constrains what a robot (or vehicle) can do
 \end{itemize}
 
 }
@@ -242,7 +253,7 @@ constraint}.
 Omnidirectional wheel (= Swedish or Mecanum wheel).
 
 \begin{itemize}
-    \item Three degrees of freedom; rotation around the (motorized) wheel axle,
+    \item \emph{Three degrees of freedom}; rotation around the (motorized) wheel axle,
   around the rollers and around the contact point.
 \end{itemize}
             \end{column}
@@ -257,12 +268,12 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
     \only<2>{
 \begin{itemize}
     \item The wheel is designed to let a vehicle move in any direction.
-    \item Rollers are mounted at 0 or 45 angles to a line along the plane of
+    \item Rollers are mounted at 0$^\circ$ or 45$^\circ$ angles to a line along the plane of
   the wheel.
 \end{itemize}
 
     \begin{center}
-        \includegraphics[height=0.4\paperheight]{omniwheel3}
+        \includegraphics[height=0.4\paperheight]{omniwheel1}
         \includegraphics[height=0.4\paperheight]{omniwheel2}
 
         \source{https://en.wikipedia.org/wiki/Mecanum_wheel}{Wikipedia}
@@ -304,8 +315,8 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
     \item Four wheels and four motors.
 
         \begin{center}
-            \includegraphics[width=0.45\linewidth]{swedishwheel3}
-            \includegraphics[width=0.45\linewidth]{swedishwheel4}
+            \video{0.5\linewidth}{figs/part4/omniwheel1-video.mp4}
+            \video{0.5\linewidth}{figs/part4/omniwheel2-video.mp4}
         \end{center}
 
     \item Airtrax lift truck
@@ -327,7 +338,7 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
 Stability is improved by 4 and more wheels
 
 \begin{itemize}
-    \item however, this arrangements are \textbf{hyperstatic} and require a flexible
+    \item however, these arrangements are \textbf{hyperstatic} and require a flexible
   suspension system.
 \end{itemize}
 
@@ -357,7 +368,7 @@ Two wheels
 
         \begin{scope}
             \draw[thick] (0,0) rectangle (3,1);
-            \draw[thick, pattern=north east lines] (0.2,0.4) rectangle +(0.6,0.2);
+            \fill[thick] (0.2,0.4) rectangle +(0.6,0.2);
             \draw[rotate around={40:(2.5,0.5)}] (2.5,0.3) rectangle +(0,0.4);
             \draw[thick, rotate around={40:(2.5,0.5)}] (2.2,0.4) rectangle +(0.6,0.2);
         \end{scope}
@@ -365,11 +376,14 @@ Two wheels
         \begin{scope}[shift={(5,-0.25)}]
             \coordinate (hatchedwheel) at (0.8,0.5);
             \draw[thick] (0,0) rectangle (1,1.5);
-            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
-            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \fill[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \fill[thick] (0.2,1.2) rectangle +(0.6,-0.2);
         \end{scope}
 
-        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(180:1)}] at (hatchedwheel) {Hatched: powered wheels};
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text
+        width=4cm, opacity=0.8,text opacity=1, draw,rectangle
+        callout,anchor=pointer,callout relative pointer={(180:1)}] at
+        (hatchedwheel) {Filled: powered, regular wheels};
     \end{tikzpicture} 
 
 
@@ -379,15 +393,15 @@ Three wheels
         [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
         \begin{scope}[shift={(0,-3)}]
             \draw[thick] (0,0) rectangle (3,1.5);
-            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
-            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \fill[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \fill[thick] (0.2,1.2) rectangle +(0.6,-0.2);
             \draw[thick] (2.5,0.75) circle[radius=0.3];
         \end{scope}
 
         \begin{scope}[shift={(4,-3)}]
             \draw[thick] (0,0) rectangle (3,1.5);
-            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
-            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \fill[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \fill[thick] (0.2,1.2) rectangle +(0.6,-0.2);
             \draw[thick] (0.5,0.5) -- (0.5,1);
             \draw[rotate around={40:(2.5,0.75)}] (2.5,0.55) rectangle +(0,0.4);
             \draw[thick, rotate around={40:(2.5,0.75)}] (2.2,0.65) rectangle +(0.6,0.2);
@@ -399,7 +413,7 @@ Three wheels
             \draw[thick] (0.2,0.3) rectangle +(0.6,0.2);
             \draw[thick] (0.2,1.2) rectangle +(0.6,-0.2);
             \draw[rotate around={40:(2.5,0.75)}] (2.5,0.55) rectangle +(0,0.4);
-            \draw[thick, pattern=vertical lines, rotate around={40:(2.5,0.75)}] (2.2,0.65) rectangle +(0.6,0.2);
+            \fill[thick, rotate around={40:(2.5,0.75)}] (2.2,0.65) rectangle +(0.6,0.2);
         \end{scope}
 
         \begin{scope}[shift={(1.5,-5)}]
@@ -424,9 +438,12 @@ Three wheels
 
         \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(200:1)}] at (freewheel) {Empty: free wheel};
 
-        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(200:0.5)},right=1 of synchro] {Synchro drive aka omnidrive};
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=3cm, opacity=0.8,text opacity=1, draw,rectangle callout,anchor=pointer,callout relative pointer={(200:1.2)}] at (synchro) {Synchro drive aka omnidrive};
 
-        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text width=4cm, opacity=0.8,text opacity=1,draw,rectangle callout,anchor=pointer,callout relative pointer={(200:0.5)}] at (omni) {Omnidirectional drive};
+        \node[align=center, fill=hriSec3Comp!60,font=\footnotesize, text
+        width=5cm, opacity=0.8,text opacity=1,draw,rectangle
+        callout,anchor=pointer,callout relative pointer={(200:0.5)}] at (omni)
+        {Hatched: omnidirectional wheels};
 
 
     \end{tikzpicture}
@@ -439,13 +456,14 @@ Three wheels
 
 Four wheels
 
+\begin{center}
     \begin{tikzpicture} 
         [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
         \begin{scope}[shift={(0,0)}]
             \draw[thick] (0,0) rectangle (3,1.5);
-            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
-            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \fill[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \fill[thick] (0.2,1.2) rectangle +(0.6,-0.2);
             \draw[thick] (0.5,0.5) -- (0.5,1);
 
             \begin{scope}[rotate around={10:(2.5,0.75)}, shift={(2.5,0.75)}]
@@ -462,8 +480,8 @@ Four wheels
             \draw[thick] (0.2,1.2) rectangle +(0.6,-0.2);
 
             \begin{scope}[rotate around={10:(2.5,0.75)}, shift={(2.5,0.75)}]
-                \draw[thick, pattern=vertical lines] (-0.3,0.25) rectangle +(0.6,0.2);
-                \draw[thick, pattern=vertical lines] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \fill[thick] (-0.3,0.25) rectangle +(0.6,0.2);
+                \fill[thick] (-0.3,-0.25) rectangle +(0.6,-0.2);
                 \draw[thick] (0,0.25) -- (0,-0.25);
             \end{scope}
         \end{scope}
@@ -471,13 +489,13 @@ Four wheels
         \begin{scope}[shift={(8,0)}]
             \draw[thick] (0,0) rectangle (3,1.5);
             \begin{scope}[rotate around={-10:(.5,0.75)}, shift={(.5,0.75)}]
-                \draw[thick, pattern=vertical lines] (-0.3,0.25) rectangle +(0.6,0.2);
-                \draw[thick, pattern=vertical lines] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \fill[thick] (-0.3,0.25) rectangle +(0.6,0.2);
+                \fill[thick] (-0.3,-0.25) rectangle +(0.6,-0.2);
                 \draw[thick] (0,0.25) -- (0,-0.25);
             \end{scope}
             \begin{scope}[rotate around={10:(2.5,0.75)}, shift={(2.5,0.75)}]
-                \draw[thick, pattern=vertical lines] (-0.3,0.25) rectangle +(0.6,0.2);
-                \draw[thick, pattern=vertical lines] (-0.3,-0.25) rectangle +(0.6,-0.2);
+                \fill[thick] (-0.3,0.25) rectangle +(0.6,0.2);
+                \fill[thick] (-0.3,-0.25) rectangle +(0.6,-0.2);
                 \draw[thick] (0,0.25) -- (0,-0.25);
             \end{scope}
         \end{scope}
@@ -492,16 +510,17 @@ Four wheels
 
         \begin{scope}[shift={(6,-3)}]
             \draw[thick] (0,0) rectangle (3,1.5);
-            \draw[thick, pattern=north east lines] (0.2,0.3) rectangle +(0.6,0.2);
-            \draw[thick, pattern=north east lines] (0.2,1.2) rectangle +(0.6,-0.2);
+            \fill[thick] (0.2,0.3) rectangle +(0.6,0.2);
+            \fill[thick] (0.2,1.2) rectangle +(0.6,-0.2);
             \draw[thick] (2.5,0.35) circle[radius=0.2];
             \draw[thick] (2.5,1.15) circle[radius=0.2];
         \end{scope}
 
     \end{tikzpicture} 
+\end{center}
 
 Six wheels
-
+\begin{center}
     \begin{tikzpicture} 
         [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
@@ -513,9 +532,9 @@ Six wheels
             \draw[thick] (2.65,0.35) circle[radius=0.2];
             \draw[thick] (2.65,1.15) circle[radius=0.2];
             \draw (1,0.55) rectangle +(0,0.4);
-            \draw[thick,pattern=north west lines] (0.7,0.65) rectangle +(0.6,0.2);
+            \fill[thick] (0.7,0.65) rectangle +(0.6,0.2);
             \draw (2,0.55) rectangle +(0,0.4);
-            \draw[thick,pattern=north west lines] (1.7,0.65) rectangle +(0.6,0.2);
+            \fill[thick] (1.7,0.65) rectangle +(0.6,0.2);
         \end{scope}
 
         \begin{scope}[shift={(6,0)}]
@@ -524,12 +543,13 @@ Six wheels
             \draw[thick] (0.35,1.15) circle[radius=0.2];
             \draw[thick] (2.65,0.35) circle[radius=0.2];
             \draw[thick] (2.65,1.15) circle[radius=0.2];
-            \draw[thick,pattern=north west lines] (1.2,1.3) rectangle +(0.6,-0.2);
-            \draw[thick,pattern=north west lines] (1.2,0.2) rectangle +(0.6,0.2);
+            \fill[thick] (1.2,1.3) rectangle +(0.6,-0.2);
+            \fill[thick] (1.2,0.2) rectangle +(0.6,0.2);
         \end{scope}
 
 
     \end{tikzpicture} 
+\end{center}
 
 
 
@@ -537,10 +557,10 @@ Six wheels
 
 \begin{frame}{Instantaneous centre of curvature (ICC)}
 
-In order for all wheels of a vehicle to \textbf{roll} without
-slipping, the axes of all wheels need to intersect in one point.
+In order for all wheels of a vehicle to \textbf{roll without
+    slipping}, the axes of all wheels need to intersect in one point.
 
-This point is called the ICC.
+    This point is called the ICC: \emph{Instantaneous centre of curvature}.
 
     \begin{center}
         \includegraphics[width=0.7\linewidth]{icc}
@@ -665,23 +685,19 @@ This point is called the ICC.
 
     \begin{center}
         \includegraphics[width=0.4\linewidth]{walkingwheels_ex1}
-        \includegraphics[width=0.4\linewidth]{walkingwheels_ex2}
     \end{center}
 \end{frame}
 
 \videoframe{figs/part4/shrimp.mp4?start=10}
 
-\begin{frame}{Shrimp, a Mobile Robot with Excellent Climbing Abilities}
+\begin{frame}{Shrimp}
+    \only<1>{
 
-Objective
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    Objective: \emph{passive} locomotion concept for rough terrain
 
-\begin{itemize}
-    \item Passive locomotion concept for rough terrain
-\end{itemize}
-
-Results: The Shrimp
-
-6 wheels
+Results: 6 wheels
 
 \begin{itemize}
     \item one fixed wheel in the rear
@@ -695,24 +711,31 @@ highly stable in rough terrain
 
 overcomes obstacles up to 2 times its wheel diameter
 
+    \end{column}
+    \begin{column}{0.5\linewidth}
+
     \begin{center}
         \includegraphics[width=0.8\linewidth]{shrimp}
     \end{center}
-\end{frame}
-
-\begin{frame}{Shrimp}
-
+        
+    \end{column}
+\end{columns}
+    }
+    \only<2>{
 \begin{center}
     \includegraphics[width=0.2\linewidth]{shrimp1}
+    \hspace{1em}
     \includegraphics[width=0.2\linewidth]{shrimp2}
+    \hspace{1em}
     \includegraphics[width=0.2\linewidth]{shrimp3}
+    \hspace{1em}
     \includegraphics[width=0.2\linewidth]{shrimp4}
 \end{center}
 
     \begin{center}
         \includegraphics[width=0.4\linewidth]{shrimp_leg}
     \end{center}
-
+}
 \end{frame}
 
 \begin{frame}{Tracked drive}
@@ -752,12 +775,19 @@ overcomes obstacles up to 2 times its wheel diameter
             \item Front wheels need different steering angle, to avoid slippage. Given
                 by\ldots{}
         \end{itemize}
-
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
     \begin{align*}
-        a &= \frac{d_a}{tan(a_i)} - d_w \\
-        a_i &= tan^{-1}(\frac{d_a}{a}) \\
-        tan(a_s) &= \frac{d_a}{a + \frac{d_w}{2}}
+        a &= \frac{d_a}{tan(\alpha_i)} - d_w \\
+        \alpha_i &= tan^{-1}(\frac{d_a}{a}) \\
+        tan(\alpha_s) &= \frac{d_a}{a + \frac{d_w}{2}}
     \end{align*}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+        \includegraphics[width=\linewidth]{ackerman_drive}
+        \end{column}
+    \end{columns}
 }
 \end{frame}
 
@@ -832,6 +862,7 @@ kinematics.
                 \item There is no direct way to measure the robot's position
                 \item Position must be integrated over time
                 \item Leads to inaccuracies of the position (motion) estimate
+
                     $\rightarrow$ a major challenge in mobile robotics
             \end{itemize}
 
@@ -855,7 +886,7 @@ kinematics.
     its wheel angles and speeds.
 
     \begin{itemize}
-        \item Example 1: inverse kinematics in a robot arm tells you the position of
+        \item Example 1: forward kinematics in a robot arm tells you the position of
             the robot hand in function of the joint angles.
         \item Example 2: when you know the speed of the left and right wheel of a
             differential drive robot, you know the velocity of the robot body.
@@ -869,10 +900,10 @@ kinematics.
     or robot position and orientation.
 
     \begin{itemize}
-        \item Example 1: if the robot hand needs to be in position (x,y,z), what
+        \item Example 1: if the robot hand needs to be in position $(x,y,z)$, what
             joint angles should the robot arm have?
-        \item Example 2: if the you want the robot to drive at v m/s and rotate at θ
-            rad/s, what should the wheels do?
+        \item Example 2: if the you want the robot to drive at $v [m/s]$ and
+            rotate at $\dot\theta [rad/s]$, what should the wheels do?
     \end{itemize}
 
     \alert{Inverse Kinematics is harder because there are most often several
@@ -893,13 +924,16 @@ kinematics.
     angles $\beta_i$, steering speeds $\dot\beta_i$ and the geometric parameters of the robot
     (\emph{configuration coordinates}).
 
+    \vspace{1em}
         \begin{columns}
             \begin{column}{0.7\linewidth}
+                \onslide<2->{
                 Forward kinematics:
 
                 \[
                     \dot\xi = \colvec{\dot{x} \\ \dot{y} \\ \dot{\theta} } = f(\dot\varphi_1,\ldots,\dot\varphi_n,\beta_1,\ldots,\beta_m,\dot\beta_1,\ldots,\dot\beta_m)
                 \]
+        }
 
             \end{column}
             \begin{column}{0.3\linewidth}
@@ -940,8 +974,8 @@ kinematics.
         \end{columns}
 
 
-        \pause
 
+         \onslide<3>{
     Inverse kinematics:
 
     $
@@ -958,7 +992,7 @@ Note that  $\colvec{x \\ y \\ \theta } =
         %
         %A dot above a variable refers to its derivative in time: the speed at
         %which it changes. Also written as
-
+    }
 \end{frame}
 
 \begin{frame}{Representing robot position}
@@ -1125,8 +1159,8 @@ If these constraints are not met, our calculations will be off.
             \begin{itemize}
                 \item Two wheels with radius $r$
                 \item Distance between wheels is $2\cdot l$
-                \item Orientation wrt inertial basis is $\theta$
-                \item Turning speed of wheels is $\dot\varphi_1, \dot\varphi_2$
+                \item Orientation wrt to world is $\theta$
+                \item Angular velocities of wheels are $\dot\varphi_1, \dot\varphi_2$
             \end{itemize}
 
         \end{column}
@@ -1198,17 +1232,19 @@ If these constraints are not met, our calculations will be off.
             \]
         \end{column}
     \end{columns}
+
+    \pause
     Consider one wheel turning, the other wheel stationary.
     \vspace{1em}
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
 The robot will pivot around the other wheel and the instantaneous
-            contribution of the rotating wheel will be that point $p$ has a
-            speed $v_p$.
+            contribution of the rotating wheel will be that point $C$ has a
+            speed $v_C$.
 
             \[
-                v_p = \frac{1}{2}\cdot v_1 = \frac{1}{2}\cdot \dot\varphi_1\cdot r
+                v_C = \frac{1}{2}\cdot v_1 = \frac{1}{2}\cdot \dot\varphi_1\cdot r
                 \]
 
         \end{column}
@@ -1232,7 +1268,7 @@ The robot will pivot around the other wheel and the instantaneous
                         \coordinate (wheel2) at (0,-1.25);
                         \draw[->] (wheel1) -- +(0.8,0) node[label,right] {$v_1$};
                         \draw[dashed] (wheel2) -- ($(wheel1) +(0.8,0)$);
-                        \draw[->] (O) -- +(0.4,0) node[label,right] {$v_p$};
+                        \draw[->] (O) -- +(0.4,0) node[label,right] {$v_C$};
 
                 \end{tikzpicture}
             }
@@ -1248,13 +1284,13 @@ The robot will pivot around the other wheel and the instantaneous
     wheel spin, the robot's mid point moves at
 
     \[
-    v_p = \frac{1}{2}\cdot \dot\varphi_1\cdot r + \frac{1}{2}\cdot \dot\varphi_2\cdot r
+    v_C = \frac{1}{2}\cdot \dot\varphi_1\cdot r + \frac{1}{2}\cdot \dot\varphi_2\cdot r
     \]
 
 
             \begin{itemize}
                 \item In particular, if wheel 1 has speed $\dot\varphi_1 = a$ and wheel 2 $\dot\varphi_2 = -a$ then the robot will turn
-                    on the spot and have no translational speed: $v_p = 0$.
+                    on the spot and have no translational speed: $v_C = 0$.
             \end{itemize}
 
     \pause
@@ -1262,7 +1298,7 @@ The robot will pivot around the other wheel and the instantaneous
     The speed in the robot reference frame is:
 
     \begin{align*}
-        \dot{x}_R &= v_p \\
+        \dot{x}_R &= v_C \\
         \dot{y}_R &= 0\bubblemark{nosideways}
     \end{align*}
 
@@ -1288,7 +1324,7 @@ contribution of each wheel to the robots rotational velocity.
 
                 \draw[->] (-0.3,0) arc [start angle=180, end angle=40, radius=0.3];
 
-                    \draw[thick] (0,0) -- +(120:1) node[label, midway,right] {$r$};
+                    \draw[thick] (0,0) -- +(120:1);
                     \draw[thick, ->] (120:1) -- +(30:.4) node[label,right] {$\vec{v}$};
 
                 \end{tikzpicture}
@@ -1305,7 +1341,7 @@ contribution of each wheel to the robots rotational velocity.
 
 For the left wheel and for the right wheel:
 \[
-    \omega_1 = \frac{\dot\varphi_1\cdot r}{2l};\qquad \omega_2 = -\frac{\dot\varphi_2\cdot r}{2l};
+    \omega_1 = \frac{\dot\varphi_1\cdot r}{\highlight<2>{2l}};\qquad \omega_2 = \highlight<3>{-}\frac{\dot\varphi_2\cdot r}{2l};
 \]
 
 Rotational velocity of robot after adding these two:
@@ -1321,7 +1357,7 @@ Rotational velocity of robot after adding these two:
 Written in matrix form this is:
 
 \[
-    \dot\xi_R = \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} = \colvec{r\cdot (\dot\varphi_1 + \dot\varphi_2) \\ 0 \\ \frac{r}{2l}\cdot (\dot\varphi_1 - \dot\varphi_2)}
+    \dot\xi_R = \colvec{\dot{x} \\ \dot{y} \\ \dot\theta} = \colvec{\frac{r}{2}\cdot (\dot\varphi_1 + \dot\varphi_2) \\ 0 \\ \frac{r}{2l}\cdot (\dot\varphi_1 - \dot\varphi_2)}
 \]
 
 
@@ -1636,9 +1672,9 @@ of rotations of wheels) is hard.
 
     \onslide<2>{
     \[
-    \Rightarrow \dot\xi_W = \begin{bmatrix}     cos\theta &    sin\theta & 0 \\
-                                                 -sin\theta &    cos\theta & 0 \\
-                                                          0 &            0 & 1 \end{bmatrix}^{-1}\cdot
+    \Rightarrow \dot\xi_W = \begin{bmatrix}     cos\theta &    -sin\theta & 0 \\
+                                                 sin\theta &    cos\theta & 0 \\
+                                                          0 &            0 & 1 \end{bmatrix}\cdot
                         \begin{bmatrix}                   0 &            1 & l \\
                                         -\frac{\sqrt{3}}{2} & -\frac{1}{2} & l \\
                                             \frac{\sqrt{3}}{2} & -\frac{1}{2} & l \end{bmatrix}^{-1}\cdot \colvec{r\cdot \dot\varphi_1 \\ r\cdot \dot\varphi_2 \\ r\cdot \dot\varphi_3}
