@@ -46,6 +46,9 @@
 
 \maketitle
 
+\videoframe[0.56]{figs/part5/robocup-2016-nao-devils-b-human.avi}
+\videoframe[0.56]{figs/part5/darpa-humanoid-robots-falling.mp4}
+
 \begin{frame}{Why walking robots?}
     \begin{columns}
         \begin{column}{0.5\linewidth}
@@ -139,7 +142,7 @@
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{flame}
+                \includegraphics[height=0.6\paperheight]{flame}
     
                 \source{http://www.3me.tudelft.nl/en/about-the-faculty/departments/biomechanical-engineering/research/dbl-delft-biorobotics-lab/bipedal-robots/}{Flame, TU Delft}
             \end{center}
@@ -152,57 +155,41 @@
 \begin{frame}{Speed of robots}
 
     \begin{center}
-        \includegraphics[width=0.3\linewidth]{image5}
-
-        Usain Bolt WR 100m: 36,8km/h
-
-        \includegraphics[width=0.3\linewidth]{image6}
-
-    Asimo: 6km/h
-
-        \includegraphics[width=0.3\linewidth]{image7}
-
-    WL-5 (1970): 45s/step
-
-        \includegraphics[width=0.3\linewidth]{image8}
-
-    E2 ('87-'91): 1,2km/h
-
-        \video{0.3\linewidth}{figs/part5/walking_person.mp4}
-
-    Walking person +/- 5km/h
-
-        \includegraphics[width=0.3\linewidth]{image10}
-
-    Partner robot: 7km/h
-
-        \includegraphics[width=0.3\linewidth]{image11}
-
-    Atlas robot: 7km/h (?)
+       \footnotesize 
+\begin{tabular}{p{2.6cm}p{2.6cm}p{2.6cm}p{2.6cm}}
+\video[1.2]{1.8cm}{figs/part5/walking_person.mp4} & \includegraphics[height=2.2cm]{image7} & \includegraphics[height=2.2cm]{image8} & \\
+    Walking person \emph{$\pm$5km/h} & WL-5 ('70) \emph{45s/step}  & E2 ('91) \emph{1.2km/h} & \\
+ \includegraphics[height=2.2cm]{nao-robocup} & \includegraphics[height=2.2cm]{image6} & \includegraphics[height=2.2cm]{image11} & \includegraphics[height=2.2cm]{image10} \\
+    Nao \emph{1.6km/h}                 & Asimo \emph{6km/h}             & Atlas robot  \emph{7km/h} & Partner \emph{7km/h}
+\end{tabular}
 
     \end{center}
+
+    \pause
     Biped robot speed is often expressed as body lengths per second, to make
     comparison with different sized robots possible.
 
 \end{frame}
 
+\imageframe[caption=Usain Bolt WR 100m: 36.8km/h]{bolt}
+
 \begin{frame}{What is bipedal walking?}
 
-    When two feet are in touch with the ground at some point in the gait
+    \textbf{Walking}: when two feet are in contact with the ground at some point in the gait
     cycle.
 
-    Running is when only one foot touches the ground at any point in the
+    \textbf{Running}: when only one foot touches the ground at any point in the
     gait cycle.
 
-    A gait cycle is the time from the initial contact of one foot to the
-    next time of initial contact for the same foot.
+    A \textbf{gait cycle} starts with an initial contact of one foot with the
+    ground, and ends at the next contact of the same foot with the ground.
 
-    Two phases to a gait cycle.
+    Two phases to a gait cycle:
 
     \begin{itemize}
 
         \item \textbf{Stance phase} --when the foot is in contact with the ground
-            (also called support phase).
+            (also called \emph{support phase});
         \item \textbf{Swing phase} --when the foot is lifted of the ground.
     \end{itemize}
 
@@ -288,17 +275,18 @@
 
     Humanoid Robotics Project (HRP2) robot (Japan, 1997-)
 
+    \vspace{1em}
     \begin{columns}
         \begin{column}{0.5\linewidth}
     Static walking
 
-            \video{0.8\linewidth}{figs/part5/hrp2-1.mp4}
+            \video{\linewidth}{figs/part5/hrp2-1.mp4}
             
         \end{column}
         \begin{column}{0.5\linewidth}
     Dynamic walking
 
-            \video{0.8\linewidth}{figs/part5/hrp2-2.mp4}
+            \video{\linewidth}{figs/part5/hrp2-2.mp4}
         \end{column}
     \end{columns}
 
@@ -307,6 +295,15 @@
 \end{frame}
 
 \begin{frame}{Robot walking (3)}
+
+    \begin{tikzpicture} 
+        [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
+
+
+        \draw[ultra thick,->] (-5,0) -- (5,0);
+        \draw[ultra thick,->] (0,-4) -- (0,4);
+
+    \end{tikzpicture}
 
     \begin{itemize}
 
