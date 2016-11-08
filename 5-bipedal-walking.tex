@@ -26,11 +26,57 @@
 \makeatother
 \setcounter{subsection}{1}
 
+\newcommand{\colvec}[2][.8]{%
+  \scalebox{#1}{%
+    \renewcommand{\arraystretch}{.8}%
+    $\begin{bmatrix}#2\end{bmatrix}$%
+  }
+}
 
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,calc,patterns}
+
+\tikzset{box/.style={
+            draw, 
+            fill=blue!20,
+            fill opacity=0.8,
+            thick,
+            inner sep=0pt,
+            minimum size=1cm,
+            transform shape,
+            anchor=center
+        },
+        finalbox/.style={
+            draw, 
+            fill=orange,
+            fill opacity=0.8,
+            thick,
+            inner sep=0pt,
+            minimum size=1cm,
+            transform shape,
+            anchor=center
+        },
+        dot/.style={
+            draw,
+            circle,
+            fill=red!20,
+            inner sep=0pt,
+            minimum size=1cm,
+            transform shape
+        },
+        axis/.style={
+            thick,
+            gray,
+            font=\small},
+        every to/.style={
+            >=latex,
+            dashed,
+            thick
+        }
+    }
+
 
 \graphicspath{{figs/part5/}}
 
@@ -46,7 +92,6 @@
 
 \maketitle
 
-\videoframe[0.56]{figs/part5/robocup-2016-nao-devils-b-human.avi}
 \videoframe[0.56]{figs/part5/darpa-humanoid-robots-falling.mp4}
 
 \begin{frame}{Why walking robots?}
@@ -157,7 +202,8 @@
     \begin{center}
        \footnotesize 
 \begin{tabular}{p{2.6cm}p{2.6cm}p{2.6cm}p{2.6cm}}
-\video[1.2]{1.8cm}{figs/part5/walking_person.mp4} & \includegraphics[height=2.2cm]{image7} & \includegraphics[height=2.2cm]{image8} & \\
+    \video[1.2]{1.8cm}{figs/part5/walking_person.mp4} & 
+    \includegraphics[height=2.2cm]{image7} & \includegraphics[height=2.2cm]{image8} & \\
     Walking person \emph{$\pm$5km/h} & WL-5 ('70) \emph{45s/step}  & E2 ('91) \emph{1.2km/h} & \\
  \includegraphics[height=2.2cm]{nao-robocup} & \includegraphics[height=2.2cm]{image6} & \includegraphics[height=2.2cm]{image11} & \includegraphics[height=2.2cm]{image10} \\
     Nao \emph{1.6km/h}                 & Asimo \emph{6km/h}             & Atlas robot  \emph{7km/h} & Partner \emph{7km/h}
@@ -172,6 +218,10 @@
 \end{frame}
 
 \imageframe[caption=Usain Bolt WR 100m: 36.8km/h]{bolt}
+
+\videoframe[0.56]{figs/part5/robocup-2016-nao-devils-b-human.avi}
+
+\section{Characterizing walk}
 
 \begin{frame}{What is bipedal walking?}
 
@@ -195,8 +245,9 @@
 
 \end{frame}
 
-\begin{frame}{Robot walking - Active}
+\begin{frame}{Active vs Passive Walk}
 
+    \only<1>{
     \textbf{Active Walk}
 
     \begin{itemize}
@@ -213,11 +264,8 @@
             \href{http://www.youtube.com/watch?v=KaIfZW7vCGI\&feature=related}{Bioloid},
             \ldots{}
     \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Robot walking - Passive}
-
+}
+    \only<2>{
     \textbf{Passive Walk}
 
     \begin{itemize}
@@ -232,122 +280,86 @@
             example},
             \href{http://www.youtube.com/watch?v=CK8IFEGmiKY\&NR=1}{Nagoya U.}
     \end{itemize}
-
+}
 \end{frame}
 
-\begin{frame}{Robot walking - Static}
+\begin{frame}{Static vs Dynamic Walk}
 
-    \textbf{Static Walk}
+    \only<1>{
+        \textbf{Static Walk}
 
     \begin{itemize}
 
-        \item A static walk is when the robot is always \textbf{balanced. If the
+        \item A static walk is when the robot is \textbf{always balanced}. If the
             robot was to stop at any point in the gait cycle then it would not
-            fall over.}
+            fall over.
         \item Control is easy.
         \item Movements are slow.
         \item \href{http://www.youtube.com/watch?v=NbnELOZbsls\&feature=related}{Aldebaran
             Nao} (\href{http://www.youtube.com/watch?v=3aOuQ1_e--k}{not always}),
             \href{http://www.youtube.com/watch?v=cYo9Whssla8}{LittleDog}
     \end{itemize}
+    }
+    \only<2>{
 
-\end{frame}
-
-\begin{frame}{Robot walking - Dynamic}
-
-    \textbf{Dynamic Walk}
+        \textbf{Dynamic Walk}
 
     \begin{itemize}
 
-        \item A dynamic walk when the robot is not \textbf{balanced. If the robot
+        \item A dynamic walk when the robot is \textbf{not always balanced}. If the robot
             was to stop at any point in the gait cycle then it would fall over.
-            Controlled falling.}
+            \textbf{Controlled falling}.
         \item Control is hard.
         \item Fast(er) motion.
         \item Honda Asimo, \href{http://www.youtube.com/watch?v=KLepY1AsaRk}{Cornell
             walkers}, Delft walkers,
             \href{http://www.youtube.com/watch?v=diaZFIUBMBQ}{Schaft robot}
     \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Static/Dynamic}
-
-    Humanoid Robotics Project (HRP2) robot (Japan, 1997-)
+    }
+    \only<3>{
+        Humanoid Robotics Project (HRP2) robot (Japan, 1997-)
 
     \vspace{1em}
     \begin{columns}
         \begin{column}{0.5\linewidth}
-    Static walking
+            Static walking
 
             \video{\linewidth}{figs/part5/hrp2-1.mp4}
-            
+
         \end{column}
         \begin{column}{0.5\linewidth}
-    Dynamic walking
+            Dynamic walking
 
             \video{\linewidth}{figs/part5/hrp2-2.mp4}
         \end{column}
     \end{columns}
 
-
+}
 
 \end{frame}
 
-\begin{frame}{Robot walking (3)}
+\begin{frame}{Robot walk typology -- Summary}
 
+    \begin{center}
     \begin{tikzpicture} 
         [>=latex,label/.style={align=center,font=\footnotesize},scale=0.8]
 
 
-        \draw[ultra thick,->] (-5,0) -- (5,0);
-        \draw[ultra thick,->] (0,-4) -- (0,4);
+        \draw[ultra thick,->] (0,-4) -- (0,4) node[above] {\emph{Passive/Active}};
+        \draw[ultra thick,->] (-5,0) -- (5,0) node[align=center,right] {\it Static/ \\ \it Dynamic};
+
+        \node[align=left,anchor=north west] at (-5,3.5) {\textbf{Active static} \\ Always in balance, \\ with energy input};
+        \node[align=left,anchor=north west] at (0.5,3.5) {\textbf{Active dynamic} \\ Controlled falling, \\ with energy input};
+        \node[align=left,anchor=north west] at (-5,-0.5) {\textbf{Passive static} \\ Does not walk.\\ A brick.};
+        \node[align=left,anchor=north west] at (0.5,-0.5) {\textbf{Passive dynamic} \\ Controlled falling, \\no energy input to the system};
 
     \end{tikzpicture}
 
-    \begin{itemize}
-
-        \item Combinations
-    \end{itemize}
-
-    \textbf{Active static}
-
-
-    Always in balance, with energy input.
-    \textbf{Active dynamic}
-
-    Controlled falling, with energy input.
-    \textbf{Passive static}
-
-
-    Does not walk. A brick.
-
-    \textbf{Passive dynamic}
-
-    Controlled falling, no energy input to the system.
-
-    \emph{Passive/Active}
-
-    \emph{Static/ Dynamic}
-
-\end{frame}
-
-\begin{frame}{Energy consumption}
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{image14}
-    \end{center}
-\end{frame}
-
-\begin{frame}{People}
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{image15}
-
-    \emph{\textbf{Eadweard Muybridge}}
     \end{center}
 
 \end{frame}
+
+\imageframe[color=black,caption=Stop-motion photographs by Eadweard Muybridge]{human_walk}
 
 \begin{frame}{How do people walk?}
 
@@ -372,6 +384,22 @@
 
 \end{frame}
 
+\begin{frame}{Energy consumption: Cost of Transport}
+    
+    \Large
+    \[
+        \mathrm{COT} \overset{\text{def}}= \frac{E}{m\cdot g\cdot d}\bubblemark{cot}
+    \]
+
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{cost_of_transport}
+    \end{center}
+
+    \bubble<1>[190]{cot}{Dimension-less quantity}
+\end{frame}
+
+\section{Actuation}
+
 \begin{frame}{Actuation}
 
     Hydraulics
@@ -379,7 +407,20 @@
     \begin{itemize}
 
         \item Pressurised liquid.
-        \item Bigdog and \href{http://www.youtube.com/watch?v=QRbvNL1PHKg}{Petman}.
+        \item Bigdog, \href{http://www.youtube.com/watch?v=QRbvNL1PHKg}{Petman}, Atlas
+    \end{itemize}
+\end{frame}
+
+\videoframe[0.56]{figs/part5/atlas.mp4}
+
+\begin{frame}{Actuation}
+
+    Hydraulics
+
+    \begin{itemize}
+
+        \item Pressurised liquid.
+        \item Bigdog, \href{http://www.youtube.com/watch?v=QRbvNL1PHKg}{Petman}, Atlas
     \end{itemize}
 
     Pneumatics
@@ -387,7 +428,39 @@
     \begin{itemize}
 
         \item Air powered: high energy, powerful.
-        \item Inherently compliant.
+        \item Inherently \textbf{compliant}.
+    \end{itemize}
+
+    \pause
+
+    DC motors
+
+    \begin{itemize}
+
+        \item Can be combined with spring to have compliant motors.
+        \item \href{http://www.youtube.com/watch?v=XVYsqv3sLew}{iCub walking}.
+    \end{itemize}
+
+\end{frame}
+
+\videoframe[0.56]{figs/part5/icub_walking.mp4}
+
+\begin{frame}{Actuation}
+
+    Hydraulics
+
+    \begin{itemize}
+
+        \item Pressurised liquid.
+        \item Bigdog, \href{http://www.youtube.com/watch?v=QRbvNL1PHKg}{Petman}, Atlas
+    \end{itemize}
+
+    Pneumatics
+
+    \begin{itemize}
+
+        \item Air powered: high energy, powerful.
+        \item Inherently \textbf{compliant}.
     \end{itemize}
 
     DC motors
@@ -407,42 +480,41 @@
 
 \end{frame}
 
-\section{Servo motor powered humanoid robots}
+
 
 \begin{frame}{What is a servo motor?}
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
-    A servo motor is a combination of a DC motor, gearing and a position
-    measurement.
+            A servo motor is a combination of a DC motor, gearing and a position
+            measurement.
 
-    \begin{itemize}
+            \vspace{1em}
 
-        \item Position measurement is used for negative feedback to decrease error
+            Position measurement is used for negative feedback to decrease error
             between current position and demanded position.
-    \end{itemize}
 
-            
+            \vspace{1em}
+
+            \includegraphics[width=\linewidth]{image18}
+
+            \href{http://www.iit.it/en/advanced-robotics/projects/the-lower-body-of-the-child-humanoid-robot-icub.html}{iCub motor arrangement}, can be used in servo mode
+
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image17}
+                \includegraphics[height=0.7\paperheight]{image17}
 
-    \source{http://en.wikipedia.org/wiki/Servomechanism}{RC servo motor (Wikipedia)}
+                \source{http://en.wikipedia.org/wiki/Servomechanism}{RC servo motor (Wikipedia)}
             \end{center}
         \end{column}
     \end{columns}
 
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{image18}
-    \source{http://www.iit.it/en/advanced-robotics/projects/the-lower-body-of-the-child-humanoid-robot-icub.html}{iCub motor arrangement, can be used in servo mode}
-
-    \end{center}
 \end{frame}
 
 \begin{frame}{Why servo motors?}
 
-    Large percentage of humanoid robots use servo motors
+    A large percentage of humanoid robots use servo motors
 
     \begin{itemize}
 
@@ -462,7 +534,8 @@
 
 \begin{frame}{Humanoids and servos}
 
-    From industrial robots to humanoid robots
+    \only<1>{
+        From industrial robots to humanoid robots
 
     \begin{itemize}
 
@@ -473,31 +546,37 @@
             new technologies to produce a humanoid robot.
     \end{itemize}
 
-\end{frame}
 
-\begin{frame}{Examples}
-
-    Humanoid Robots Using Servo Motors
+}
+    \only<2>{
+        Examples of humanoid robots using servo motors
 
     \begin{itemize}
 
         \item Honda Asimo
         \item Toyota humanoid
         \item Aldebaran Nao
-        \item Team Osaka football player
         \item Bioloid
+        \item Team Osaka football player
     \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.2\linewidth]{image19}
-        \includegraphics[width=0.2\linewidth]{image20}
-        \includegraphics[width=0.2\linewidth]{image21}
-        \includegraphics[width=0.2\linewidth]{image22}
-        \includegraphics[width=0.2\linewidth]{image23}
+        \includegraphics[height=2.5cm]{image19}
+        \hspace{0.5em}
+        \includegraphics[height=2.5cm]{image10}
+        \hspace{0.5em}
+        \includegraphics[height=2.5cm]{image21}
+        \hspace{0.5em}
+        \includegraphics[height=2.5cm]{image22}
+        \hspace{0.5em}
+        \includegraphics[height=2.5cm]{image23}
     \end{center}
+}
 \end{frame}
 
 \begin{frame}{Bioloid robot}
+
+    \only<1>{
 
     \href{http://www.robotis.com/xe/bioloid_en}{Bioloid} Robot
     Specifications
@@ -521,65 +600,72 @@
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image24}
+                \includegraphics[width=0.8\linewidth]{bioloid}
             \end{center}
         \end{column}
     \end{columns}
 
-\end{frame}
+    }
 
-\begin{frame}{Bioloid robot (2)}
-
+    \only<2>{
     Motors, brackets and comms module used for the Plymouth humanoids.
 
-    Can be programmed in two ways
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
+            Can be programmed in two ways:
+
+            \begin{itemize}
+
+                \item Using an editor (RoboPlus)
+                \item C (cross-compiled to Atmel processor assembly).
+            \end{itemize}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=\linewidth]{bioloid-gui}
+            \end{center}
+        \end{column}
+    \end{columns}
+
+}
+    \only<3>{
     \begin{itemize}
 
-        \item Using an editor (RoboPlus)
-        \item C (cross-compiled to Atmel processor assembly).
-    \end{itemize}
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{image25}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Bioloid robot (3)}
-
-    \begin{itemize}
-
-        \item Difficult to create exact controlled movements such as walking.
+        \item Difficult to create exact controlled movements such as walking
         \item Takes a long time to manually enter the exact positions calculated for
-            the robots.
-        \item Restricted by the performance of the AX-12 servo motors.
-        \item Compliance in the motors affects performance.
+            the robots
+        \item Restricted by the performance of the AX-12 servo motors
+        \item Compliance in the motors affects performance:
     \end{itemize}
 
     \begin{center}
         \includegraphics[width=0.8\linewidth]{image26}
     \end{center}
+    }
 \end{frame}
 
 \begin{frame}{AX-12+ Servo Motor}
 
+    \only<1>{
     \begin{columns}
-        \begin{column}{0.5\linewidth}
+        \begin{column}{0.6\linewidth}
     AX-12+ Specifications
 
     \begin{itemize}
 
-        \item Weight 55g.
-        \item Has a maximum speed of 50 RPM at 10 volts.
-        \item A maximum torque of 16.5 Kgf.cm or 1.62 Nm.
-        \item Has a gear ratio reduction of 1/254.
-        \item Operating angle of 300 degrees.
-        \item Uses plastic gears.
-        \item Programmable.
+        \item Weight 55g
+        \item Has a maximum speed of 50 RPM at 10V
+        \item A maximum torque of 16.5 Kgf.cm or 1.62 Nm
+        \item Has a gear ratio reduction of 1/254
+        \item Operating angle of 300 degrees
+        \item Uses plastic gears
+        \item Programmable
     \end{itemize}
             
         \end{column}
-        \begin{column}{0.5\linewidth}
+        \begin{column}{0.4\linewidth}
             \begin{center}
                 \includegraphics[width=0.8\linewidth]{image28}
 
@@ -587,60 +673,59 @@
             \end{center}
         \end{column}
     \end{columns}
-
-\end{frame}
-
-\begin{frame}{AX-12+ Servo Motor (2)}
+}
+    \only<2>{
 
     AX-12+ Servo Specifications
 
     \begin{itemize}
 
         \item AX-12 servo motor uses an AtmelMega8.
-        \item Uses Serial RS232 communication at 128Hz or every 7.8 mS.
+        \item Uses Serial RS232 communication at 128Hz or every 7.8ms.
         \item Calculate the required position of the motor then send the speed and
             position for the motor.
     \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.4\linewidth]{image29}
-        \includegraphics[width=0.4\linewidth]{image30}
+        \includegraphics[height=3cm]{image29}
+        \hspace{1em}
+        \includegraphics[height=3cm]{image30}
     \end{center}
+}
 \end{frame}
 
-\begin{frame}{Bioloid kinematics}
+\section{Kinematics}
 
-    Developing a robot gait.
+\begin{frame}{Humanoid kinematics}
 
-    \begin{itemize}
+    \only<1-4>{
+        Developing a robot gait: \emph{What gait pattern results in a robust and fast walk?}
 
-        \item What gait pattern results in a robust and fast walk?
-    \end{itemize}
+        \pause
 
     To answer to these questions the robot needs to be able to translate the
-    movement in an world coordinate system (x, y, z) in to the angle of
-    rotation for the motors.
+    movement in the Cartesian world coordinate system $(x, y, z)$ to the angles of
+    rotation for the motors (\textbf{joint space}).
 
     \begin{itemize}
-
-        \item This is achieved by using inverse kinematics.
+        \item This is achieved by using inverse kinematics
+        \item the joint space of the Bioloid robot has 18 dimensions
+        \item<3-> some dimensions are less relevant for static walking
+        \item<4-> however all are usually important for dynamic walking: \textbf{full body motion}
     \end{itemize}
 
     Forward kinematics is when given an angle of the rotation of the motors
     the position of the foot can be calculated in world coordinates.
 
-\end{frame}
+}
+    \only<5>{
 
-\begin{frame}{Bioloid kinematics (2)}
-
-    \begin{itemize}
-
-        \item Bioloid Kinematics -Simplified
-    \end{itemize}
+    Simplified Bioloid kinematics:
 
     \begin{center}
         \includegraphics[width=0.8\linewidth]{image31}
     \end{center}
+}
 \end{frame}
 
 \begin{frame}{Bioloid kinematics (3)}
@@ -650,22 +735,23 @@
     \begin{itemize}
 
         \item Forward kinematics
-        \item \emph{A1} and \emph{A2} are the angle of rotation, \emph{L1} and
-            \emph{L2} are the length of the robot limbs
-        \item Calculate the resultant position (\emph{XR}, \emph{YR}) first
-            determine the X and Y component of each link and add these together.
+        \item $A_1$ and $A_2$ are the angle of rotation, $L_1$ and
+            $L_2$ are the length of the robot limbs
+        \item To calculate the resultant position $(x_R, y_R)$, first
+            determine the $X$ and $Y$ component of each link and add these together.
     \end{itemize}
             
         \end{column}
         \begin{column}{0.5\linewidth}
 
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image32}
+                \includegraphics[width=\linewidth]{image32}
             \end{center}
 
-    sin \emph{A = opposite / hypotenuse}
+            $\sin A = \frac{opposite}{hypotenuse}$
 
-    \emph{cosA = adjacent / hypotenuse}
+            $\cos A = \frac{adjacent}{hypotenuse}$
+
         \end{column}
     \end{columns}
 
@@ -677,15 +763,15 @@
     \begin{columns}
         \begin{column}{0.5\linewidth}
 
-    \emph{XR= L1} cos\emph{(A1) + L2} cos\emph{(A1+ A2)}
-
-
-    \emph{YR= L1} sin\emph{(A1) + L2} sin\emph{(A1+ A2)}
+            \begin{align*}
+                x_R &= L_1 \cos(A_1) + L_2 \cos(A_1+ A_2) \\
+                y_R &= L_1 \sin(A_1) + L_2 \sin(A_1+ A_2)
+            \end{align*}
         \end{column}
         \begin{column}{0.5\linewidth}
 
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image33}
+                \includegraphics[width=\linewidth]{image33}
             \end{center}
         \end{column}
     \end{columns}
@@ -693,9 +779,130 @@
 
 \end{frame}
 
-\begin{frame}{Bioloid kinematics (5)}
+\begin{frame}{Composition of transformations}
 
-    Inverse kinematics
+    Computation of the forward kinematics can be seen as a composition of transformations:
+
+    $\rightarrow$ to go from $(0,0)$ to $(x_R, y_R)$: \onslide<2->{first rotation by $A_1$ around $z$} \onslide<3->{, then translation by $L_1$ along $x$}\onslide<4->{, then rotation by $A_2$ around $z$}\onslide<5->{, then translation by $L_2$ along $x$}
+
+    \centering
+    \begin{tikzpicture}
+
+        \pgfmathsetmacro{\a}{45} % angle A1
+        \pgfmathsetmacro{\l}{2.5} % length L1
+        \pgfmathsetmacro{\b}{-60} % angle A2
+        \pgfmathsetmacro{\m}{2} % length L2
+
+        \draw[axis,->] (0,0) -- (2,0) node[right] {x};
+        \draw[axis,->] (0,0) -- (0,2) node[right] {y};
+
+        \coordinate (t1) at (0,0);
+        \coordinate (t2) at (0,0);
+        \coordinate (t3) at (0,0);
+
+        \node[box] at (0,0) (base) {};
+        \begin{scope}[rotate=\a]
+            \temporal<2>{}
+                        {\node[finalbox] at (0,0) (t1) {};}
+                        {\node[box,dashed, fill opacity=0.4, fill=orange] at (0,0) (t1) {};}
+            \onslide<2>{\draw (0,0) -- (0.5,0);}
+            \onslide<2>{\draw[thick,<-] (0.4,0) arc(0:-\a:0.4) node[near start,below] {\footnotesize $A_1$};}
+
+            \begin{scope}[shift={(\l,0)}]
+
+                \temporal<3>{}
+                            {\node[finalbox] at (0,0) (t2) {};}
+                            {\node[box,dashed, fill opacity=0.4, fill=orange] at (0,0) (t2) {};}
+
+                \onslide<3-4>{\draw (0,0) -- (0.5,0);}
+
+                \begin{scope}[rotate=\b]
+                    \temporal<4>{}
+                                {\node[finalbox] at (0,0) (t3) {};}
+                                {\node[box,dashed, fill opacity=0.4, fill=orange] at (0,0) (t3) {};}
+                    \onslide<4>{
+                            \draw (0,0) -- (0.5,0);
+                            \draw[thick,<-] (0.4,0) arc(0:-\b:0.4);
+                            \node at (.6,-.5) {\small $A_2$};
+                            }
+                    \begin{scope}[shift={(\m,0)}]
+                        \onslide<5>{\node[finalbox] at (0,0) (t4) {};}
+                    \end{scope}
+                \end{scope}
+            \end{scope}
+        \end{scope}
+        \onslide<3->{\draw[thick, ->] (t1.center) -- (t2.center) node[midway,above] {\small $L_1$};}
+        \onslide<5->{\draw[thick, ->] (t3.center) -- (t4.center) node[midway,above] {\small $L_2$};}
+
+    \end{tikzpicture}
+
+    \pause
+    \textbf{To compose transformations is to multiply their matrices}
+
+\end{frame}
+\begin{frame}{Matrix form}
+
+    \footnotesize
+    2D transformation matrices:
+
+    \begin{align*}
+        R(\alpha) = \begin{bmatrix}\cos(\alpha) & -\sin(\alpha) & 0 \\
+                                   \sin(\alpha) & \cos(\alpha) & 0 \\
+                                   0 &0 &1 \end{bmatrix}, \qquad
+        T(\colvec{x \\y}) =  \begin{bmatrix} 1 & 0 & x \\
+                                             0 & 1 & y \\
+                                             0 & 0 & 1 \end{bmatrix}
+    \end{align*}
+
+    \pause
+
+    In the case of a planar kinematic (ie, 2D kinematic), the resulting forward transformation $FK$ is:
+
+    {\scriptsize
+    \begin{align*}
+        FK(A_i,L_i) &= \prod \bubblemark{joint_matrix}R_i(A_i)\cdot T_i(L_i)\bubblemark{link_matrix} \\
+                              &= R(A_1)\cdot T(L_1)\cdot R(A_2)\cdot T(L_2) \\
+                            &= \begin{bmatrix}\cos A_1 & -\sin A_1 & 0 \\
+                                            \sin A_1 & \cos A_1 & 0 \\
+                                                        0 &0 &1 \end{bmatrix}\cdot
+                                \begin{bmatrix} 1 & 0 & L_1 \\
+                                                0 & 1 & 0 \\
+                                                0 & 0 & 1 \end{bmatrix}\cdot
+                                \begin{bmatrix}\cos A_2 & -\sin A_2 & 0 \\
+                                            \sin A_2 & \cos A_2 & 0 \\
+                                                        0 &0 &1 \end{bmatrix}\cdot
+                                \begin{bmatrix} 1 & 0 & L_2 \\
+                                                0 & 1 & 0 \\
+                                                0 & 0 & 1 \end{bmatrix} \\
+                            &=  \begin{bmatrix} \cos(A_1 + A_2) & -\sin(A_1 + A_2) & \highlight<4>{L_1 \cos(A_1) + L_2 \cos(A_1 + A_2)} \\
+                                                \sin(A_1 + A_2) & \cos(A_1 + A_2) & \highlight<4>{L_1 \sin(A_1) + L_2 \sin(A_1 + A_2)} \\
+                                                0 & 0 & 1 \end{bmatrix}
+    \end{align*}
+    }
+    \bubble<3>[330]{joint_matrix}{\textbf{Joint matrix}, noted $Z_i$ in the general, 3D case}
+    \bubble<3>[200]{link_matrix}{\textbf{Link matrix}, noted $X_i$ in the general, 3D case}
+\end{frame}
+
+    \begin{frame}{Matrix form (2)}
+
+    What is the position of the origin $\colvec{0 \\ 0 \\ 1}\bubblemark{homogenous}$?
+
+    \bubble<1->[200][0.5][4cm]{homogenous}{\textbf{Homogenous coordinates}: we need them to use transformation matrices.}
+
+    \pause
+        \scriptsize
+    \begin{align*}
+        FK(A_i,L_i)\cdot \begin{bmatrix}0 \\ 0 \\ 1\end{bmatrix} &= \begin{bmatrix} \cos(A_1 + A_2) & -\sin(A_1 + A_2) & L_1 \cos(A_1) + L_2 \cos(A_1 + A_2) \\
+                                                                                    \sin(A_1 + A_2) & \cos(A_1 + A_2) & L_1 \sin(A_1) + L_2 \sin(A_1 + A_2) \\
+                                                                                    0 & 0 & 1 \end{bmatrix}\cdot \begin{bmatrix}0 \\ 0 \\ 1\end{bmatrix} \\
+                                                                 &= \begin{bmatrix}L_1 \cos(A_1) + L_2 \cos(A_1 + A_2) \\ L_1 \sin(A_1) + L_2 \sin(A_1 + A_2) \\ 1\end{bmatrix} \\
+                                                                 &= \begin{bmatrix}y_R \\ y_R \\ 1\end{bmatrix}
+    \end{align*}
+
+
+\end{frame}
+
+\begin{frame}{Inverse kinematics}
 
     \begin{align*}
         A_2 &= \cos^{-1} \left( \frac{x_R^2+y_R^2-L_1^2-L_2^2}{2L_1L_2} \right) \\
@@ -705,16 +912,14 @@
     \begin{columns}
         \begin{column}{0.5\linewidth}
 
-    \begin{itemize}
+        This is a geometric solution, more can be found in
+            \href{http://www.tribotix.info/Articles\&Tutorials/MathsforRobotics/Mathematics\%20required\%20for\%20Robotic\%20Motion.pdf}{Mathematics
+            required for legged robotic motion}
 
-        \item This is a geometric solution, more can be found in the document
-            `\href{http://www.tribotix.info/Articles\&Tutorials/MathsforRobotics/Mathematics\%20required\%20for\%20Robotic\%20Motion.pdf}{Mathematics
-            required for legged robotic motion}'.
-    \end{itemize}
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image32}
+                \includegraphics[width=0.7\linewidth]{image32}
             \end{center}
         \end{column}
     \end{columns}
@@ -723,21 +928,22 @@
 
 \begin{frame}{Servo-based humanoids}
 
-    What do Servo Powered Humanoid Robots Have in Common?
+    What do servo powered humanoid robots have in common?
 
     \begin{itemize}
 
         \item They never straighten their legs!
         \item Most servo powered robots either walk or run with their legs slightly
-            bent.
-        \item Produces an un-human like gait.
-        \item Same for either statically of dynamically balanced robots.
-        \item Results from the physical restrictions of using servo motors.
+            bent
+        \item Produces an non-human like gait
+        \item Same for either statically of dynamically balanced robots
+        \item Results from the physical restrictions of using servo motors
     \end{itemize}
 
-    Use a simple kinematics model to prove why.
+    \pause 
+    A simple kinematics model shows why.
 
-    An example of the problem can be shown using the Bioloid robot.
+    $\rightarrow$ example of the problem with the Bioloid robot.
 
 \end{frame}
 
@@ -751,7 +957,7 @@
     \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{image35}
+        \includegraphics[width=\linewidth]{image35}
     \end{center}
 \end{frame}
 
@@ -784,9 +990,10 @@
                 \includegraphics[width=0.8\linewidth]{graph2}
             \end{center}
 
-        Much less angle change required for motors to lift foot same amount.
         \end{column}
     \end{columns}
+
+    $\rightarrow$ Much less angle change required for motors to lift foot same amount.
 
 \end{frame}
 
