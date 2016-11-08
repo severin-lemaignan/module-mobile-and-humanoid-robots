@@ -963,17 +963,18 @@
 
 \begin{frame}{Effort to lift foot 1cm?}
 
+    \only<1>{
     \begin{columns}
         \begin{column}{0.5\linewidth}
     \textbf{Stretched leg}
 
         \begin{itemize}
 
-            \item     Hip moves 21.0$^\circ$ knee moves 42.0$^\circ$
+            \item Hip moves 21.0$^\circ$, knee moves 42.0$^\circ$
         \end{itemize}
 
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{graph1}
+                \includegraphics[width=\linewidth]{graph1}
             \end{center}
             
         \end{column}
@@ -983,51 +984,51 @@
 
         \begin{itemize}
 
-            \item     Hip moves 8.9$^\circ$ knee moves 17.8$^\circ$
+            \item Hip moves 8.9$^\circ$, knee moves 17.8$^\circ$
         \end{itemize}
 
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{graph2}
+                \includegraphics[width=\linewidth]{graph2}
             \end{center}
 
         \end{column}
     \end{columns}
 
     $\rightarrow$ Much less angle change required for motors to lift foot same amount.
-
-\end{frame}
-
-\begin{frame}{Effort to lift foot 1cm?}
+    }
+    \only<2>{
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{graph3}
+        \resizebox{\linewidth}{!}{%
+        \begin{tikzpicture}
+            \node at (0,0) {\includegraphics[width=12cm]{graph3}};
+            \node[align=left,fill=hriSec3Comp!60,text width=4cm,opacity=0.8,rectangle callout,anchor=pointer,callout relative pointer={(250:0.5)}] at (-2,1.3) {\footnotesize Starting with bent knees\\and hip requires less effort};
+            \node[align=left,fill=hriSec3Comp!60,text width=4.2cm,opacity=0.8,rectangle callout,anchor=pointer,callout relative pointer={(160:0.5)}] at (3,-0.3) {\footnotesize But further bending knees and\\ hip has diminishing returns};
+            \node[align=left,fill=hriSec3Comp!60,text width=5cm,opacity=0.8,rectangle callout,anchor=pointer,callout relative pointer={(185:0.5)}] at (-4,-1.5) {\footnotesize Starting from stretched legs\\ requires the hip to flex 20$^\circ$ and\\ the knee -42$^\circ$ to lift the foot 1cm};
+        \end{tikzpicture}
+        }
     \end{center}
 
-    But further bending knees and hip has diminishing returns
 
-    Starting with bent knees and hip requires less effort
-
-    Starting from stretched legs requires the hip to flex 20$^\circ$ and the knee
-    -42$^\circ$ to lift the foot 1 cm
-
+}
 \end{frame}
 
 \begin{frame}{Bioloid Gait Analysis}
 
+    \only<1>{
     What are the implications for the Bioloid robot gait?
 
     How often are the servo motors asked to move?
 
     \begin{itemize}
-
-        \item Usually at 64Hz or every 15.6 ms.
+        \item Usually at 64Hz or every 15.6ms.
     \end{itemize}
 
     Therefore what is the maximum angle they can rotate in that time.
 
     \begin{itemize}
 
-        \item At 50 RPM = 300°/s -\textgreater{} 4.68° in 15.6 ms
+        \item At 50 RPM = 300°/s $\rightarrow$ 4.68° in 15.6 ms
     \end{itemize}
 
     As the height the foot is raised and the forward movement of the foot is
@@ -1036,9 +1037,8 @@
     Above the maximum speed the gait will not be able to reach its
     calculated position. This could result in instability.
 
-\end{frame}
-
-\begin{frame}{Bioloid Gait Analysis (4)}
+    }
+    \only<2>{
 
     Using a simple inverse kinematic solution for the Bioloid leg servos,
     the angle of rotation for a step height and length can be calculated.
@@ -1057,27 +1057,28 @@
             gait pattern to follow.
     \end{itemize}
 
-\end{frame}
+    }
+    \only<3>{
 
-\begin{frame}{Bioloid Gait Analysis -Summary}
 
     \begin{itemize}
 
         \item In order to reduce the computational cost for calculating the equation
-            of an ellipse every 15.6 ms the solution in pre-calculated over a grid
-            (75 mmx 70 mm) and stored in a look-up table.
+            of an ellipse every 15.6ms the solution in pre-calculated over a grid
+            (75mm x 70mm) and stored in a look-up table.
     \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{image39}
+        \includegraphics[width=0.55\linewidth]{image39}
     \end{center}
+}
 \end{frame}
 
-\begin{frame}{Bioloid Dynamic Gait Generator (1)}
+\begin{frame}{Bioloid Dynamic Gait Generator}
 
     \begin{itemize}
 
-        \item There is also a Bioloid dynamic gate generator, which takes 10
+        \item There is also a Bioloid dynamic gait generator, which takes 10
             parameters to generate a series of robot poses.
     \end{itemize}
 
@@ -1087,7 +1088,7 @@
 
     \begin{itemize}
 
-        \item Swing -Hip movement (Sideways)
+        \item Swing -- Hip movement (Sideways)
     \end{itemize}
 
     \begin{center}
@@ -1099,7 +1100,7 @@
 
     \begin{itemize}
 
-        \item Tilt -Hip (used to balance the robot)
+        \item Tilt -- Hip (used to balance the robot)
     \end{itemize}
     \begin{center}
         \includegraphics[height=0.5\paperheight]{bioloid-gait-2}
@@ -1147,37 +1148,31 @@
 
 \begin{frame}{Static walking}
 
-    \begin{itemize}
-
-        \item Based on keeping Centre of Gravity (COG) over the support polygon
-    \end{itemize}
+    Based on keeping \textbf{Centre of Gravity} (COG) over the support polygon
 
     \begin{center}
         \includegraphics[width=0.8\linewidth]{image45}
         
-    \source{http://www.diss.fu-berlin.de/diss/servlets/MCRFileNodeServlet/FUDISS_derivate_000000002504/05_Kapitel5.pdf;jsessionid=BB71E0C0242031B3A6B5F4E873C63233?hosts=}{Source}
+    \source{http://www.diss.fu-berlin.de/diss/servlets/MCRFileNodeServlet/FUDISS_derivate_000000002504/05_Kapitel5.pdf}{Zaldivar Navarro, `A Biped Robot Design'}
     \end{center}
 \end{frame}
 
 \begin{frame}{Dynamic walking}
 
-    \begin{itemize}
-
-        \item Based on keeping Zero Moment Point (ZMP) over support polygon
-    \end{itemize}
+    Based on keeping \textbf{Zero Moment Point} (ZMP) over support polygon
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
 
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image46}
+                \includegraphics[height=0.5\paperheight]{image46}
 
     WL-10RD. First dynamic walker using the ZMP scheme (1985).
             \end{center}
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image47}
+                \includegraphics[height=0.5\paperheight]{image47}
 
     Honda Asimo, uses ZMP scheme for walking as deduced from papers and
     patents(2000-). 
@@ -1204,38 +1199,44 @@
 
 \begin{frame}{Force and moment on a body}
 
-    \begin{itemize}
+        Resultant force of inertia and gravity forces is:
 
-        \item Resultant force of inertia and gravity forces is
-        \item \href{http://en.wikipedia.org/wiki/Moment_of_force}{Moment} (aka
-            torque) in any point \emph{X is}
+            $F^{gi} =\bubblemark[0pt]{eq1} m\cdot g - m\cdot a_G$
 
-            \[
-                M^{gi}_X = \vec{XG} \times mg - \vec{XG} \times ma_G - \dot{H}_G
-                \]
-    \end{itemize}
+            \vspace{5em}
+        \href{http://en.wikipedia.org/wiki/Moment_of_force}{Moment} (aka
+            torque) in any point $X$ is:
 
-    \emph{m} is total mass of robot, \emph{g} is gravitational acceleration
-    (9.81 m/s\^{}2), \emph{aG} is acceleration of centre of mass
+            $M^{gi}_X =\bubblemark[0pt]{eq2} \vec{XG} \times m\cdot g - \vec{XG} \times m\cdot a_G - \dot{H}_G$
 
-    is the vector between point \emph{X} and centre of mass \emph{G} and
-    \emph{} is rate of
+
+    \bubble<1>[150][0.5][5cm]{eq1}{$m$ is total mass of robot, $g$ is gravitational acceleration
+    ($9.81 m/s^2$), $a_G$ is acceleration of centre of mass}
+
+    \bubble<1>[150][0.5][5cm]{eq2}{$\vec{XG}$is the vector between point $X$ and centre of mass $G$ and
+    $\dot{H}_G$ is rate of
     \href{http://en.wikipedia.org/wiki/Angular_momentum}{angular momentum}
-    at \emph{G} ( amount of rotation)
+    at $G$ (amount of rotation)}
 
 \end{frame}
 
 \begin{frame}{Force and moment because of contact}
 
-    \begin{itemize}
 
-        \item Resultant contact forces
-        \item Moment caused by contact forces
-    \end{itemize}
+        Resultant contact forces:
 
-    The contact force at a point \emph{C} is given by this equation.
+            $F^{C} + m\cdot g\bubblemark[0pt]{eq3} = m\cdot a_G$
 
-    is the moment at a contact point caused by contact forces
+            \vspace{5em}
+
+        Moment caused by contact forces:
+
+            $M_X^C + \vec{XG} \times m\cdot g =\bubblemark[0pt]{eq4} \dot{H}_G + \vec{XG} \times m\cdot a_G$
+
+
+            \bubble<1>[150][0.5][5cm]{eq3}{The contact force at a point $C$ is given by this equation}
+
+    \bubble<1>[150][0.5][5cm]{eq4}{$M_X^C$ is the moment at a contact point caused by contact forces}
 
 \end{frame}
 
@@ -1243,13 +1244,23 @@
 
     \begin{itemize}
 
-        \item When forces and moments are opposite the body is dynamically balanced
-        \item Zero Moment Point (ZMP)
+        \item When forces and moments are opposite the body is dynamically balanced:
+            \begin{align*}
+                F^{gi} + F^C &= 0 \\
+                M_X^C + M_X^{gi} &= 0
+            \end{align*}
+
+        \item Zero Moment Point (ZMP):
+
+            \[
+                \vec{PZ} =\bubblemark[0pt]{eq6} \frac{\vec{n} \times M_P^{gi}}{F^{gi}\cdot \vec{n}}
+            \]
+
     \end{itemize}
 
-    \emph{n} is normal vector (a vector perpendicular to a surface of size
-    1) to the support surface. \emph{Z} is the Zero Moment Point, P is the
-    resultant point of contact of the foot.
+    \bubble<1>[90][0.5][7cm]{eq6}{$n$ is normal vector (a vector perpendicular to a surface of length 1) to the support surface. $Z$ is the Zero Moment Point, $P$ is the resultant point of contact of the foot.}
+
+    \vspace{4em}
 
     \href{http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=\&arnumber=1325327}{Read
     more here (if you dare)\ldots{}}
@@ -1262,7 +1273,7 @@
 
     Requires a precise knowledge of where the Centre of Gravity is, what the
     forces are acting on the point of contact, and what the rate of angular
-    momentum () of the robot is.
+    momentum ($\dot{H}_G$) of the robot is.
 
     \begin{itemize}
 
@@ -1271,15 +1282,11 @@
         \item Is impossible for real, complex robots.
     \end{itemize}
 
-    \begin{itemize}
-
-        \item ~
-    \end{itemize}
-
 \end{frame}
 
 \begin{frame}{Capture steps}
 
+    \only<1>{
     A promising way forward is to use ``capture steps''.
 
     \begin{itemize}
@@ -1293,13 +1300,8 @@
     If a Capture Point is situated within the convex hull of the foot
     support area (the Base of Support), the robot is able to recover from
     the push without having to take a step. Otherwise, it must take a step.
-
-    NEW
-
-\end{frame}
-
-\begin{frame}[plain]
-
+    }
+    \only<2>{
     \begin{columns}
         \begin{column}{0.5\linewidth}
             \begin{center}
@@ -1317,6 +1319,7 @@
     \end{itemize}
         \end{column}
     \end{columns}
+    }
 
 \end{frame}
 
