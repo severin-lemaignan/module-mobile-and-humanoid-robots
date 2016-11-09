@@ -202,7 +202,7 @@
     \begin{center}
        \footnotesize 
 \begin{tabular}{p{2.6cm}p{2.6cm}p{2.6cm}p{2.6cm}}
-    \video[1.2]{1.8cm}{figs/part5/walking_person.mp4} & 
+    \video[1.2]{1.8cm}{figs/part5/walking_person.mp4?loop\&autostart} & 
     \includegraphics[height=2.2cm]{image7} & \includegraphics[height=2.2cm]{image8} & \\
     Walking person \emph{$\pm$5km/h} & WL-5 ('70) \emph{45s/step}  & E2 ('91) \emph{1.2km/h} & \\
  \includegraphics[height=2.2cm]{nao-robocup} & \includegraphics[height=2.2cm]{image6} & \includegraphics[height=2.2cm]{image11} & \includegraphics[height=2.2cm]{image10} \\
@@ -217,7 +217,7 @@
 
 \end{frame}
 
-\imageframe[caption=Usain Bolt WR 100m: 36.8km/h]{bolt}
+\imageframe[color=black,caption=Usain Bolt WR 100m: 36.8km/h]{bolt}
 
 \videoframe[0.56]{figs/part5/robocup-2016-nao-devils-b-human.avi}
 
@@ -1053,7 +1053,7 @@
 
     \begin{itemize}
 
-        \item Currently the Bioloid uses the equation of an elipise to generate the
+        \item Currently the Bioloid uses the equation of an ellipse to generate the
             gait pattern to follow.
     \end{itemize}
 
@@ -1146,9 +1146,24 @@
 
 \section{Theories of walking}
 
+\begin{frame}{Support polygon}
+
+    The \textbf{support polygon} is a horizontal region over which the center of mass must lie to achieve static stability.
+    
+    \pause
+    For example, for an object resting on a horizontal surface (e.g. a table), the support polygon is the \textbf{convex hull of its "footprint"} on the table.
+
+    \pause
+    For bipedal robots, the support polygon is \textbf{the convex hull of the contact points with the ground}.
+    \begin{itemize}
+        \item Might be a single foot!
+        \item Changes over time
+    \end{itemize}
+
+\end{frame}
 \begin{frame}{Static walking}
 
-    Based on keeping \textbf{Centre of Gravity} (COG) over the support polygon
+    Based on keeping \textbf{Centre of Gravity} (COG) \textbf{over the support polygon}
 
     \begin{center}
         \includegraphics[width=0.8\linewidth]{image45}
@@ -1157,9 +1172,12 @@
     \end{center}
 \end{frame}
 
+\imageframe{bioloid-stairs-lateral}
+\imageframe{bioloid-stairs-back}
+
 \begin{frame}{Dynamic walking}
 
-    Based on keeping \textbf{Zero Moment Point} (ZMP) over support polygon
+    Based on keeping \textbf{Zero Moment Point} (ZMP) \textbf{over the support polygon}
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
@@ -1199,15 +1217,19 @@
 
 \begin{frame}{Force and moment on a body}
 
-        Resultant force of inertia and gravity forces is:
+        The resultant force of inertia and gravity forces is:
 
-            $F^{gi} =\bubblemark[0pt]{eq1} m\cdot g - m\cdot a_G$
+            \[
+                \vec{F}^{gi} =\bubblemark[0pt]{eq1} m\cdot \vec{g} - m\cdot \vec{a_G}
+            \]
 
             \vspace{5em}
-        \href{http://en.wikipedia.org/wiki/Moment_of_force}{Moment} (aka
+        The \href{http://en.wikipedia.org/wiki/Moment_of_force}{moment} (aka
             torque) in any point $X$ is:
 
-            $M^{gi}_X =\bubblemark[0pt]{eq2} \vec{XG} \times m\cdot g - \vec{XG} \times m\cdot a_G - \dot{H}_G$
+            \[
+                \vec{M}^{gi}_X =\bubblemark[0pt]{eq2} \vec{XG} \times m\cdot \vec{g} - \vec{XG} \times m\cdot \vec{a_G} - \vec{\dot{H}}_G
+            \]
 
 
     \bubble<1>[150][0.5][5cm]{eq1}{$m$ is total mass of robot, $g$ is gravitational acceleration
@@ -1220,18 +1242,28 @@
 
 \end{frame}
 
-\begin{frame}{Force and moment because of contact}
+\begin{frame}{Force and moment induced by contact}
 
+        Euler's laws of motion:
+        \begin{align*}
+            \vec{F} &= m\cdot \vec{a}_G \\
+            \vec{M}_X &= \vec{XG} \times (m\cdot \vec{a}_G) + I\cdot \vec{\ddot\alpha}_G
+        \end{align*}
 
-        Resultant contact forces:
+        \pause
 
-            $F^{C} + m\cdot g\bubblemark[0pt]{eq3} = m\cdot a_G$
+        Resultant of the contact forces:
 
-            \vspace{5em}
+            \[
+                \vec{F}^c + m\cdot \vec{g}\bubblemark[0pt]{eq3} = m\cdot \vec{a}_G
+            \]
+
 
         Moment caused by contact forces:
 
-            $M_X^C + \vec{XG} \times m\cdot g =\bubblemark[0pt]{eq4} \dot{H}_G + \vec{XG} \times m\cdot a_G$
+            \[
+                \vec{M}_X^c + \vec{XG} \times m\cdot \vec{g} =\bubblemark[0pt]{eq4} \vec{\dot{H}}_G + \vec{XG} \times m\cdot \vec{a}_G
+            \]
 
 
             \bubble<1>[150][0.5][5cm]{eq3}{The contact force at a point $C$ is given by this equation}
@@ -1240,25 +1272,25 @@
 
 \end{frame}
 
-\begin{frame}{Dynamical balance}
+\begin{frame}{Dynamic balance}
 
     \begin{itemize}
 
-        \item When forces and moments are opposite the body is dynamically balanced:
+        \item<1-> When forces and moments are opposite the body is dynamically balanced:
             \begin{align*}
-                F^{gi} + F^C &= 0 \\
-                M_X^C + M_X^{gi} &= 0
+                \vec{F}^{gi} + \vec{F}^c &= 0 \\
+                \vec{M}_X^c + \vec{M}_X^{gi} &= 0
             \end{align*}
 
-        \item Zero Moment Point (ZMP):
+        \item<2-> Zero Moment Point (ZMP):
 
             \[
-                \vec{PZ} =\bubblemark[0pt]{eq6} \frac{\vec{n} \times M_P^{gi}}{F^{gi}\cdot \vec{n}}
+                \vec{PZ} =\bubblemark[0pt]{eq6} \frac{\vec{n} \times \vec{M}_P^{gi}}{\vec{F}^{gi}\cdot \vec{n}}
             \]
 
     \end{itemize}
 
-    \bubble<1>[90][0.5][7cm]{eq6}{$n$ is normal vector (a vector perpendicular to a surface of length 1) to the support surface. $Z$ is the Zero Moment Point, $P$ is the resultant point of contact of the foot.}
+    \bubble<2>[90][0.5][7cm]{eq6}{$n$ is normal vector (a vector perpendicular to a surface of length 1) to the support surface. $Z$ is the Zero Moment Point, $P$ is the resultant point of contact of the foot.}
 
     \vspace{4em}
 
@@ -1305,7 +1337,7 @@
     \begin{columns}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{image56}
+                \includegraphics[height=0.8\paperheight]{image56}
             \end{center}
         \end{column}
         \begin{column}{0.5\linewidth}
@@ -1322,6 +1354,8 @@
     }
 
 \end{frame}
+
+\videoframe[0.56]{figs/part5/capture-steps.avi}
 
 \begin{frame}{Capture steps examples}
 
@@ -1360,6 +1394,7 @@
             surface under one set of conditions.
     \end{itemize}
 
+    \pause
     Floor reaction control is very hard
 
     \begin{itemize}
@@ -1368,6 +1403,7 @@
             don't yet.
     \end{itemize}
 
+    \pause
     Sensing for walking challenging
 
     \begin{itemize}
@@ -1376,12 +1412,19 @@
             how to use their readings to make robust gaits.
     \end{itemize}
 
+    \pause
     Power requirements are high
+
+    \pause
+    Robots do not walk in isolation...
 
 \end{frame}
 
-\begin{frame}{Possible ways forward (1)}
+\videoframe{figs/part5/hrp2-3d-motion-planning.webm}
 
+\begin{frame}{Possible ways forward}
+
+    \only<1>{
     Closed-loop walking
 
     \begin{itemize}
@@ -1393,9 +1436,9 @@
             what to do?
     \end{itemize}
 
-\end{frame}
+    }
+    \only<2>{
 
-\begin{frame}{Possible ways forward (2)}
 
     Letting the robot learn how to walk
 
@@ -1410,6 +1453,7 @@
             not been possible yet for bipeds
     \end{itemize}
 
+}
 \end{frame}
 
 \begin{frame}{}
