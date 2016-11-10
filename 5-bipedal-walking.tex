@@ -101,17 +101,16 @@
 
     \begin{itemize}
 
-        \item Wheeled robots only function on prepared surfaces (e.g. roads, rails,
-            \ldots{}).
+        \item Wheeled robots only function on prepared surfaces (roads, rails, \ldots{})
         \item Legged robots can negotiate difficult terrain, which wheeled robots
-            cannot reach.
+            cannot reach
     \end{itemize}
 
     Understanding
 
     \begin{itemize}
 
-        \item Understanding animal legged motion.
+        \item Understanding animal legged motion
     \end{itemize}
             
         \end{column}
@@ -130,22 +129,24 @@
     \begin{columns}
         \begin{column}{0.5\linewidth}
 
-    Because humanoid robots only have two legs.
+    Because humanoid robots only have two legs
 
     \begin{itemize}
 
-        \item Better mobility over rough terrain.
-        \item Active suspension that stabilises the load.
-        \item Overcoming obstacles, i.e. avoiding or moving over or under obstacles.
+        \item Better mobility over rough terrain
+        \item Active suspension that stabilises the load
+        \item Overcoming obstacles, i.e. avoiding or moving over or under obstacles
     \end{itemize}
 
-    Humans relate to humanoid robots much more readily.
+    Humans relate to humanoid robots much more readily
 
     \begin{itemize}
 
-        \item Human--Robot Interaction.
+        \item Human--Robot Interaction
     \end{itemize}
-            
+    
+    Lower hardware complexity
+
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
@@ -157,6 +158,8 @@
     \end{columns}
 
 \end{frame}
+
+\videoframe[0.56]{figs/part5/hughherr-bionic-limbs.mp4}
 
 \begin{frame}{Why bipedal walking?}
 
@@ -170,14 +173,14 @@
 
         \item E.g.
             \href{https://www.ted.com/talks/hugh_herr_the_new_bionics_that_let_us_run_climb_and_dance?language=en}{Hugh
-            Herr's prothetic legs}.
+            Herr's prosthetic legs}.
     \end{itemize}
 
     Exoskeletons
 
     \begin{itemize}
 
-        \item E.g. \href{http://www.youtube.com/watch?v=2Ysb-Oko3Bg}{Cyberdine HAL}
+        \item E.g. \href{http://www.youtube.com/watch?v=2Ysb-Oko3Bg}{Cyberdyne HAL}
     \end{itemize}
 
     The human environment has been adapted profoundly to bipedal locomotion.
@@ -187,61 +190,45 @@
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[height=0.6\paperheight]{flame}
+                %\includegraphics[height=0.6\paperheight]{flame}
     
-                \source{http://www.3me.tudelft.nl/en/about-the-faculty/departments/biomechanical-engineering/research/dbl-delft-biorobotics-lab/bipedal-robots/}{Flame, TU Delft}
+                %\source{http://www.3me.tudelft.nl/en/about-the-faculty/departments/biomechanical-engineering/research/dbl-delft-biorobotics-lab/bipedal-robots/}{Flame, TU Delft}
+                \video[0.56]{\linewidth}{figs/part5/cyberdyne-hal.mp4}
             \end{center}
         \end{column}
     \end{columns}
 
-
 \end{frame}
-
-\begin{frame}{Speed of robots}
-
-    \begin{center}
-       \footnotesize 
-\begin{tabular}{p{2.6cm}p{2.6cm}p{2.6cm}p{2.6cm}}
-    \video[1.2]{1.8cm}{figs/part5/walking_person.mp4?loop\&autostart} & 
-    \includegraphics[height=2.2cm]{image7} & \includegraphics[height=2.2cm]{image8} & \\
-    Walking person \emph{$\pm$5km/h} & WL-5 ('70) \emph{45s/step}  & E2 ('91) \emph{1.2km/h} & \\
- \includegraphics[height=2.2cm]{nao-robocup} & \includegraphics[height=2.2cm]{image6} & \includegraphics[height=2.2cm]{image11} & \includegraphics[height=2.2cm]{image10} \\
-    Nao \emph{1.6km/h}                 & Asimo \emph{6km/h}             & Atlas robot  \emph{7km/h} & Partner \emph{7km/h}
-\end{tabular}
-
-    \end{center}
-
-    \pause
-    Biped robot speed is often expressed as body lengths per second, to make
-    comparison with different sized robots possible.
-
-\end{frame}
-
-\imageframe[color=black,caption=Usain Bolt WR 100m: 36.8km/h]{bolt}
-
-\videoframe[0.56]{figs/part5/robocup-2016-nao-devils-b-human.avi}
 
 \section{Characterizing walk}
 
 \begin{frame}{What is bipedal walking?}
 
-    \textbf{Walking}: when two feet are in contact with the ground at some point in the gait
-    cycle.
+    \only<1>{
+        A \textbf{gait cycle} starts with an initial contact of one foot with the
+        ground, and ends at the next contact of the same foot with the ground.
 
-    \textbf{Running}: when only one foot touches the ground at any point in the
-    gait cycle.
+        \textbf{Walking}: the two feet are simultaneously in contact with the ground at
+        some point during the gait cycle.
 
-    A \textbf{gait cycle} starts with an initial contact of one foot with the
-    ground, and ends at the next contact of the same foot with the ground.
+        \textbf{Running}: one foot at maximum touches the ground at any point in the
+        gait cycle.
 
-    Two phases to a gait cycle:
+    }
+    \only<2>{
+        Two phases to a gait cycle:
 
-    \begin{itemize}
+        \begin{itemize}
 
-        \item \textbf{Stance phase} --when the foot is in contact with the ground
-            (also called \emph{support phase});
-        \item \textbf{Swing phase} --when the foot is lifted of the ground.
-    \end{itemize}
+            \item \textbf{Stance phase} --when the foot is in contact with the ground
+                (also called \emph{support phase});
+            \item \textbf{Swing phase} --when the foot is lifted of the ground.
+        \end{itemize}
+
+        \begin{center}
+            \includegraphics[width=0.8\linewidth]{gait-phases}
+        \end{center}
+    }
 
 \end{frame}
 
@@ -308,7 +295,7 @@
 
         \item A dynamic walk when the robot is \textbf{not always balanced}. If the robot
             was to stop at any point in the gait cycle then it would fall over.
-            \textbf{Controlled falling}.
+            \textbf{Controlled ``falling''}.
         \item Control is hard.
         \item Fast(er) motion.
         \item Honda Asimo, \href{http://www.youtube.com/watch?v=KLepY1AsaRk}{Cornell
@@ -384,15 +371,44 @@
 
 \end{frame}
 
+\begin{frame}{Speed of robots}
+
+    \begin{center}
+       \footnotesize 
+\begin{tabular}{p{2.6cm}p{2.6cm}p{2.6cm}p{2.6cm}}
+    \video[1.2]{1.8cm}{figs/part5/walking_person.mp4?loop\&autostart} & 
+    \includegraphics[height=2.2cm]{image7} & \includegraphics[height=2.2cm]{image8} & \\
+    Walking person \emph{$\pm$5km/h} & WL-5 ('70) \emph{45s/step}  & E2 ('91) \emph{1.2km/h} & \\
+ \includegraphics[height=2.2cm]{nao-robocup} & \includegraphics[height=2.2cm]{image6} & \includegraphics[height=2.2cm]{image11} & \includegraphics[height=2.2cm]{image10} \\
+    Nao \emph{1.6km/h}                 & Asimo \emph{6km/h}             & Atlas robot  \emph{7km/h} & Partner \emph{7km/h}
+\end{tabular}
+
+    \end{center}
+
+    \pause
+    Biped robot speed is often expressed as body lengths per second, to make
+    comparison with different sized robots possible.
+
+\end{frame}
+
+\imageframe[color=black,caption=Usain Bolt WR 100m: 36.8km/h]{bolt}
+
+\videoframe[0.56]{figs/part5/robocup-2016-nao-devils-b-human.avi}
+
+
 \begin{frame}{Energy consumption: Cost of Transport}
     
+    \begin{center}
+
     \Large
     \[
         \mathrm{COT} \overset{\text{def}}= \frac{E}{m\cdot g\cdot d}\bubblemark{cot}
     \]
 
-    \begin{center}
-        \includegraphics[width=0.6\linewidth]{cost_of_transport}
+    \small
+    Energy $E$ to move a system of mass $m$ over a distance $d$
+
+        \includegraphics[width=0.5\linewidth]{cost_of_transport}
     \end{center}
 
     \bubble<1>[190]{cot}{Dimension-less quantity}
@@ -630,20 +646,6 @@
     \end{columns}
 
 }
-    \only<3>{
-    \begin{itemize}
-
-        \item Difficult to create exact controlled movements such as walking
-        \item Takes a long time to manually enter the exact positions calculated for
-            the robots
-        \item Restricted by the performance of the AX-12 servo motors
-        \item Compliance in the motors affects performance:
-    \end{itemize}
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{image26}
-    \end{center}
-    }
 \end{frame}
 
 \begin{frame}{AX-12+ Servo Motor}
@@ -692,6 +694,20 @@
         \includegraphics[height=3cm]{image30}
     \end{center}
 }
+    \only<3>{
+    \begin{itemize}
+
+        \item Difficult to create exact controlled movements such as walking
+        \item Takes a long time to manually enter the exact positions calculated for
+            the robots
+        \item Restricted by the performance of the AX-12 servo motors
+        \item Compliance in the motors affects performance:
+    \end{itemize}
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{image26}
+    \end{center}
+    }
 \end{frame}
 
 \section{Kinematics}
@@ -728,7 +744,7 @@
 }
 \end{frame}
 
-\begin{frame}{Bioloid kinematics (3)}
+\begin{frame}{Bioloid forward kinematics}
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
@@ -758,7 +774,7 @@
 
 \end{frame}
 
-\begin{frame}{Bioloid kinematics (4)}
+\begin{frame}{Bioloid forward kinematics}
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
@@ -776,6 +792,9 @@
         \end{column}
     \end{columns}
 
+    \only<2>{
+        How does that generalize to more degrees of freedom (DoF)?
+    }
 
 \end{frame}
 
@@ -836,8 +855,9 @@
 
     \end{tikzpicture}
 
-    \pause
+    \onslide<5>{
     \textbf{To compose transformations is to multiply their matrices}
+    }
 
 \end{frame}
 \begin{frame}{Matrix form}
@@ -856,11 +876,12 @@
 
     \pause
 
-    In the case of a planar kinematic (ie, 2D kinematic), the resulting forward transformation $FK$ is:
+    In the case of a planar kinematics (i.e., 2D kinematics), the resulting forward transformation $FK$ is:
 
     {\scriptsize
     \begin{align*}
         FK(A_i,L_i) &= \prod \bubblemark{joint_matrix}R_i(A_i)\cdot T_i(L_i)\bubblemark{link_matrix} \\
+        \onslide<4->{
                               &= R(A_1)\cdot T(L_1)\cdot R(A_2)\cdot T(L_2) \\
                             &= \begin{bmatrix}\cos A_1 & -\sin A_1 & 0 \\
                                             \sin A_1 & \cos A_1 & 0 \\
@@ -874,9 +895,10 @@
                                 \begin{bmatrix} 1 & 0 & L_2 \\
                                                 0 & 1 & 0 \\
                                                 0 & 0 & 1 \end{bmatrix} \\
-                            &=  \begin{bmatrix} \cos(A_1 + A_2) & -\sin(A_1 + A_2) & \highlight<4>{L_1 \cos(A_1) + L_2 \cos(A_1 + A_2)} \\
-                                                \sin(A_1 + A_2) & \cos(A_1 + A_2) & \highlight<4>{L_1 \sin(A_1) + L_2 \sin(A_1 + A_2)} \\
+                            &=  \begin{bmatrix} \cos(A_1 + A_2) & -\sin(A_1 + A_2) & \highlight<5>{L_1 \cos(A_1) + L_2 \cos(A_1 + A_2)} \\
+                                                \sin(A_1 + A_2) & \cos(A_1 + A_2) & \highlight<5>{L_1 \sin(A_1) + L_2 \sin(A_1 + A_2)} \\
                                                 0 & 0 & 1 \end{bmatrix}
+    }
     \end{align*}
     }
     \bubble<3>[330]{joint_matrix}{\textbf{Joint matrix}, noted $Z_i$ in the general, 3D case}
@@ -926,6 +948,8 @@
 
 \end{frame}
 
+\section{Gait}
+
 \begin{frame}{Servo-based humanoids}
 
     What do servo powered humanoid robots have in common?
@@ -940,21 +964,13 @@
         \item Results from the physical restrictions of using servo motors
     \end{itemize}
 
-    \pause 
-    A simple kinematics model shows why.
-
-    $\rightarrow$ example of the problem with the Bioloid robot.
-
 \end{frame}
 
 \begin{frame}{Bioloid Gait Analysis}
 
-    \begin{itemize}
-
-        \item Starting with slightly bent knees means the knee servo motor is used
-            more effectively resulting in the foot being lifted a greater distance
-            and in a more controlled manner.
-    \end{itemize}
+    Starting with slightly bent knees means the knee servo motor is used
+    more effectively resulting in the foot being lifted a greater distance
+    and in a more controlled manner.
 
     \begin{center}
         \includegraphics[width=\linewidth]{image35}
@@ -1061,12 +1077,9 @@
     \only<3>{
 
 
-    \begin{itemize}
-
-        \item In order to reduce the computational cost for calculating the equation
-            of an ellipse every 15.6ms the solution in pre-calculated over a grid
-            (75mm x 70mm) and stored in a look-up table.
-    \end{itemize}
+    In order to reduce the computational cost to calculate the equation
+    of an ellipse every 15.6ms, the solution is pre-calculated over a grid
+    (75mm x 70mm) and stored in a look-up table.
 
     \begin{center}
         \includegraphics[width=0.55\linewidth]{image39}
@@ -1385,7 +1398,7 @@
 
 \begin{frame}{Why is walking hard for robots?}
 
-    Number of possible gaits is enormous
+    \textbf{Number of possible gaits is enormous}
 
     \begin{itemize}
 
@@ -1394,29 +1407,22 @@
             surface under one set of conditions.
     \end{itemize}
 
+    \href{http://rednuht.org/genetic_walkers/}{Fun example: genetic algorithms
+    to find the right parameters}
+
     \pause
-    Floor reaction control is very hard
-
-    \begin{itemize}
-
-        \item Human feet sense and change to the structure of the surface. Robots
+    \textbf{Floor reaction control is very hard} Human feet sense and change to the structure of the surface. Robots
             don't yet.
-    \end{itemize}
 
     \pause
-    Sensing for walking challenging
-
-    \begin{itemize}
-
-        \item Gyroscopes, accelerometers, cameras, \ldots{} we do not yet understand
+    \textbf{Sensing for walking challenging} Gyroscopes, accelerometers, cameras, \ldots{} we do not yet understand
             how to use their readings to make robust gaits.
-    \end{itemize}
 
     \pause
-    Power requirements are high
+    \textbf{Power requirements are high}
 
     \pause
-    Robots do not walk in isolation...
+    \textbf{Robots do not walk in isolation}...
 
 \end{frame}
 
