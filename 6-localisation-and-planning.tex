@@ -34,10 +34,18 @@
 
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
 
+\newcommand{\colvec}[2][.8]{%
+  \scalebox{#1}{%
+    \renewcommand{\arraystretch}{.8}%
+    $\begin{bmatrix}#2\end{bmatrix}$%
+  }
+}
+
+
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,quotes}
 
-\graphicspath{{figs/}}
+\graphicspath{{figs/part6/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
 \subtitle{Part 4 -- Localisation and Planning}
@@ -435,9 +443,11 @@ Easy to implement.
 
 \begin{frame}{Example: museum pose maintenance}
 
-\begin{itemize}
-\item Monte Carlo using the ceiling of the Smithsonian museum
-\end{itemize}
+Monte Carlo using the ceiling of the Smithsonian museum
+
+    \begin{center}
+    \video{0.6\linewidth}{figs/part6/mcl.mp4}
+    \end{center}
 
 \end{frame}
 
@@ -507,6 +517,11 @@ Chicken and egg problem
 
 Odometry is not to be trusted
 
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{slam1}
+        \hspace{1em}
+        \includegraphics[width=0.4\linewidth]{slam2}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Example}
@@ -564,6 +579,11 @@ Examples:
 \begin{itemize}
 \item State or configuration \emph{q} can be described with \emph{k} values
   \emph{qi}
+
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{configurationspace}
+    \end{center}
+
 \item \textbf{Configuration space} of a robot: a n-dimensional map of free
   and occupied states.
 \end{itemize}
@@ -583,6 +603,10 @@ Areas with paths between them are called \textbf{graphs.}
 
 For example: a visibility graph
 
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{visibilitygraph}
+    \end{center}
+
 Edges between nodes are the lines of sight from each corner to an
 obstacle to every other visible corner.
 
@@ -592,6 +616,11 @@ obstacle to every other visible corner.
 
 \begin{itemize}
 \item Voronoi graph, distance to obstacles from every nodes is maximal.
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{voronoi}
+    \end{center}
+
 \item Works well as the robot's sensors get a get view of the environment.
 \end{itemize}
 
@@ -627,27 +656,34 @@ compute a path within each cell.
 
 \begin{frame}{Graphs: Cell Decomposition}
 
-\begin{itemize}
-\item Example: exact cell decomposition
-\end{itemize}
+Example: exact cell decomposition
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{exactcelldecomposition}
+    \end{center}
 
 \end{frame}
 
 \begin{frame}{Graphs: Cell Decomposition}
 
-\begin{itemize}
-\item Example: approximate cell decomposition
-\end{itemize}
+Example: approximate cell decomposition
+
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{celldecomposition1}
+        \hspace{1em}
+        \includegraphics[width=0.4\linewidth]{celldecomposition2}
+    \end{center}
 
 \end{frame}
 
 \begin{frame}{Graphs: Cell Decomposition}
 
-\begin{itemize}
-\item Adaptive cell decomposition: changes the size of each cell according
+Adaptive cell decomposition: changes the size of each cell according
   to the detail needed.
-\end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{adaptivecelldecomposition}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Graphs: representing}
@@ -693,65 +729,55 @@ Many different search algorithms exist
 
 \end{frame}
 
-\begin{frame}{Searching graphs - Dijkstra}
+\begin{frame}[fragile]{Searching graphs - Dijkstra}
 
-\begin{itemize}
-\item Dijkstra's shortest path algorithm 1 \textbf{function} Dijkstra(G, w,
-  s) 2 \textbf{for each} node n \emph{// Initializations} 3 d{[}n{]} :=
-  infinity \emph{// Known distance from s to n} 4 previous{[}n{]} :=
-  undefined 5 d{[}s{]} := 0 \emph{// Distance from s to s} 6 S := empty
-  set \emph{// Set of all visited nodes} 7 Q := all nodes \emph{// Set
-  of all unvisited nodes} 8 \textbf{while} Q is not an empty set
-  \emph{// The algorithm itself} 9 u := Extract\_Min(Q) \emph{// Remove
-  best node} 10 S := S union \{u\} \emph{// Mark it `visited'} 11
-  \textbf{for each} edge (u,v) outgoing from u 12 \textbf{if} d{[}u{]} +
-  w(u,v) \textless{} d{[}v{]} \emph{// Relax (u,v)} 13 d{[}v{]} :=
-  d{[}u{]} + w(u,v) 14 previous{[}v{]} := u
-\item Extract\_Min returns the node n with the lowest value d.
-\end{itemize}
+\begin{pythoncode}
+def dijkstra(graph, weights, start_node):
 
+  dist = {} # map {node -> distance to 'start_node'}
+  previous = {} # needed to reconstruct shortest path
+
+  for node in graph:
+    dist[node] = math.inf # initial dist. from 'start_node' to 'node'
+
+  dist[start_node] = 0
+
+  Q = graph.nodes() # unvisited nodes
+  while not Q.empty():
+    u = pop_min(Q) # remove best node
+
+    for v in u.neighbours: # iterate over nodes connected to u
+      if dist[u] + weights(u, v) < dist[v]: # new shorter path to v!
+        dist[v] = dist[u] + weights(u, v)
+        previous[v] = u
+
+  return dist, previous
+\end{pythoncode}
 \end{frame}
 
-\begin{frame}{Searching graphs - Dijkstra}
 
-\begin{block}{1 \textbf{function} Dijkstra(G, w, s) 2 \textbf{for each}
-node n \emph{// Initializations} 3 d{[}n{]} := infinity \emph{// Known
-distance from s to n} 4 previous{[}n{]} := undefined 5 d{[}s{]} := 0
-\emph{// Distance from s to s} 6 S := empty set \emph{// Set of all
-visited nodes} 7 Q := all nodes \emph{// Set of all unvisited nodes} 8
-\textbf{while} Q is not an empty set \emph{// The algorithm itself} 9 u
-:= Extract\_Min(Q) \emph{// Remove best node} 10 S := S union \{u\}
-\emph{// Mark it `visited'} 11 \textbf{for each} edge (u,v) outgoing
-from u 12 \textbf{if} d{[}u{]} + w(u,v) \textless{} d{[}v{]} \emph{//
-Relax (u,v)} 13 d{[}v{]} := d{[}u{]} + w(u,v) 14 previous{[}v{]} := u}
+\begin{frame}[fragile]{Searching graphs -- Dijkstra}
 
-\begin{itemize}
-\item Extract\_Min returns the node n with the lowest value d.
-\end{itemize}
+Reading out shortest path from the start node to to $t$:
 
-Start node
+\begin{pythoncode}
+path = []
+node = t # goal
+while node in previous:
+    path = [node] + path # append at the front of our path
+    node = previous[node]
+\end{pythoncode}
 
-Graph
-
-Weights
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}{Searching graphs -- Dijkstra}
-
-\begin{itemize}
-\item Reading out shortest path from s to t 1 S := empty sequence 2 u := t
-  // Goal 3 \textbf{while} defined previous{[}u{]} 4 insert u to the
-  beginning of S 5 u := previous{[}u{]}
-\item Returns the shortest path (if there are more than one, only one is
-  returned). Return empty if no path exists.
-\end{itemize}
+Returns the shortest path (if there are more than one, only one is returned).
+Return empty if no path exists.
 
 \end{frame}
 
 \begin{frame}{Dijkstra's algorithm: illustration}
+
+    \begin{center}
+    \video[1]{0.6\linewidth}{figs/part6/dijkstra.mp4}
+    \end{center}
 
 Dijkstra search for finding path between start (red) and goal (green)
 position (\href{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Wiki
@@ -766,7 +792,7 @@ closer to the goal.
 Maps can be huge
 
 \begin{itemize}
-\item For example, 100,000 m2 shopping mall, with a 10 x 10 cm map
+\item For example, 100,000 m2 shopping mall, with a 10x10cm map
   resolution, requires 10 million nodes on the graph.
 \end{itemize}
 
@@ -785,6 +811,10 @@ Search time can be problematic
 \end{frame}
 
 \begin{frame}{A* algorithm - illustration}
+
+    \begin{center}
+        \video[1]{0.6\linewidth}{figs/part6/astar.mp4}
+    \end{center}
 
 A* search for finding path between start and goal position. A* uses a
 heuristic (here the distance to the goal
@@ -820,13 +850,19 @@ Needed
 
 \begin{frame}{Potential Field Path Planning}
 
+    \begin{center}
+        \includegraphics[width=0.4\linewidth]{potentialfields1}
+
+        \includegraphics[width=0.4\linewidth]{potentialfields2}
+        \includegraphics[width=0.4\linewidth]{potentialfields3}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Potential Field Path Planning}
 
 Potential field generation
 
-Generation of potential field function \emph{U(q)}
+Generation of potential field function $U(q)$
 
 \begin{itemize}
 \item attracting (goal) and repulsing (obstacle) fields
@@ -835,27 +871,21 @@ Generation of potential field function \emph{U(q)}
   \href{http://en.wikipedia.org/wiki/Differentiable_function}{differentiable}
 \end{itemize}
 
-Generate artificial force field \emph{F(q)}
+Generate artificial force field $F(q)$
 
-\begin{block}{\emph{}}
+\[
+    F(q) = -\nabla U(q) = -\nabla U_{att}(q) - \nabla U_{rep}(q) =
+    \begin{bmatrix}\frac{\partial U}{x} \\ \frac{\partial U}{y}\end{bmatrix}
+\]
 
-\end{block}
-
-\begin{block}{\emph{}}
-
-\end{block}
-
-\begin{block}{\emph{}}
-
-Set robot speed (\emph{vx}, \emph{vy}) proportional to the force
-\emph{F}(\emph{q}) generated by the field
+Set robot speed $(v_x, v_y)$ proportional to the force
+$F(q)$ generated by the field
 
 \begin{itemize}
 \item the force field drives the robot to the goal
 \item if robot is assumed to be a point mass
 \end{itemize}
 
-\end{block}
 
 \end{frame}
 
@@ -943,30 +973,32 @@ Task potential field
 \item Goal is reaches by travelling on descending values.
 \end{itemize}
 
+    \begin{center}
+        \includegraphics[width=0.6\linewidth]{grassfire}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Grassfire algorithm}
 
 \end{frame}
 
-\begin{frame}{Grassfire algorithm}
+\imageframe{grassfire2}
 
-\end{frame}
+\begin{frame}[fragile]{Grassfire algorithm}
 
-\begin{frame}{Grassfire algorithm}
+\begin{pythoncode}
 
-\begin{itemize}
-\item \textbf{function} Grassfire( M, goal )
-\item Q := goal // Put goal in queue
-\item M(goal) := 0 // Set goal value to 0
-\item \textbf{while} Q is not empty // Do until map filled
-\item a := dequeue from Q
-\item \textbf{for} n := \textbf{} all neighbours of a AND if neighbour no
-  value yet
-\item if n is not obstacle
-\item Q := Q enqueue n
-\item M(n) = M(a) + 1
-\end{itemize}
+def grassfire( M, goal )
+  Q = goal # Put goal in queue
+  M(goal) := 0 # Set goal value to 0
+
+  while Q is not empty: # Do until map filled
+    a := dequeue from Q
+    for n := all neighbours of a AND if neighbour no value yet
+      if n is not obstacle
+        Q := Q enqueue n
+        M(n) = M(a) + 1
+\end{pythoncode}
 
 Q is a
 \href{http://en.wikipedia.org/wiki/Queue_(abstract_data_type)}{queue
