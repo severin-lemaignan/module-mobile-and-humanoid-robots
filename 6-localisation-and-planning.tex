@@ -43,7 +43,7 @@
 
 
 \usepackage{tikz}
-\usetikzlibrary{mindmap,backgrounds,positioning,quotes}
+\usetikzlibrary{mindmap,backgrounds,positioning,quotes,shapes}
 
 \graphicspath{{figs/part6/}}
 
@@ -141,52 +141,58 @@ nature, such as picking a safe path or determining where to go next.
 
 \end{frame}
 
-\imageframe{mcl_example}
+\videoframe[0.56]{figs/part6/mcl_example.mp4}
+
+\imageframe[color=black]{localisation_pepper}
 
 \begin{frame}{Monte-Carlo Localisation -- Introduction}
 
-\begin{itemize}
-    \item Monte-Carlo Localisation (MCL) is a \href{http://en.wikipedia.org/wiki/Particle_filter}{particle
-  filter}, which uses a set $S_t$ of $N$ particles at time
-  $t$.
-    \begin{align*}
-        S_t &= \{s_t^i | i = 1\ldots N\} \\
-        s^i &= \{l^i, p^i\} \text{ with } l^i = \{x^i, y^i, \theta^i\}
-    \end{align*}
- \item<+-> For small maps, $N$ is in the hundreds, for larger maps you
-  can have thousands of particles.
-\item<+-> Each particle $s^i$ contains the pose of the particle and a posterior
-    belief $p^i$.
-\item<+-> The sum of all beliefs is 1: \[ \sum_{i=1}^N p^i = 1 \]
-\end{itemize}
+    \begin{itemize}
+        \item Monte-Carlo Localisation (MCL) is a \href{http://en.wikipedia.org/wiki/Particle_filter}{particle
+            filter}, which uses a set $S_t$ of $N$ particles at time
+            $t$.
+            \large
+            \begin{align*}
+                S_t &= \{s_t^i \quad|\quad i = 1\ldots N\} \\
+                s^i &= \{\mathbf{x}^i, w^i\} \text{ with } \mathbf{x}^i = \{x^i, y^i, \theta^i\}
+            \end{align*}
+            \normalsize
+        \item<+-> For small maps, $N$ is in the hundreds, for larger maps you
+            can have thousands of particles.
+        \item<+-> Each particle $s^i$ contains the pose of the particle and a weight $w^i$.
+        \item<+-> The sum of all weights is 1: \[ \sum_{i=1}^N w^i = 1 \]
+    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Monte-Carlo Localisation -- Initialisation}
 
-The $N$ particles are distributed on the map
+    The $N$ particles are distributed on the map
 
-\begin{itemize}
-\item If the robot's position is not known, they are distributed randomly
-    across the map with a probability $p=\frac{1}{N}$ (\emph{uniform
-        distribution}).
-\item If the robot's position is available, the initial particle
-    distribution could be Gaussian around the robot (\emph{normal distribution}).
-\end{itemize}
+    \begin{itemize}
+        \item If the robot's position is not known, they are distributed randomly
+            across the map with a probability $p=\frac{1}{N}$ (\emph{uniform
+            distribution}). \textbf{Global localisation}.
+            \pause
+        \item If the robot's position is available, the initial particle
+            distribution could be Gaussian around the robot (\emph{normal
+            distribution}). \textbf{Continuous localisation} $\equiv$
+            \textbf{Tracking}.
+    \end{itemize}
 
-\pause 
+    \pause 
 
-Then , Monte Carlo Localisation runs through three steps:
+    Then , Monte Carlo Localisation runs through three steps:
 
-\begin{enumerate}
-\item Prediction phase (when the robot takes an action)
-\item Update phase (when sensor data comes in)
-\item Resampling phase
-\end{enumerate}
+    \begin{enumerate}
+        \item Prediction phase (when the robot takes an action)
+        \item Update phase (when sensor data comes in)
+        \item Resampling phase
+    \end{enumerate}
 
 \end{frame}
 
-\begin{frame}{Monte-Carlo Localisation -- Prediction phase 1}
+\begin{frame}{Monte-Carlo Localisation -- Prediction phase}
 
 The robot performs an \textbf{action.} All $N$ particles are
     updated as follows:
@@ -218,7 +224,7 @@ particle $s_t$ after doing action $a$ at the location of
 
 \end{frame}
 
-\begin{frame}{Monte-Carlo Loclaisation - Prediction phase 2}
+\begin{frame}{Monte-Carlo Loclaisation - Prediction phase}
 
 The prediction phase \textbf{essentially moves all particles}.
 
@@ -226,11 +232,11 @@ Example: if the robot moves 10cm right and turn 10˚ counterclockwise, then all 
 updated:
     \Large
     \[
-        s_t^i = \{ \{ x_{t-1}^i + 0.1, y_{t-1}^i, \theta_{t-1}^i - 10^{\circ}\}, p\bubblemark[0pt]{oldnochange}_{t-1}^i\}
+        s_t^i = \{ \{ x_{t-1}^i + 0.1, y_{t-1}^i, \theta_{t-1}^i - 10^{\circ}\}, w\bubblemark[0pt]{oldnochange}_{t-1}^i\}
     \]
     \normalsize
 
-\bubble<1>[90]{oldnochange}{Note, belief is not changed}
+\bubble<1>[90]{oldnochange}{Note, the weight is not changed}
 \pause
 
     This allows for a motion model to be implemented, by adding some noise.
@@ -238,8 +244,8 @@ updated:
     \only<2>{
     \large
     \begin{align*}
-        s_t^1 &= \{ \{ x_{t-1}^1 + 0.11, y_{t-1}^1, \theta_{t-1}^1 - 10.3^{\circ}\}, p_{t-1}^1\} \\
-        s_t^2 &= \{ \{ x_{t-1}^2 + 0.09, y_{t-1}^2, \theta_{t-1}^2 - 10.2^{\circ}\}, p_{t-1}^2\} \\
+        s_t^1 &= \{ \{ x_{t-1}^1 + 0.11, y_{t-1}^1, \theta_{t-1}^1 - 10.3^{\circ}\}, w_{t-1}^1\} \\
+        s_t^2 &= \{ \{ x_{t-1}^2 + 0.09, y_{t-1}^2, \theta_{t-1}^2 - 10.2^{\circ}\}, w_{t-1}^2\} \\
         ...
     \end{align*}
     \normalsize
@@ -261,119 +267,143 @@ updated:
             updated as follows:
             \Large
             \[ 
-            p(s_t^i) = \bubblemark[0pt]{alpha}\alpha \cdot p(z_t\bubblemark[0pt]{sensormodel}|s_t^i) \cdot p(s_t^i)
+            w_t^i = \bubblemark[0pt]{alpha}\alpha \cdot p(z_t\bubblemark[0pt]{sensormodel}|\mathbf{x}_t^i) \cdot w_t^i
             \]
             \normalsize
             \vspace{3em}
         \item The normalising constant $\alpha$ is calculated afterwards to make
-            \[ \sum_{i=1}^N p^i = 1 \]
+            \[ \sum_{i=1}^N w^i = 1 \]
     \end{itemize}
 
     \bubble<1>[145][.8][4cm]{sensormodel}{Sensor model: what is the probability
-    of seeing sensor reading $z_t$ at position $s_t$}
+    of seeing sensor reading $z_t$ at position $\mathbf{x}_t$}
 
-    \bubble<1>[40][.8][3cm]{alpha}{Normalisation constant: keeps to total $p$ value equal
+    \bubble<1>[40][.8][3cm]{alpha}{Normalisation constant: keeps the sum of $w^i$ equal
     to 1}
 
 \end{frame}
 
 \begin{frame}{Monte-Carlo Localisation -- Resampling phase}
 
-Generate a new set of particles by drawing randomly from the current
-set. Likelihood is determined by $p$ values. Set the $p$ value
-    of these new samples to $\frac{1}{N}$.
+    Generate a new set of particles by drawing randomly from the current
+    set. Likelihood is determined by the weights values.
 
-\begin{itemize}
-\item You can think of drawing particles as a roulette wheel selection.
-  Particles with a higher $p$ value have a higher chance of being
-  selected into the new set. Also, a particle can be selected more than
-  once
-\end{itemize}
+    %% Really??? Reset the weights??
+    %Then, reset the weights $w$ of these new samples to $\frac{1}{N}$.
 
-$p1$
+    \begin{overprint}
+        \onslide<1>
+        \vspace{1em}
+        \small
+        You can think of drawing particles as a roulette wheel selection.
+        Particles with a higher weight have a higher chance of being
+        selected into the new set. Also, a particle can be selected \textbf{more than
+        once}.
 
-$p2$
+        \centering
+        \resizebox{0.4\linewidth}{!}{
+            \begin{tikzpicture}[>=latex]
 
-$p3$
+                \filldraw[fill=hriSec3Comp,ultra thick] (0,0) circle (3cm);
+                \fill (0,0) circle (0.3cm);
+                \draw[thick] (0,0) -- (10:3cm);
+                \draw[thick] (0,0) -- (40:3cm);
+                \draw[thick] (0,0) -- (60:3cm);
+                \draw[thick] (0,0) -- (110:3cm);
+                \draw[thick] (0,0) -- (150:3cm);
+                \draw[thick] (0,0) -- (180:3cm);
+                \draw[thick] (0,0) -- (230:3cm);
+                \draw[thick] (0,0) -- (300:3cm);
+                \draw[thick] (0,0) -- (330:3cm);
 
-$p4$
+                \node at (25:2cm) {$w^1$};
+                \node at (50:2cm) {$w^2$};
+                \node at (85:2cm) {$w^3$};
+                \node at (130:2cm) {$w^4$};
+                \node at (165:2cm) {$w^5$};
+                \node at (205:2cm) {$w^6$};
+                \node at (275:2cm) {$w^7$};
+                \node at (315:2cm) {$w^8$};
+                \node at (350:2cm) {$w^9$};
 
-$p5$
+                \node[signal,draw,fill=hriSec3Dark,minimum size=1cm,signal to=west] at (3.5,0) {};
 
-$p7$
+            \end{tikzpicture}
+        }
 
-$p8$
+        \onslide<2>
+        \vspace{2em}
+        In addition, it is useful to add a \textbf{small number of uniformly distributed
+        particles} to the set of particles.
 
-$p9$
+        This helps the algorithm recover when it loses track of the robot's
+        position.
 
-$p6$
+        \vspace{1em}
+        \small
+        This is know as the \emph{``kidnapped robot''} problem, and occurs when the
+        robot loses track of its position, due to a malfunction or power
+        outage.
+
+
+    \end{overprint}
 
 \end{frame}
 
-\begin{frame}{MCL -- Resamping phase (2)}
+\begin{frame}[fragile]{Pseudocode}
 
-In addition, it is useful to add a small number of uniformly distributed
-particles to the set of particles.
+    \begin{center}
 
-This helps the algorithm recover when it loses track of the robot's
-position.
-
-\begin{itemize}
-\item This is know as thee ``kidnapped robot'' problem, and occurs when the
-  robot loses track of its position, due to a malfunction or power
-  outage.
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}[fragile]{Pseudocode (1)}
-
-\begin{columns}
-    \begin{column}{0.4\linewidth}
-        
-        \begin{pythoncode*}{frame=none,escapeinside=||}
+\begin{overprint}
+    \onslide<1>
+\begin{pythoncode*}{frame=none,escapeinside=||}
 
 # initialise all N particles
 for i in range(1, N):
     S[i].x = random(x_max)
     S[i].y = random(y_max)
     S[i].|$\theta$| = random(2 * |$\pi$|)
-    S[i].p = 1/N
+    S[i].w = 1/N
 \end{pythoncode*}
-    \end{column}
-    \begin{column}{0.6\linewidth}
 
-\begin{pythoncode*}{frame=none,escapeinside=||}
+\onslide<2>
+\begin{pythoncode*}{frame=none,escapeinside=\%\%}
 while True:
     # prediction phase
-    move_robot(x,y,theta)
+    move_robot(x, y, %$\theta$%)
     for i in range(1,N):
-        move_particle(i, x, y, |$\theta$|)
+        move_particle(i, x, y, %$\theta$%) # adds noise as well -> motion model
 
-    # update phase
+    # update phase (r: sensor reading)
     n = 0
     for i in range(1,N):
-    TO BE FIXED
-        S[i] = p(r||S[i].x, S[i].y, S[i].|$\theta$|) * S[i].p
-        n = n + S[i].p
+        S[i].w = likelihood(r, (S[i].x, S[i].y, S[i].%$\theta$%)) * S[i].w
+        n = n + S[i].w
 
     # normalise
     for i in range(1,N):
-        S[i].p = S[i].p/n
+        S[i].w = S[i].w/n
 
     # resample phase
-    for i in range(1,M):
-        draw_S1_with_high_S.p
-        find_S2_with_lowest_S.p
-        S2=S1
+    S1 = best_particles() # particles with high S.w
+    S2 = worst_particles() # particles with low S.w
+    replace_particles(S2, S1)
 \end{pythoncode*}
-    \end{column}
-\end{columns}
 
+\end{overprint}
+
+    \end{center}
 \end{frame}
 
-\begin{frame}{Pseudocode (2)}
+\begin{frame}{Position estimate}
 
+    The position estimate at time $t$ is the mean of the weighted particles locations,
+    \ie the centre of the weighted particle cloud.
+
+    \Large
+    \[
+        \bar{\mathbf{x}}_t = \sum^N_{i=1} w^i_t \cdot \mathbf{x}^i_t
+    \]
 \end{frame}
 
 \begin{frame}{MCL -- Some properties}
@@ -393,6 +423,12 @@ Powerful, yet efficient.
 
 Easy to implement.
 
+Compared to Kalman filtering
+
+    \begin{itemize}
+        \item Kalman filtering doe snot work for multi-modal distributions of
+            the position estimate (\emph{data association problem})
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Example: museum pose maintenance}
@@ -478,13 +514,17 @@ Odometry is not to be trusted
     \end{center}
 \end{frame}
 
-\begin{frame}{Example}
+\begin{frame}[plain]
 
-\begin{block}{\url{http://youtu.be/Q1ipn42rMh8}}
+    \begin{center}
+    \video[1.0]{0.7\linewidth}{figs/part6/slam.mp4}
 
-\end{block}
+    \source{http://youtu.be/Q1ipn42rMh8}{Robert Sim, University of British Columbia}
+    \end{center}
 
 \end{frame}
+
+\imageframe{mapping_pepper}
 
 \begin{frame}{Commercial applications}
 
@@ -496,7 +536,52 @@ Odometry is not to be trusted
 
 \end{frame}
 
-\section{Path planning on graph}
+\section{Path planning}
+
+\begin{frame}{Global vs local path planning}
+
+        \begin{tikzpicture}[>=latex]
+            \node at (0,0) {\includegraphics[width=\linewidth]{motion_planning_pepper_rviz}};
+
+            \only<2>{
+            \draw[thick,->] (-1,-1) -- (0,0) node[at start, below] {local costmap};
+            \draw[thick,->] (0.3,-1.8) -- (2,-0.7) node[at start, below] {global costmap};
+            \draw[thick,->] (0.3,-1.8) -- (1.9,-1);
+            }
+        \end{tikzpicture}
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \textbf{Global path planning}
+
+            \only<1>{
+            \begin{itemize}
+                \item long distances (\ie large map, slower calculations)
+                \item static environment
+            \end{itemize}
+            }
+            \only<2> {
+                \vspace{1em}
+                $\rightarrow$ global (static) \textbf{costmap}
+            }
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \textbf{Local path planning}
+
+            \only<1>{
+            \begin{itemize}
+                \item Short horizon
+                \item Dynamic environment (use of sensors)
+            \end{itemize}
+            }
+            \only<2> {
+                \vspace{1em}
+                $\rightarrow$ local (dynamic) \textbf{costmap}
+            }
+        \end{column}
+    \end{columns}
+
+\end{frame}
 
 \begin{frame}{Global path planning}
 
