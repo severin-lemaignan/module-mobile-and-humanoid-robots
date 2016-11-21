@@ -83,7 +83,7 @@ Getting from A to B.
 
 \begin{frame}{Planning and navigation -- traditional approach}
 
-Today's industrial robots can operate without any intelligence because
+Today's industrial robots can operate \textbf{without any intelligence} because
 their environment is static and very structured.
 
 In mobile robotics, cognition and reasoning is primarily of geometric
@@ -102,159 +102,211 @@ nature, such as picking a safe path or determining where to go next.
 \end{frame}
 
 \begin{frame}{Kiva systems: Beacon based localisation}
+    \begin{center}
+        \url{http://www.youtube.com/watch?v=lWsMdN7HMuA}
 
-\begin{itemize}
-\item \url{http://www.youtube.com/watch?v=lWsMdN7HMuA}
-\end{itemize}
-
+        \includegraphics[width=0.8\linewidth]{kiva}
+    \end{center}
 \end{frame}
 
 \section{Monte-Carlo Localisation}
 
 \begin{frame}{Monte Carlo methods}
 
-Repeated random sampling to compute results.
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \textbf{Repeated random sampling to compute results}
 
-Used when it to difficult to calculate exact results
+            Used when it to difficult to calculate exact results:
+
+            \begin{itemize}
+                \item The system is too complex and calculating it through is too
+                    computationally expensive
+                \item There are too many variables and it is impossible to calculate all
+                    posibilities
+            \end{itemize}
+
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=\linewidth]{montecarlo}
+            \end{center}
+
+            \onslide<2>{
+            Monte Carlo \emph{localisation} is MC methods applied to robot localisation.
+            }
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+\imageframe{mcl_example}
+
+\begin{frame}{Monte-Carlo Localisation -- Introduction}
 
 \begin{itemize}
-\item The system is too complex and calculating it through it too
-  computationally expensive.
-\item There are too many variables and it is impossible to calculate all
-  posibilities.
-\end{itemize}
-
-Monte Carlo localisation is MC methods applied to robot localisation.
-
-\end{frame}
-
-\begin{frame}{Monte Carlo localisation - Example}
-
-\end{frame}
-
-\begin{frame}{MCL - introduction}
-
-\begin{itemize}
-\item MCL is a \href{http://en.wikipedia.org/wiki/Particle_filter}{particle
-  filter}, which uses a set \emph{St} of \emph{N} particles at time
-  \emph{t}. For small maps N is in the hundreds, for larger maps you
-  could have thousands of particles.
-\item Each particle si contains the pose of the particle and a posterior
-  belief.
-\item The sum of all beliefs is 1:
+    \item Monte-Carlo Localisation (MCL) is a \href{http://en.wikipedia.org/wiki/Particle_filter}{particle
+  filter}, which uses a set $S_t$ of $N$ particles at time
+  $t$.
+    \begin{align*}
+        S_t &= \{s_t^i | i = 1\ldots N\} \\
+        s^i &= \{l^i, p^i\} \text{ with } l^i = \{x^i, y^i, \theta^i\}
+    \end{align*}
+ \item<+-> For small maps, $N$ is in the hundreds, for larger maps you
+  can have thousands of particles.
+\item<+-> Each particle $s^i$ contains the pose of the particle and a posterior
+    belief $p^i$.
+\item<+-> The sum of all beliefs is 1: \[ \sum_{i=1}^N p^i = 1 \]
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}{MCL -- Initialisation}
+\begin{frame}{Monte-Carlo Localisation -- Initialisation}
 
-The \emph{N} particles are distributed on the map
+The $N$ particles are distributed on the map
 
 \begin{itemize}
 \item If the robot's position is not known, they are distributed randomly
-  across the map with a probability \emph{p=}1\emph{/N}.
+    across the map with a probability $p=\frac{1}{N}$ (\emph{uniform
+        distribution}).
 \item If the robot's position is available, the initial particle
-  distribution could be Gaussian around the robot.
+    distribution could be Gaussian around the robot (\emph{normal distribution}).
 \end{itemize}
 
-Monte Carlo Localisation runs through three steps
+\pause 
 
-\begin{itemize}
+Then , Monte Carlo Localisation runs through three steps:
+
+\begin{enumerate}
 \item Prediction phase (when the robot takes an action)
 \item Update phase (when sensor data comes in)
 \item Resampling phase
-\end{itemize}
+\end{enumerate}
 
 \end{frame}
 
-\begin{frame}{MCL -- Prediction phase (1)}
+\begin{frame}{Monte-Carlo Localisation -- Prediction phase 1}
 
-\begin{itemize}
-\item The robot performs an \textbf{action.} All \emph{N} particles are
-  updated as follows
-\item Example: repeated application of theprediction rule leads to gradual
+The robot performs an \textbf{action.} All $N$ particles are
+    updated as follows:
+    \Large
+        \[ 
+        \bubblemark{newp}p(s_t^i) = \sum_{j=1}^N
+        p(l_t{}^j\bubblemark[0pt]{motionmodel}|l_{t-1}{}^i, a) \cdot p(s\bubblemark[0pt]{oldp}_{t-1}{}^i)
+        \]
+    \normalsize
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+Example: repeated application of the prediction rule leads to gradual
   loss of pose accuracy.
-\end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=\linewidth]{mcl_prediction}
+            \end{center}
+        \end{column}
+    \end{columns}
 
-Motion model: what is the probability of ending up in the location of
-particle \emph{st} after doing action \emph{a} at the location of
-particle \emph{st-1}
+    \bubble<1>[40][1][6.5cm]{motionmodel}{Motion model: what is the probability of ending up in the location of
+particle $s_t$ after doing action $a$ at the location of
+    particle $s_{t-1}$}
 
-Belief of ith particle at time \emph{t-1}
+    \bubble<1>[130][0.5][3cm]{oldp}{Belief of $i^{th}$ particle at time $t-1$}
 
-Updated belief
-
-of particle \emph{i}
-
-\end{frame}
-
-\begin{frame}{MCL - Prediction phase (2)}
-
-The prediction phase essentially moves all particles.
-
-\begin{itemize}
-\item If the robot moves 10cm right and turn 10˚ cw, then all particles are
-  updated
-\end{itemize}
-
-This allows for a motion model to be implemented, by adding some noise.
-
-\begin{itemize}
-\item For example
-\item This motion model should be based on the kinematics of your robot.
-  E.g. for a differential drive robot you would have a pretty accurate
-  idea of how imprecise it is.
-\end{itemize}
-
-Note, belief is not changed
+    \bubble<1>[0]{newp}{Updated belief of particle $i$}
 
 \end{frame}
 
-\begin{frame}{MCL -- Update phase}
+\begin{frame}{Monte-Carlo Loclaisation - Prediction phase 2}
 
-\begin{itemize}
-\item The robot gets \textbf{new sensor data} in, all \emph{N} particles
-  updated as follows:
-\item The normalising constant \emph{} is calculated afterwards to make
-\end{itemize}
+The prediction phase \textbf{essentially moves all particles}.
 
-Sensor model: what is the probability of seeing sensor reading \emph{zt}
-at position \emph{st}
+Example: if the robot moves 10cm right and turn 10˚ counterclockwise, then all particles are
+updated:
+    \Large
+    \[
+        s_t^i = \{ \{ x_{t-1}^i + 0.1, y_{t-1}^i, \theta_{t-1}^i - 10^{\circ}\}, p\bubblemark[0pt]{oldnochange}_{t-1}^i\}
+    \]
+    \normalsize
 
-Normalisation constant: keeps to total \emph{p} value equal to 1.
+\bubble<1>[90]{oldnochange}{Note, belief is not changed}
+\pause
+
+    This allows for a motion model to be implemented, by adding some noise.
+
+    \only<2>{
+    \large
+    \begin{align*}
+        s_t^1 &= \{ \{ x_{t-1}^1 + 0.11, y_{t-1}^1, \theta_{t-1}^1 - 10.3^{\circ}\}, p_{t-1}^1\} \\
+        s_t^2 &= \{ \{ x_{t-1}^2 + 0.09, y_{t-1}^2, \theta_{t-1}^2 - 10.2^{\circ}\}, p_{t-1}^2\} \\
+        ...
+    \end{align*}
+    \normalsize
+    }
+
+    \only<3>{
+    This motion model should be based on the kinematics of your robot.
+    \eg for a differential drive robot you would have a pretty accurate
+    idea of how imprecise it is.
+    }
+
 
 \end{frame}
 
-\begin{frame}{MCL -- Resampling phase}
+\begin{frame}{Monte-Carlo Localisation -- Update phase}
+
+    \begin{itemize}
+        \item The robot gets \textbf{new sensor data} in, all $N$ particles
+            updated as follows:
+            \Large
+            \[ 
+            p(s_t^i) = \bubblemark[0pt]{alpha}\alpha \cdot p(z_t\bubblemark[0pt]{sensormodel}|s_t^i) \cdot p(s_t^i)
+            \]
+            \normalsize
+            \vspace{3em}
+        \item The normalising constant $\alpha$ is calculated afterwards to make
+            \[ \sum_{i=1}^N p^i = 1 \]
+    \end{itemize}
+
+    \bubble<1>[145][.8][4cm]{sensormodel}{Sensor model: what is the probability
+    of seeing sensor reading $z_t$ at position $s_t$}
+
+    \bubble<1>[40][.8][3cm]{alpha}{Normalisation constant: keeps to total $p$ value equal
+    to 1}
+
+\end{frame}
+
+\begin{frame}{Monte-Carlo Localisation -- Resampling phase}
 
 Generate a new set of particles by drawing randomly from the current
-set. Likelihood is determined by \emph{p} values. Set the \emph{p} value
-of these new samples to \emph{1/N}.
+set. Likelihood is determined by $p$ values. Set the $p$ value
+    of these new samples to $\frac{1}{N}$.
 
 \begin{itemize}
 \item You can think of drawing particles as a roulette wheel selection.
-  Particles with a higher \emph{p} value have a higher chance of being
+  Particles with a higher $p$ value have a higher chance of being
   selected into the new set. Also, a particle can be selected more than
   once
 \end{itemize}
 
-\emph{p1}
+$p1$
 
-\emph{p2}
+$p2$
 
-\emph{p3}
+$p3$
 
-\emph{p4}
+$p4$
 
-\emph{p5}
+$p5$
 
-\emph{p7}
+$p7$
 
-\emph{p8}
+$p8$
 
-\emph{p9}
+$p9$
 
-\emph{p6}
+$p6$
 
 \end{frame}
 
@@ -274,151 +326,53 @@ position.
 
 \end{frame}
 
-\begin{frame}{Pseudocode (1)}
+\begin{frame}[fragile]{Pseudocode (1)}
 
-\begin{block}{\% Initialise all N particles}
+\begin{columns}
+    \begin{column}{0.4\linewidth}
+        
+        \begin{pythoncode*}{frame=none,escapeinside=||}
 
-\end{block}
+# initialise all N particles
+for i in range(1, N):
+    S[i].x = random(x_max)
+    S[i].y = random(y_max)
+    S[i].|$\theta$| = random(2 * |$\pi$|)
+    S[i].p = 1/N
+\end{pythoncode*}
+    \end{column}
+    \begin{column}{0.6\linewidth}
 
-\begin{block}{for i=1:N}
+\begin{pythoncode*}{frame=none,escapeinside=||}
+while True:
+    # prediction phase
+    move_robot(x,y,theta)
+    for i in range(1,N):
+        move_particle(i, x, y, |$\theta$|)
 
-\end{block}
+    # update phase
+    n = 0
+    for i in range(1,N):
+    TO BE FIXED
+        S[i] = p(r||S[i].x, S[i].y, S[i].|$\theta$|) * S[i].p
+        n = n + S[i].p
 
-\begin{block}{}
+    # normalise
+    for i in range(1,N):
+        S[i].p = S[i].p/n
 
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{end for}
-
-\end{block}
-
-\begin{block}{forever do}
-
-\end{block}
-
-\begin{block}{\% Prediction phase}
-
-\end{block}
-
-\begin{block}{moverobot(\emph{x,y,α})}
-
-\end{block}
-
-\begin{block}{for i=1:N}
-
-\end{block}
-
-\begin{block}{move\_particle(i, \emph{x,y,α})}
-
-\end{block}
-
-\begin{block}{end for}
-
-\end{block}
-
-\begin{block}{}
-
-\begin{itemize}
-\item ~
-\end{itemize}
-
-\end{block}
-
-\begin{block}{\% Update phase}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{for i=1:N}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{end for}
-
-\end{block}
-
-\begin{block}{\% Normalise}
-
-\end{block}
-
-\begin{block}{for i=1:N}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{end for}
-
-\end{block}
-
-\begin{block}{\ldots{}}
-
-\begin{itemize}
-\item ~
-\end{itemize}
-
-\end{block}
+    # resample phase
+    for i in range(1,M):
+        draw_S1_with_high_S.p
+        find_S2_with_lowest_S.p
+        S2=S1
+\end{pythoncode*}
+    \end{column}
+\end{columns}
 
 \end{frame}
 
 \begin{frame}{Pseudocode (2)}
-
-\begin{block}{\% Resample phase}
-
-\end{block}
-
-\begin{block}{for i=1:M}
-
-\end{block}
-
-\begin{block}{draw\_S1\_with\_high\_S.p}
-
-\end{block}
-
-\begin{block}{find\_S2\_with\_lowest\_S.p S2 = S1}
-
-\end{block}
-
-\begin{block}{end for}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
-
-\begin{block}{{[}END{]}}
-
-\end{block}
-
-\begin{block}{}
-
-\end{block}
 
 \end{frame}
 
@@ -577,8 +531,8 @@ Examples:
 \begin{frame}{Path Planning: Configuration Space}
 
 \begin{itemize}
-\item State or configuration \emph{q} can be described with \emph{k} values
-  \emph{qi}
+\item State or configuration $q$ can be described with $k$ values
+  $qi$
 
     \begin{center}
         \includegraphics[width=0.6\linewidth]{configurationspace}
@@ -799,12 +753,12 @@ Maps can be huge
 Search time can be problematic
 
 \begin{itemize}
-\item Dijkstra has order \emph{O}(N+V2). For example, for a map with 107
+\item Dijkstra has order $O$(N+V2). For example, for a map with 107
   nodes and 108 vertices, it can take 107+102x8 ≈ 1016 calculations to
   find a shortest path between two points.
 \item Some implementations are much more efficient. A* search is at worst
   the same as Dijkstra, but can be polynomial in the number of nodes
-  \emph{O}(Nk) when a good heuristic is used. For example, if you can
+  $O$(Nk) when a good heuristic is used. For example, if you can
   choose between two nodes to explore, take the node closer to the goal.
 \end{itemize}
 
