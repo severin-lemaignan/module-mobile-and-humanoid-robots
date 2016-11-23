@@ -1,6 +1,6 @@
 %!TEX program = xelatex
 
-\documentclass[compress]{beamer}
+\documentclass[compress,xcolor=table]{beamer}
 %--------------------------------------------------------------------------
 % Common packages
 %--------------------------------------------------------------------------
@@ -720,6 +720,50 @@ Odometry is not to be trusted:
 
 \section{Path planning}
 
+\begin{frame}{Metric vs topological maps}
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{map}
+            \end{center}
+
+            \small
+            A metric map considers a two-dimensional space in which it places objects. The
+            objects are placed with precise coordinates.
+
+            This representation is convenient and natural, but \emph{sensitive to noise}
+            and \emph{difficult to calculate the distances precisely}.
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{tubemap}
+            \end{center}
+
+            \small
+            A topological map only considers places and
+            relations between them. Often, the distances between places
+            are stored.
+
+            The map is typically a \textbf{graph}, in which the nodes
+            corresponds to places and arcs correspond to the paths.
+        \end{column}
+    \end{columns}
+
+    \normalsize
+
+    \pause
+    \textbf{Cell decomposition} can be used to transform a metric map into a
+    topological one. More on that in a moment.
+
+\end{frame}
+
+\imageframe{topo-metric}
+\imageframe{tubemap-2}
+
 \begin{frame}{Global vs local path planning}
 
         \begin{tikzpicture}[>=latex]
@@ -752,8 +796,8 @@ Odometry is not to be trusted:
 
             \only<1>{
             \begin{itemize}
-                \item Short horizon
-                \item Dynamic environment (use of sensors)
+                \item short horizon
+                \item dynamic environment (use of sensors)
             \end{itemize}
             }
             \only<2> {
@@ -767,144 +811,156 @@ Odometry is not to be trusted:
 
 \begin{frame}{Global path planning}
 
-Assumptions
+\emph{Assumptions}:
 
 \begin{itemize}
-\item There exists a good enough map of the environment for navigation
+\item A good enough map of the environment is available for navigation
   (topological or metric or a mixture between both).
 \item The robot knows where it is on the map (using for example GPS or Monte
   Carlo localisation).
 \end{itemize}
 
-First step:
+\pause
+
+\emph{First step}: Build a representation of the environment using a \textbf{road-map (graph)},
+        \textbf{cells} or a \textbf{potential field}. The resulting
+        \emph{discrete} locations or cells allow then to use standard planning algorithms.
+
+Possible algorithms:
 
 \begin{itemize}
-\item Representation of the environment by a road-map (graph), cells or a
-  potential field. The resulting discrete locations or cells allow then
-  to use standard planning algorithms.
-\end{itemize}
-
-Examples:
-
-\begin{itemize}
-\item Visibility Graph
-\item Voronoi Diagram
-\item Cell Decomposition -\textgreater{} Connectivity Graph
-\item Potential Field
+\item Visibility graph
+\item Voronoi diagram
+\item Cell decomposition $\rightarrow$ connectivity graph
+\item Potential field
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Path Planning: Configuration Space}
 
-\begin{itemize}
-\item State or configuration $q$ can be described with $k$ values
-  $qi$
+     The state or configuration $q$ of a robot can be described with $k$ values $q_i$.
+        For example, for a two-link planar robot, $\theta_1$ and $\theta_2$:
 
-    \begin{center}
-        \includegraphics[width=0.6\linewidth]{configurationspace}
-    \end{center}
+        \begin{center}
+        \resizebox{0.9\linewidth}{!}{
+        \begin{tikzpicture}[>=latex]
+            \only<1>{
+            \node at (0,0){\includegraphics[width=\linewidth]{configurationspace0}};
+            }
+            \only<2->{
+            \node at (0,0) {\includegraphics[width=\linewidth]{configurationspace}};
 
-\item \textbf{Configuration space} of a robot: a n-dimensional map of free
-  and occupied states.
-\end{itemize}
+            \draw[thick,->] (5.5,-1) -- (4,-0.7) node[at start,
+            right,align=left] {\footnotesize these regions\\\footnotesize correspond \\ \footnotesize to colliding $(\theta_1,\theta_2)$};
+            \draw[thick,->] (5.5,-1) -- (3,-1.2);
+            }
+        \end{tikzpicture}
+    }
+        \end{center}
+
+\onslide<2->
+    Each $q$ is a point in a $k$-dimensional space called the
+    \textbf{configuration space} $C$ of the robot.
+
+    \onslide<3>
+    We can map as well obstacles to \emph{configuration space obstacles} $O$.
+
+    The \emph{free space} (where the robot is safe to move) is then $F = C - O$.
 
 \end{frame}
 
 \begin{frame}{Graphs}
 
-Maps used by robots can be seen as interconnected nodes.
+    Maps used by robots can be seen as interconnected nodes.
 
-Areas with paths between them are called \textbf{graphs.}
+    Areas with paths between them are represented as \textbf{graphs.}
 
-\begin{itemize}
-\item \textbf{In maths, the paths are called edges, the areas are called
-  nodes.}
-\end{itemize}
+    \begin{itemize}
+        \item In maths, the paths are called edges, the areas are called
+            nodes.
+    \end{itemize}
 
-For example: a visibility graph
+    \pause
 
-    \begin{center}
-        \includegraphics[width=0.6\linewidth]{visibilitygraph}
-    \end{center}
+    For example: a \textbf{visibility graph}
 
-Edges between nodes are the lines of sight from each corner to an
-obstacle to every other visible corner.
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=\linewidth]{visibilitygraph}
+            \end{center}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            Edges between nodes are the lines of sight from each corner to an
+            obstacle to every other visible corner.
+        \end{column}
+    \end{columns}
+
 
 \end{frame}
 
 \begin{frame}{Graphs: Voronoi graphs}
 
-\begin{itemize}
-\item Voronoi graph, distance to obstacles from every nodes is maximal.
+    \href{http://alexbeutel.com/webgl/voronoi.html}{Voronoi graph}: distance to obstacles from every nodes is maximal.
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{voronoi}
+        \includegraphics[width=0.7\linewidth]{voronoi}
     \end{center}
 
-\item Works well as the robot's sensors get a get view of the environment.
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Graphs: Voronoi diagram}
-
-\begin{itemize}
-\item SysQuake demo
-\end{itemize}
+    (by moving along the edges of a Voronoi graph, the robot ensures it is
+    always as far as possible from obstacles)
 
 \end{frame}
 
 \begin{frame}{Graphs: Cell Decomposition}
 
-Divide space into simple, connected regions called cells
+    \only<1>{
+    Divide space into simple, connected regions called \textbf{cells}.
 
-Determine which open sells are adjacent and construct a connectivity
-graph
+    Determine which open cells are adjacent and construct a \textbf{connectivity
+    graph}.
 
-Find cells in which the initial and goal configuration (state) lie and
-search for a path in the connectivity graph to join them.
+    Find cells in which the initial and goal configuration (state) lie and
+    search for a path in the connectivity graph to join them.
 
-From the sequence of cells found with an appropriate search algorithm,
-compute a path within each cell.
+    From the sequence of cells found with an appropriate search algorithm,
+    compute a path within each cell.
 
-\begin{itemize}
-\item e.g. passing through the midpoints of cell boundaries or by sequence
-  of wall following movements.
-\end{itemize}
+    \small
+        \eg passing through the midpoints of cell boundaries or by sequence
+            of wall following movements.
 
-\end{frame}
+    }
+    \only<2>{
 
-\begin{frame}{Graphs: Cell Decomposition}
-
-Example: exact cell decomposition
+    Example: exact cell decomposition
 
     \begin{center}
-        \includegraphics[width=0.8\linewidth]{exactcelldecomposition}
+        \includegraphics[width=0.6\linewidth]{exactcelldecomposition}
     \end{center}
 
-\end{frame}
+    }
+    \only<3>{
 
-\begin{frame}{Graphs: Cell Decomposition}
-
-Example: approximate cell decomposition
+    Example: approximate cell decomposition
 
     \begin{center}
-        \includegraphics[width=0.4\linewidth]{celldecomposition1}
-        \hspace{1em}
-        \includegraphics[width=0.4\linewidth]{celldecomposition2}
+        \includegraphics[width=0.5\linewidth]{celldecomposition1}
+        \includegraphics[width=0.5\linewidth]{celldecomposition2}
     \end{center}
 
-\end{frame}
+    }
+    \only<4>{
 
-\begin{frame}{Graphs: Cell Decomposition}
-
-Adaptive cell decomposition: changes the size of each cell according
-  to the detail needed.
+    Adaptive cell decomposition: changes the size of each cell according
+    to the detail needed.
 
     \begin{center}
         \includegraphics[width=0.8\linewidth]{adaptivecelldecomposition}
     \end{center}
+}
 \end{frame}
 
 \begin{frame}{Graphs: representing}
@@ -915,20 +971,40 @@ Adaptive cell decomposition: changes the size of each cell according
 \item Graphs can be represented as a matrix:
 \end{itemize}
 
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
     \begin{tikzpicture}[every edge quotes/.style={auto=right}]
         \node at (0,0) (A) {$A$};
-        \node at (2,1) (B) {$B$};
-        \node at (0,2) (C) {$C$} edge["6m",left] (A)
-                                 edge["5m"] (B);
+        \node at (1,1.5) (B) {$B$};
+        \node at (-1,2) (C) {$C$} edge["6m",left] (A)
+                                 edge node[above] {5m} (B);
         \node at (1,4) (D) {$D$} edge["10m"] (C);
         \node at (2.5,3.5) (E) {$E$} edge["4m"] (D)
                                      edge["8m"] (B)
-                                     edge["25m"] (A);
+                                     edge[bend left] node[right] {25m} (A);
 
         %\draw (A) --[label=25m] (E) --[label=4m] (D) --[label=10m] (B) --[label=5m] (C) --[label=6m] (A);
         %\draw (E) --[label=8m] (B);
     \end{tikzpicture}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{tabular}{llllll}
+                           & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} &
+                           \textbf{E} \\
+                           \textbf{A} & 0          & -          & 6          & -
+                           & 25         \\
+                           \textbf{B} & -          & 0          & 5          & -
+                           & 8          \\
+                           \textbf{C} & 6          & 5          & 0          &
+                           10         & -          \\
+                           \textbf{D} & -          & -          & 10         & 0
+                           & 4          \\
+                           \textbf{E} & 25         & 8          & -          & 4
+                           & 0         
+            \end{tabular}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
@@ -952,10 +1028,10 @@ Many different search algorithms exist
 
 \begin{frame}[fragile]{Searching graphs - Dijkstra}
 
-\begin{pythoncode}
+\begin{pythoncode*}{frame=none,escapeinside=||}
 def dijkstra(graph, weights, start_node):
 
-  dist = {} # map {node -> distance to 'start_node'}
+  dist = {} # maps nodes to distance to 'start_node'
   previous = {} # needed to reconstruct shortest path
 
   for node in graph:
@@ -973,7 +1049,7 @@ def dijkstra(graph, weights, start_node):
         previous[v] = u
 
   return dist, previous
-\end{pythoncode}
+\end{pythoncode*}
 \end{frame}
 
 
@@ -997,14 +1073,17 @@ Return empty if no path exists.
 \begin{frame}{Dijkstra's algorithm: illustration}
 
     \begin{center}
-    \video[1]{0.6\linewidth}{figs/part6/dijkstra.mp4}
+        \video[1]{0.4\linewidth}{figs/part6/dijkstra.mp4}
+
+        \source{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Wikipedia}
     \end{center}
 
-Dijkstra search for finding path between start (red) and goal (green)
-position (\href{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Wiki
-Commons}). Note how Dijkstra is expanding its search out from the
-starting position, without knowledge about which nodes could bring it
-closer to the goal.
+    Dijkstra search between start (red) and goal (green)
+    positions.
+
+    Note how Dijkstra is expanding its search out from the
+    starting position, without knowledge about which nodes could bring it
+    closer to the goal.
 
 \end{frame}
 
@@ -1013,19 +1092,20 @@ closer to the goal.
 Maps can be huge
 
 \begin{itemize}
-\item For example, 100,000 m2 shopping mall, with a 10x10cm map
-  resolution, requires 10 million nodes on the graph.
+    \item For example, 10,000 $m^2$ shopping mall ($\sim$ Marshmills' Sainsburys), with a 10x10cm map
+    resolution, requires $10^{10}$ = 10 billion nodes on the graph!
 \end{itemize}
 
-Search time can be problematic
+Search time can be problematic:
 
 \begin{itemize}
-\item Dijkstra has order $O$(N+V2). For example, for a map with 107
-  nodes and 108 vertices, it can take 107+102x8 ≈ 1016 calculations to
+\item Dijkstra has a complexity of $O(N+V^2)$. For example, for a map with
+    $10^7$ nodes and $10^8$ vertices, it can take $10^7+10^{2\times 8} \sim
+        10^{16}$ calculations to
   find a shortest path between two points.
 \item Some implementations are much more efficient. A* search is at worst
   the same as Dijkstra, but can be polynomial in the number of nodes
-  $O$(Nk) when a good heuristic is used. For example, if you can
+  $O(N^k)$ when a good heuristic is used. For example, if you can
   choose between two nodes to explore, take the node closer to the goal.
 \end{itemize}
 
@@ -1034,15 +1114,16 @@ Search time can be problematic
 \begin{frame}{A* algorithm - illustration}
 
     \begin{center}
-        \video[1]{0.6\linewidth}{figs/part6/astar.mp4}
+        \video[1]{0.4\linewidth}{figs/part6/astar.mp4}
+
+        \source{http://en.wikipedia.org/wiki/A*_search_algorithm}{Wikipedia}
     \end{center}
 
-A* search for finding path between start and goal position. A* uses a
-heuristic (here the distance to the goal
-\href{http://en.wikipedia.org/wiki/A*_search_algorithm}{--} it first
-expands to nodes closer to the goal) which gives it a chance of finding
-the solution in less time.
-\href{http://en.wikipedia.org/wiki/A*_search_algorithm}{(Wiki Commons})
+    A* search for finding path between start and goal position.
+
+    A* uses a \textbf{heuristic} (here the distance to the goal) to guide the
+    exploration (first expand to nodes closer to the goal). This gives a chance of finding
+    the solution in less time.
 
 \end{frame}
 
@@ -1050,62 +1131,66 @@ the solution in less time.
 
 \begin{frame}{Potential Field Path Planning}
 
-Robot is treated as a \emph{point under the influence} of an artificial
-potential field.
+    \only<1>{
+        Robot is treated as a \emph{point under the influence} of an artificial
+    potential field.
 
-\begin{itemize}
-\item Generated robot movement is similar to a ball rolling down the hill
-\item Goal generates attractive force
-\item Obstacle are repulsive forces.
-\end{itemize}
+    \begin{itemize}
+        \item Generated robot movement is similar to a ball rolling down the hill
+        \item Goal generates attractive force
+        \item Obstacle are repulsive forces
+    \end{itemize}
 
-Needed
+    Needed:
 
-\begin{itemize}
-\item Location of robot.
-\item Location of obstacles.
-\item A good way is for these to be on a metric map.
-\end{itemize}
+    \begin{itemize}
+        \item Location of robot
+        \item Location of obstacles
+        \item $\Rightarrow$ a metric map is well suited
+    \end{itemize}
 
+    }
+    \only<2>{
+
+        \begin{center}
+            \includegraphics[width=0.4\linewidth]{potentialfields1}
+            \includegraphics[width=0.4\linewidth]{potentialfields3}
+
+            \includegraphics[width=0.4\linewidth]{potentialfields2}
+        \end{center}
+
+    }
 \end{frame}
 
-\begin{frame}{Potential Field Path Planning}
+\begin{frame}{Potential field generation}
 
-    \begin{center}
-        \includegraphics[width=0.4\linewidth]{potentialfields1}
+    Generation of potential field function $U(q)$
 
-        \includegraphics[width=0.4\linewidth]{potentialfields2}
-        \includegraphics[width=0.4\linewidth]{potentialfields3}
-    \end{center}
-\end{frame}
+    \begin{itemize}
+        \item attracting (goal) and repulsing (obstacle) fields
+        \item summing up the fields
+        \item functions must be
+            \href{http://en.wikipedia.org/wiki/Differentiable_function}{differentiable}
+    \end{itemize}
 
-\begin{frame}{Potential Field Path Planning}
+    \pause
 
-Potential field generation
+    Generate artificial force field $F(q)$
 
-Generation of potential field function $U(q)$
-
-\begin{itemize}
-\item attracting (goal) and repulsing (obstacle) fields
-\item summing up the fields
-\item functions must be
-  \href{http://en.wikipedia.org/wiki/Differentiable_function}{differentiable}
-\end{itemize}
-
-Generate artificial force field $F(q)$
-
-\[
-    F(q) = -\nabla U(q) = -\nabla U_{att}(q) - \nabla U_{rep}(q) =
+    \[
+        F(q) = -\nabla U(q) = -\nabla U_{att}(q) - \nabla U_{rep}(q) =
     \begin{bmatrix}\frac{\partial U}{x} \\ \frac{\partial U}{y}\end{bmatrix}
-\]
+        \]
 
-Set robot speed $(v_x, v_y)$ proportional to the force
-$F(q)$ generated by the field
+    \pause
 
-\begin{itemize}
-\item the force field drives the robot to the goal
-\item if robot is assumed to be a point mass
-\end{itemize}
+    Set robot speed $(v_x, v_y)$ proportional to the force
+    $F(q)$ generated by the field
+
+    \begin{itemize}
+        \item the force field drives the robot to the goal
+        \item if robot is assumed to be a point mass
+    \end{itemize}
 
 
 \end{frame}
@@ -1116,8 +1201,19 @@ Attractive potential field
 
 \begin{itemize}
 \item For example, a parabolic function representing the Euclidean distance
-  to the goal
+    $\rho = || q - q_{goal} ||$ to the goal:
+
+        \[
+            U_{att}(q) = \frac{1}{2} k_{att} \cdot \rho_{goal}^2(q)
+            \]
+
 \item Attracting force converges linearly towards 0 (goal)
+
+    \begin{align*}
+        F_{att}(q) &= - \nabla U_{att}(q) \\
+                &= -k_{att}\cdot \rho_{goal}(q) \nabla \rho_{goal}(q) \\
+                &= -k_{att}\cdot (q - q_{goal})
+    \end{align*}
 \end{itemize}
 
 \end{frame}
@@ -1130,65 +1226,79 @@ Should generate a barrier around all the obstacle
 
 \begin{itemize}
 \item strong if close to the obstacle
-\item no influence if far from the obstacle
-\item Field is positive or zero and \emph{tends to infinity} as q gets
-  closer to the object
+\item no influence if far from the obstacle:
+    \[
+        U_{rep}(q) = \left\{\begin{matrix}
+                            \frac{1}{2}k_{rep}(\frac{1}{\rho(q)} -
+                            \frac{1}{\rho_0})^2 &  \text{if }
+                            \rho(q)\bubblemark{rhoq} <  \rho_0 \\ 
+                            0 & \text{if } \rho(q) \geq \rho_0 
+                        \end{matrix}\right.
+    \]
+\item field is positive or zero and \emph{tends to infinity} as q gets
+  closer to the object:
+    \[
+        F_{rep}(q) = -\nabla U_{rep}(q) = \left\{\begin{matrix}
+            k_{rep}(\frac{1}{\rho(q)} - \frac{1}{\rho_0}) \cdot \frac{1}{\rho(q)^2} &  \text{if }  \rho(q) <  \rho_0 \\ 
+                                              0 & \text{if } \rho(q) \geq \rho_0 
+                                          \end{matrix}\right.
+    \]
 \end{itemize}
 
+    \bubble<1>{rhoq}{distance to obstacle}
 \end{frame}
 
 \begin{frame}{Potential Field Path Planning}
 
-Notes:
+    Notes:
 
-\begin{itemize}
-\item Local minima problem exists: robot can get stuck in places on the map
-  where the potential field has a local dip.
-\item problem is getting more complex if the robot is not considered as a
-  point mass
-\item If objects are convex there exists situations where several minimal
-  distances exist ® can result in oscillations
-\item Robot path oscillates, e.g. in narrow passages.
-\end{itemize}
+    \begin{itemize}
+        \item \textbf{Local minima problem} exists: robot can get stuck in places on the map
+            where the potential field has a local dip.
+        \item problem is getting more complex if the robot is not considered as a
+            point mass
+        \item If objects are convex there exists situations where several minimal
+            distances exist $\rightarrow$ can result in oscillations
+        \item Robot path oscillates, \eg in narrow passages.
+    \end{itemize}
 
-Sysquake demo
 
-Videos
+    Videos:
 
-\begin{itemize}
-\item \url{http://www.youtube.com/watch?v=DxzRYYMjxKY}
-\item \url{http://www.youtube.com/watch?v=JnPfu7xHNt4}
-\end{itemize}
+    \begin{itemize}
+        \item \url{http://www.youtube.com/watch?v=DxzRYYMjxKY}
+        \item \url{http://www.youtube.com/watch?v=JnPfu7xHNt4}
+    \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Potential Field Path Planning}
+\begin{frame}{Extended Potential Field Path Planning}
 
-Extended Potential Field Path Planning
+    Additionally a \textbf{rotation potential field} and a \textbf{task
+    potential field} are introduced.
 
-Additionally a \emph{rotation potential field} and a \emph{task
-potential field} in introduced
+    \vspace{1em}
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
-Rotation potential field
 
-\begin{itemize}
-\item force is also a function of robots orientation to the obstacle
-\end{itemize}
+            \textbf{Rotation potential field}
 
-Task potential field
+            \begin{itemize}
+                \item force is also a function of robots orientation to the obstacle
+            \end{itemize}
 
-\begin{itemize}
-\item Filters out the obstacles that should not influence the robots
-  movements, i.e. only the obstacles in the sector Z in front of the
-  robot are considered
-\end{itemize}
-            
+            \textbf{Task potential field}
+
+            \begin{itemize}
+                \item filters out the obstacles that should not influence the robots
+                    movements, \ie only the obstacles in front of the robot are considered
+            \end{itemize}
+
         \end{column}
         \begin{column}{0.5\linewidth}
             \begin{center}
-                \includegraphics[width=0.8\linewidth]{potentialfield}
+                \includegraphics[width=\linewidth]{potentialfield}
             \end{center}
         \end{column}
     \end{columns}
@@ -1200,40 +1310,56 @@ Task potential field
 \begin{frame}{Grassfire algorithm}
 
 \begin{itemize}
-\item Starting from a metric map, a wave front is expanded around the goal.
-\item Goal is reaches by travelling on descending values.
+    \item Starting from a metric map, a \textbf{wave front} is expanded around the goal.
+\item Goal is reached by travelling on descending values.
 \end{itemize}
 
     \begin{center}
-        \includegraphics[width=0.6\linewidth]{grassfire}
+        \includegraphics[width=0.7\linewidth]{grassfire}
     \end{center}
 \end{frame}
 
 \begin{frame}{Grassfire algorithm}
+    \begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+15 & 14 & 13                        & 12                       & 11                       & 10 & 7 & 8                         & 9                        & 10                       & 11                       & 10 \\ \hline
+14 & 13 & \cellcolor[HTML]{32CB00}S & 11                       & 10                       & 9  & 6 & \cellcolor[HTML]{000000}  & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & 9  \\ \hline
+13 & 12 & 11                        & 10                       & 9                        & 8  & 5 & 4                         & 5                        & 6                        & 7                        & 8  \\ \hline
+12 & 11 & 10                        & 9                        & 8                        & 5  & 4 & 3                         & 4                        & 5                        & 6                        & 7  \\ \hline
+11 & 10 & 9                         & \cellcolor[HTML]{000000} & \cellcolor[HTML]{000000} & 4  & 3 & 2                         & 3                        & 4                        & 5                        & 6  \\ \hline
+10 & 9  & 8                         & 7                        & \cellcolor[HTML]{000000} & 3  & 2 & 1                         & 2                        & \cellcolor[HTML]{000000} & 6                        & 7  \\ \hline
+9  & 8  & 7                         & 6                        & \cellcolor[HTML]{000000} & 2  & 1 & \cellcolor[HTML]{FE0000}G & 1                        & \cellcolor[HTML]{000000} & 7                        & 8  \\ \hline
+8  & 7  & 6                         & 5                        & 4                        & 3  & 2 & 1                         & 2                        & \cellcolor[HTML]{000000} & 8                        & 9  \\ \hline
+9  & 8  & 7                         & 6                        & 5                        & 4  & 3 & 2                         & 3                        & \cellcolor[HTML]{000000} & 9                        & 10 \\ \hline
+10 & 9  & 8                         & 7                        & 6                        & 5  & 4 & 3                         & 4                        & \cellcolor[HTML]{000000} & 10                       & 11 \\ \hline
+\end{tabular}
+    \end{center}
 
 \end{frame}
 
-\imageframe{grassfire2}
+\imageframe[scale=0.9]{grassfire2}
 
 \begin{frame}[fragile]{Grassfire algorithm}
 
 \begin{pythoncode}
 
-def grassfire( M, goal )
-  Q = goal # Put goal in queue
-  M(goal) := 0 # Set goal value to 0
+def grassfire(M, goal):
+    Q.push(goal)
+    M[goal] = 0 # set goal value to 0
 
-  while Q is not empty: # Do until map filled
-    a := dequeue from Q
-    for n := all neighbours of a AND if neighbour no value yet
-      if n is not obstacle
-        Q := Q enqueue n
-        M(n) = M(a) + 1
+    while not Q.empty(): # loop until map filled
+        a = Q.pop()
+
+        for n in neighbours(a):
+            if not n in M and not is_obstacle(n):
+                Q.push(n)
+                M[n] = M[a] + 1
+    return M
 \end{pythoncode}
 
-Q is a
-\href{http://en.wikipedia.org/wiki/Queue_(abstract_data_type)}{queue
-data structure}, a first-in first-out list. The queue keeps track of
+Q is a \href{http://en.wikipedia.org/wiki/Queue_(abstract_data_type)}{queue
+data structure}, a first-in first-out (fifo) list. The queue keeps track of
 which locations on the map still need to be visited.
 
 \end{frame}
