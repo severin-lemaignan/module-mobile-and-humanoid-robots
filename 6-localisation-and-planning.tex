@@ -154,13 +154,14 @@ nature, such as picking a safe path or determining where to go next.
             \large
             \begin{align*}
                 S_t &= \{s_t^i \quad|\quad i = 1\ldots N\} \\
-                s^i &= \{\mathbf{x}^i, w^i\} \text{ with } \mathbf{x}^i = \{x^i, y^i, \theta^i\}
+                s^i &= \{\mathbf{x}^i, w^i\} \text{ with } \mathbf{x}^i =
+                \colvec{x^i \\ y^i \\ \theta^i}
             \end{align*}
             \normalsize
-        \item<+-> For small maps, $N$ is in the hundreds, for larger maps you
-            can have thousands of particles.
         \item<+-> Each particle $s^i$ contains the pose of the particle and a weight $w^i$.
         \item<+-> The sum of all weights is 1: \[ \sum_{i=1}^N w^i = 1 \]
+        \item<+-> For small maps, $N$ is in the hundreds, for larger maps you
+            can have thousands of particles.
     \end{itemize}
 
 \end{frame}
@@ -172,12 +173,11 @@ nature, such as picking a safe path or determining where to go next.
     \begin{itemize}
         \item If the robot's position is not known, they are distributed randomly
             across the map with a probability $p=\frac{1}{N}$ (\emph{uniform
-            distribution}). \textbf{Global localisation}.
+            distribution}).
             \pause
         \item If the robot's position is available, the initial particle
             distribution could be Gaussian around the robot (\emph{normal
-            distribution}). \textbf{Continuous localisation} $\equiv$
-            \textbf{Tracking}.
+            distribution}).
     \end{itemize}
 
     \pause 
@@ -192,42 +192,12 @@ nature, such as picking a safe path or determining where to go next.
 
 \end{frame}
 
-\begin{frame}{Monte-Carlo Localisation -- Prediction phase}
-
-The robot performs an \textbf{action.} All $N$ particles are
-    updated as follows:
-    \Large
-        \[ 
-        \bubblemark{newp}p(s_t^i) = \sum_{j=1}^N
-        p(l_t{}^j\bubblemark[0pt]{motionmodel}|l_{t-1}{}^i, a) \cdot p(s\bubblemark[0pt]{oldp}_{t-1}{}^i)
-        \]
-    \normalsize
-    \begin{columns}
-        \begin{column}{0.5\linewidth}
-Example: repeated application of the prediction rule leads to gradual
-  loss of pose accuracy.
-        \end{column}
-        \begin{column}{0.5\linewidth}
-            \begin{center}
-                \includegraphics[width=\linewidth]{mcl_prediction}
-            \end{center}
-        \end{column}
-    \end{columns}
-
-    \bubble<1>[40][1][6.5cm]{motionmodel}{Motion model: what is the probability of ending up in the location of
-particle $s_t$ after doing action $a$ at the location of
-    particle $s_{t-1}$}
-
-    \bubble<1>[130][0.5][3cm]{oldp}{Belief of $i^{th}$ particle at time $t-1$}
-
-    \bubble<1>[0]{newp}{Updated belief of particle $i$}
-
-\end{frame}
-
 \begin{frame}{Monte-Carlo Loclaisation - Prediction phase}
 
-The prediction phase \textbf{essentially moves all particles}.
+The prediction phase \textbf{essentially moves all particles} along with the
+robot.
 
+    \only<1-3>{
 Example: if the robot moves 10cm right and turn 10˚ counterclockwise, then all particles are
 updated:
     \Large
@@ -239,7 +209,7 @@ updated:
 \bubble<1>[90]{oldnochange}{Note, the weight is not changed}
 \pause
 
-    This allows for a motion model to be implemented, by adding some noise.
+    This allows for a \textbf{motion model} to be implemented, by adding some noise.
 
     \only<2>{
     \large
@@ -253,11 +223,39 @@ updated:
 
     \only<3>{
     This motion model should be based on the kinematics of your robot.
-    \eg for a differential drive robot you would have a pretty accurate
+    \eg for a differential drive robot you can have a good
     idea of how imprecise it is.
     }
+    }
+    \only<4>{
+    Formally, if the robot performs an action $a$, all $N$ particles are
+    updated as follows:
+        \Large
+        \[ 
+        \mathbf{x}_t^i =
+        p(\mathbf{x}_t{}^i\bubblemark[0pt]{motionmodel}|\mathbf{x}_{t-1}{}^i, a)
+        \]
+    \normalsize
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 
+            \vspace{1em}
 
+        Example: repeated application of the prediction rule leads to gradual
+          loss of pose accuracy:
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.7\linewidth]{mcl_prediction}
+            \end{center}
+        \end{column}
+    \end{columns}
+
+    \bubble<4>[25][1][6.5cm]{motionmodel}{Motion model: what is the probability of ending up in the location of
+particle $s_t$ after doing action $a$ at the location of
+    particle $s_{t-1}$}
+
+    }
 \end{frame}
 
 \begin{frame}{Monte-Carlo Localisation -- Update phase}
@@ -369,25 +367,27 @@ for i in range(1, N):
 \onslide<2>
 \begin{pythoncode*}{frame=none,escapeinside=\%\%}
 while True:
-    # prediction phase
-    move_robot(x, y, %$\theta$%)
+    # 1- prediction phase
+    x, y, %$\theta$% = estimate_robot_position()
     for i in range(1,N):
-        move_particle(i, x, y, %$\theta$%) # adds noise as well -> motion model
+        move_particle(S[i], x, y, %$\theta$%) # adds noise as well -> motion model
 
-    # update phase (r: sensor reading)
+    # 2- update phase (z: sensor readings, m: map)
     n = 0
     for i in range(1,N):
-        S[i].w = likelihood(r, (S[i].x, S[i].y, S[i].%$\theta$%)) * S[i].w
+        S[i].w = likelihood(z, (S[i].x, S[i].y, S[i].%$\theta$%), m) * S[i].w
         n = n + S[i].w
-
     # normalise
     for i in range(1,N):
         S[i].w = S[i].w/n
 
-    # resample phase
+    # 3- resample phase
     S1 = best_particles() # particles with high S.w
     S2 = worst_particles() # particles with low S.w
-    replace_particles(S2, S1)
+    S = S - S2 + S1 # effectively duplicates good particles
+    # optionally, add a few new random particles
+    for i in range(1, N): # reset the weights
+        S[i].w = 1/N
 \end{pythoncode*}
 
 \end{overprint}
@@ -396,7 +396,14 @@ while True:
 \end{frame}
 
 \begin{frame}{Likelihood function}
-    How is \python{likelihood(r, x, y, theta)} implemented?
+    How is \python{likelihood(z, x, m)} implemented?
+
+    \begin{itemize}
+        \item \python{z}: the actual range measurements (sensor reading)
+        \item \python{x}: the candidate position of the robot (particle
+            location)
+        \item \python{m}: the map
+    \end{itemize}
 
 \end{frame}
 
@@ -405,6 +412,41 @@ while True:
 \imageframe[scale=0.8]{mcl_likelihood_2}
 \imageframe[scale=0.8]{mcl_likelihood_3}
 \imageframe[scale=0.8]{mcl_likelihood_4}
+\imageframe[scale=0.8]{mcl_likelihood_5}
+
+\begin{frame}[fragile]{Likelihood function}
+
+\begin{pythoncode*}{frame=none,escapeinside=||}
+
+def likelihood(z, x, m):
+
+    p = 1 # likelihood
+
+    for obs_range in z:
+        map_range = raycast(x,m)
+
+        pz = 0.0
+
+        # good, but noisy, hit -> normal distribution
+        err = obs_range - map_range
+        pz += z_hit * exp(-err|$^2$| / (2 * sigma_hit|$^2$|))
+
+        # + other types of measurement errors:
+        #    - likelihood of a short reading from unexpected objects
+        #    - likelihood of failures (black surface...)
+        #    - likelihood of random measurements (reflections...)
+        #
+        # => pz += p_short + p_failure + p_rand
+
+        p = p * pz
+
+    return p
+\end{pythoncode*}
+
+\end{frame}
+
+
+
 
 \begin{frame}{Position estimate}
 
@@ -417,29 +459,67 @@ while True:
     \]
 \end{frame}
 
-\begin{frame}{MCL -- Some properties}
+\begin{frame}{Global vs. Continuous Localisation}
 
-Light on memory and computational resources.
-
-\begin{itemize}
-\item Markov Localisation uses much more memory, as it needs to keep track
-  of belief at each location of the map even the ones that have a low
-  belief. This also results in a computationally expensive algorithm.
-\end{itemize}
-
-``Any time'' algorithm: you can interrupt the algorithm and still get an
-estimate out.
-
-Powerful, yet efficient.
-
-Easy to implement.
-
-Compared to Kalman filtering
+    The $N$ particles are distributed on the map
 
     \begin{itemize}
-        \item Kalman filtering doe snot work for multi-modal distributions of
-            the position estimate (\emph{data association problem})
+        \item If the robot's position is not known, they are distributed randomly
+            across the map with a probability $p=\frac{1}{N}$ (\emph{uniform
+            distribution}). \textbf{Global localisation}.
+
+        \item If the robot's position is available, the initial particle
+            distribution could be Gaussian around the robot (\emph{normal
+            distribution}). \textbf{Continuous localisation} $\equiv$
+            \textbf{Tracking}.
     \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Monte-Carlo Localisation -- Some properties}
+
+    \only<1>{
+    \begin{itemize}
+        \item Light on memory and computational resources.
+
+            \begin{itemize}
+                \item MCL draws inspiration from \emph{Markov Localisation}, but Markov
+                    Localisation uses much more memory as it needs to keep track
+                    of belief at each location of the map even the ones that have a low
+                    belief. This also results in a computationally expensive algorithm.
+            \end{itemize}
+
+        \item ``Any time'' algorithm: you can interrupt the algorithm and still get an
+            estimate out.
+
+        \item Powerful, yet efficient.
+
+        \item Easy to implement.
+
+    \end{itemize}
+    
+    }
+    \only<2>{
+    Compared to Kalman filtering:
+
+    \begin{itemize}
+        \item Kalman filtering does not work for multi-modal distributions of
+            the position estimate (\emph{data association problem})
+        \item Kalman filtering assume linear sensors/motion models
+        \item Kalman filtering is proved to be optimal
+    \end{itemize}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{mcl_dieter_fox_example}
+
+        \small
+        Example of bi-modal distribution arising from the symmetry of the
+        environment
+
+        \source{http://www.aaai.org/Papers/AAAI/1999/AAAI99-050.pdf}{Fox et
+        al., Monte Carlo Localization: Efficient Position Estimation for Mobile Robots}
+    \end{center}
+}
 \end{frame}
 
 \begin{frame}{Example: museum pose maintenance}
@@ -452,77 +532,166 @@ Monte Carlo using the ceiling of the Smithsonian museum
 
 \end{frame}
 
-\begin{frame}{Example: AIBO localising}
+\begin{frame}{Monte-Carlo Localisation -- Further reading}
 
-Estimating the robots position using Rao-Blackwellised particle filters
+    \begin{itemize}
+        \item Thrun, Burgard, Fox, \emph{Probabilistic Robotics}
+        \item Dellaert, Fox, Burgard, Thrun,
+            \href{http://www.ri.cmu.edu/publication_view.html?pub_id=533}{Monte
+            Carlo Localization for Mobile Robots}, \emph{IEEE International
+            Conference on Robotics and Automation (ICRA99)}, May, 1999.
 
-\begin{itemize}
-\item D. Fox, http://www.cs.washington.edu/ai/Mobile\_Robotics/Aibo
-\end{itemize}
+    \end{itemize}
 
-\end{frame}
+    Videos of examples of MCL
 
-\begin{frame}{MCL -- Further reading}
-
-Frank Dellaert,~Dieter Fox, Wolfram Burgard, and~Sebastian Thrun,
-"\href{http://www.ri.cmu.edu/publication_view.html?pub_id=533}{Monte
-Carlo Localization for Mobile Robots}"~\emph{IEEE International
-Conference on Robotics and Automation (ICRA99)}, May, 1999.
-
-Videos of examples of MCL
-
-\begin{itemize}
-\item \url{http://www.youtube.com/watch?v=uU_1c_CxB1g}
-\item \url{http://www.youtube.com/watch?v=7K8dZwqBSSA}
-\item \url{https://www.youtube.com/watch?v=oKUYj1FWzN4}
-\item \url{https://www.youtube.com/watch?v=lCXv4yOcwf8}
-\end{itemize}
+    \begin{itemize}
+        \item \url{http://www.youtube.com/watch?v=uU_1c_CxB1g}
+        \item \url{http://www.youtube.com/watch?v=7K8dZwqBSSA}
+        \item \url{https://www.youtube.com/watch?v=oKUYj1FWzN4}
+        \item \url{https://www.youtube.com/watch?v=lCXv4yOcwf8}
+    \end{itemize}
 
 \end{frame}
 
-\section{SLAM: simultaneous localisation and mapping}
+\section{SLAM}
 
-\begin{frame}{SLAM simultaneous localisation and mapping}
 
-Content for these slides is taken from
-\href{http://www.computerrobotvision.org/2010/slam_camp.html}{Jack
-Collier}
+\begin{frame}{What is Simultaneous Localisation And Mapping?}
+
+    Given an unknown environment and vehicle pose:
+
+    \begin{itemize}
+        \item Move through the environment
+        \item Estimate the robot pose
+        \item Generate a map of environmental features
+    \end{itemize}
+
+    \begin{enumerate}
+        \item Use the robot pose estimate to improve the map landmark position
+            estimates
+
+        \item Use the landmark estimates to improve the robot pose estimate
+
+        \item Repeat
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Probabilistic Basis of SLAM}
+
+    \begin{overprint}
+    \onslide<1>
+    Given:
+    \begin{itemize}
+        \item Robot control signal $u_k$ (or measurement)
+        \item A set of feature observations $z_k$ (sensor measurements)
+    \end{itemize}
+
+    Estimate:
+
+    \begin{itemize}
+        \item Map of landmarks $M_{k+1}$
+        \item Robot Pose $V_{k+1}$
+    \end{itemize}
+
+    Sources of Error:
+
+    \begin{itemize}
+        \item Control signal
+        \item Mapping sensor
+        \item Motion model
+        \item Observation model
+    \end{itemize}
+
+    \onslide<2>
+        \vspace{3em}
+
+        \Large
+        \[
+            p(V_{k+1}, M_{k+1} | z_k, u_k)
+        \]
+
+        \normalsize
+
+        \vspace{2em}
+
+        $\Rightarrow$ estimate the joint probability of $V_{k+1}$ and $M_{k+1}$ conditioned on
+        $z_k$ and $u_k$.
+
+    \onslide<3->
+
+        \vspace{3em}
+        \large
+        \begin{align*}
+            p&(V_{k+1}, M_{k+1} | z_k, u_k) = \\
+            &\eta \highlight<6>{p(z_{k+1} |\bubblemark[0pt]{sensormod} V_{k+1}, M_{k+1})} \int \highlight<5>{p(V_{k+1} |\bubblemark[0pt]{motionmod} V_k, u_k)} \highlight<4>{p(V_k, M_k |\bubblemark[0pt]{prior} z_k, u_k)} \mathrm{d} v_k
+        \end{align*}
+
+        \bubble<4>[90][0.5][4cm]{prior}{Prior state and covariance estimates from the last filter iteration}
+        \bubble<5>[90][0.5][6cm]{motionmod}{Probabilistic motion model estimates the new
+        vehicle pose covariance estimates from the prior estimate and the
+        control}
+        \bubble<6>[90][0.5][4cm]{sensormod}{Measurement model gives the expected value of the feature observations}
+    \end{overprint}
+
+\source{http://www.computerrobotvision.org/2010/slam_camp/collier_intro.pdf}{Jack Collier}
 
 \end{frame}
 
-\begin{frame}{What is SLAM?}
+\begin{frame}{SLAM families}
 
-Given an unknown environment and vehicle pose:
-
-\begin{itemize}
-\item Move through the environment
-\item Estimate the robot pose
-\item Generate a map of environmental features
-\end{itemize}
-
-Use the robot pose estimate to improve the map landmark position
-estimates
-
-Use the landmark estimates to improve the robot pose estimate
-
+    \begin{itemize}
+        \item \emph{Kalman filtering}: \textbf{Extended KF (EKF) SLAM} + a few others
+        \item \emph{particle filtering}: Rao-Blackwellized particle filter
+            (\textbf{FastSLAM})
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Why is SLAM hard?}
 
-Chicken and egg problem
+\only<1>{
+    \textbf{Chicken and egg problem}
 
-\begin{itemize}
-\item If there is no map, how the robot localise itself. If the robot
+If there is no map, how the robot localise itself. If the robot
   doesn't know its location, how can it build up a map?
-\end{itemize}
 
-Odometry is not to be trusted
+Odometry is not to be trusted:
 
     \begin{center}
         \includegraphics[width=0.4\linewidth]{slam1}
         \hspace{1em}
         \includegraphics[width=0.4\linewidth]{slam2}
     \end{center}
+
+}
+    \only<2>{
+
+        \textbf{Loop closure}
+
+        \begin{columns}
+            \begin{column}{0.5\linewidth}
+
+                    \begin{itemize}
+                        \item Even with the best SLAM algorithm, pose
+                            uncertainty will increase as the vehicle moves
+                        \item This pose uncertainty means that landmark
+                            locations further from the map origin have a higher
+                            uncertainty
+                        \item \textbf{Revisiting a previously observed landmarks
+                            significantly reduces uncertainty in robot and
+                            landmark pose estimates}
+                    \end{itemize}
+
+            \end{column}
+            \begin{column}{0.5\linewidth}
+                \begin{center}
+                    \includegraphics[width=\linewidth]{loopclosure}
+                \end{center}
+            \end{column}
+        \end{columns}
+    }
+
+\source{http://www.computerrobotvision.org/2010/slam_camp/collier_intro.pdf}{Jack Collier}
 \end{frame}
 
 \begin{frame}[plain]
@@ -537,14 +706,16 @@ Odometry is not to be trusted
 
 \imageframe{mapping_pepper}
 
-\begin{frame}{Commercial applications}
+\videoframe[0.56]{figs/part6/samsung_slam_vacuum.mp4}
 
-\begin{itemize}
-\item \href{https://www.youtube.com/watch?v=bq5HZzGF3vQ}{Samsung vacuum
-  cleaning robot}
-\item \href{https://www.youtube.com/watch?v=bq5HZzGF3vQ}{iRobot having SLAM}
-\end{itemize}
+\begin{frame}{SLAM -- Further reading}
 
+    \begin{itemize}
+        \item Take a MSc Robotics next year!
+        \item \href{http://www.computerrobotvision.org/2010/slam_camp/collier_intro.pdf}{Jack
+            Collier introduction (!!) to SLAM}
+        \item Thrun, Burgard, Fox, \emph{Probabilistic Robotics}
+    \end{itemize}
 \end{frame}
 
 \section{Path planning}
@@ -998,6 +1169,8 @@ Extended Potential Field Path Planning
 Additionally a \emph{rotation potential field} and a \emph{task
 potential field} in introduced
 
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
 Rotation potential field
 
 \begin{itemize}
@@ -1011,6 +1184,14 @@ Task potential field
   movements, i.e. only the obstacles in the sector Z in front of the
   robot are considered
 \end{itemize}
+            
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics[width=0.8\linewidth]{potentialfield}
+            \end{center}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
