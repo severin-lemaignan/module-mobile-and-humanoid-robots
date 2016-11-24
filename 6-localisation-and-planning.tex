@@ -62,42 +62,50 @@
 
 \begin{frame}{Pose and navigation}
 
-Pose maintenance
+    \textbf{Pose maintenance}
 
-\begin{itemize}
-\item \textbf{Pose} (= position and orientation) \textbf{maintenance} is
-  keeping a precise as possible estimate of the robot's pose.
-\end{itemize}
+    \begin{itemize}
+        \item Pose (= position and orientation) maintenance is
+            keeping an as precise as possible estimate of the robot's pose.
+    \end{itemize}
 
-Getting from A to B.
+    \pause
 
-\begin{itemize}
-\item Different from inverse kinematics, where an efficient manner is
-  computed to get a robot in a certain state (position and orientation).
-  Inverse kinematics work on a small scale (\textless{} meter).
-\item Planning and navigation work on a larger scale (room, building,
-  roadmap, \ldots{}).
-\end{itemize}
+    \textbf{Planning: getting from A to B}
+
+    \begin{itemize}
+        \item A cognitive skill: given partial knowledge of the environment, a
+            goal and sensor readings, decide what to do to reach the goal as
+            efficiently and reliably as possible.
+
+        \item Different from inverse kinematics: IK \emph{locally} maps a
+            target state (position and orientation) in a global space (\eg
+            Cartesian space) to the robot's internal space (joint space, or
+            generally \emph{configuration space})
+
+        \item $\rightarrow$ IK work on a small scale (\textless{} meter) while
+            planning/navigation works on larger scale (room, building, roadmap,
+            \ldots{})
+
+    \end{itemize}
 
 \end{frame}
 
 \begin{frame}{Planning and navigation -- traditional approach}
 
-Today's industrial robots can operate \textbf{without any intelligence} because
-their environment is static and very structured.
+    Today's industrial robots can operate \textbf{without any intelligence} because
+    their environment is static and very structured.
 
-In mobile robotics, cognition and reasoning is primarily of geometric
-nature, such as picking a safe path or determining where to go next.
+    In mobile robotics, cognition and reasoning is primarily of geometric
+    nature, such as picking a safe path or determining where to go next.
 
-\begin{itemize}
-\item already been largely explored in literature for cases in which
-  complete information about the current situation and the environment
-  exists (e.g.
-  \href{http://en.wikipedia.org/wiki/Travelling_salesman_problem}{travelling
-  sales man problem} or
-  \href{http://en.wikipedia.org/wiki/Route_inspection_problem}{route
-  inspection problem}).
-\end{itemize}
+    $\rightarrow$ already been largely explored in literature for cases in
+    which complete information about the current situation and the environment
+    exists (e.g.
+    \href{http://en.wikipedia.org/wiki/Travelling_salesman_problem}{travelling
+    sales man problem} or
+    \href{http://en.wikipedia.org/wiki/Route_inspection_problem}{route
+    inspection problem}).
 
 \end{frame}
 
@@ -120,10 +128,10 @@ nature, such as picking a safe path or determining where to go next.
             Used when it to difficult to calculate exact results:
 
             \begin{itemize}
-                \item The system is too complex and calculating it through is too
-                    computationally expensive
-                \item There are too many variables and it is impossible to calculate all
-                    posibilities
+                \item the system is complex and calculating it through is too
+                    computationally expensive,
+                \item or, too many variables and it is impossible to calculate all
+                    possibilities (\emph{combinatorial explosion})
             \end{itemize}
 
 
@@ -148,8 +156,8 @@ nature, such as picking a safe path or determining where to go next.
 \begin{frame}{Monte-Carlo Localisation -- Introduction}
 
     \begin{itemize}
-        \item Monte-Carlo Localisation (MCL) is a \href{http://en.wikipedia.org/wiki/Particle_filter}{particle
-            filter}, which uses a set $S_t$ of $N$ particles at time
+        \item Monte-Carlo Localisation (MCL) is a \textbf{\href{http://en.wikipedia.org/wiki/Particle_filter}{particle
+            filter}}, which uses a set $S_t$ of $N$ particles at time
             $t$.
             \large
             \begin{align*}
@@ -158,7 +166,7 @@ nature, such as picking a safe path or determining where to go next.
                 \colvec{x^i \\ y^i \\ \theta^i}
             \end{align*}
             \normalsize
-        \item<+-> Each particle $s^i$ contains the pose of the particle and a weight $w^i$.
+        \item<+-> Each particle $s^i$ contains the pose of the particle $\mathbf{x}^i$ and a weight $w^i$.
         \item<+-> The sum of all weights is 1: \[ \sum_{i=1}^N w^i = 1 \]
         \item<+-> For small maps, $N$ is in the hundreds, for larger maps you
             can have thousands of particles.
@@ -423,7 +431,7 @@ def likelihood(z, x, m):
     p = 1 # likelihood
 
     for obs_range in z:
-        map_range = raycast(x,m)
+        map_range = raycast(x, bearing(z), m)
 
         pz = 0.0
 
@@ -567,6 +575,7 @@ Monte Carlo using the ceiling of the Smithsonian museum
         \item Generate a map of environmental features
     \end{itemize}
 
+    \pause
     \begin{enumerate}
         \item Use the robot pose estimate to improve the map landmark position
             estimates
@@ -583,7 +592,7 @@ Monte Carlo using the ceiling of the Smithsonian museum
     \onslide<1>
     Given:
     \begin{itemize}
-        \item Robot control signal $u_k$ (or measurement)
+        \item Robot control signal $u_k$ (or measurement $\rightarrow$ odometry)
         \item A set of feature observations $z_k$ (sensor measurements)
     \end{itemize}
 
@@ -598,9 +607,8 @@ Monte Carlo using the ceiling of the Smithsonian museum
 
     \begin{itemize}
         \item Control signal
-        \item Mapping sensor
         \item Motion model
-        \item Observation model
+        \item Sensor model
     \end{itemize}
 
     \onslide<2>
@@ -749,7 +757,7 @@ Odometry is not to be trusted:
             are stored.
 
             The map is typically a \textbf{graph}, in which the nodes
-            corresponds to places and arcs correspond to the paths.
+            corresponds to places and edges correspond to the paths.
         \end{column}
     \end{columns}
 
@@ -763,6 +771,39 @@ Odometry is not to be trusted:
 
 \imageframe{topo-metric}
 \imageframe{tubemap-2}
+
+\begin{frame}{Path Planning: Configuration Space}
+
+     The state or configuration $q$ of a robot can be described with $k$ values $q_i$.
+        For example, for a two-link planar robot, $\theta_1$ and $\theta_2$:
+
+        \begin{center}
+        \resizebox{0.9\linewidth}{!}{
+        \begin{tikzpicture}[>=latex]
+            \only<1>{
+            \node at (0,0){\includegraphics[width=\linewidth]{configurationspace0}};
+            }
+            \only<2->{
+            \node at (0,0) {\includegraphics[width=\linewidth]{configurationspace}};
+
+            \draw[thick,->] (5.5,-1) -- (4,-0.7) node[at start,
+            right,align=left] {\footnotesize these regions\\\footnotesize correspond \\ \footnotesize to colliding $(\theta_1,\theta_2)$};
+            \draw[thick,->] (5.5,-1) -- (3,-1.2);
+            }
+        \end{tikzpicture}
+    }
+        \end{center}
+
+\onslide<2->
+    Each $q$ is a point in a $k$-dimensional space called the
+    \textbf{configuration space} $C$ of the robot.
+
+    \onslide<3>
+    We can map as well obstacles to \emph{configuration space obstacles} $O$.
+
+    The \emph{free space} (where the robot is safe to move) is then $F = C - O$.
+
+\end{frame}
 
 \begin{frame}{Global vs local path planning}
 
@@ -837,67 +878,16 @@ Possible algorithms:
 
 \end{frame}
 
-\begin{frame}{Path Planning: Configuration Space}
 
-     The state or configuration $q$ of a robot can be described with $k$ values $q_i$.
-        For example, for a two-link planar robot, $\theta_1$ and $\theta_2$:
+\begin{frame}{Graphs: Visibility Graph}
 
-        \begin{center}
-        \resizebox{0.9\linewidth}{!}{
-        \begin{tikzpicture}[>=latex]
-            \only<1>{
-            \node at (0,0){\includegraphics[width=\linewidth]{configurationspace0}};
-            }
-            \only<2->{
-            \node at (0,0) {\includegraphics[width=\linewidth]{configurationspace}};
 
-            \draw[thick,->] (5.5,-1) -- (4,-0.7) node[at start,
-            right,align=left] {\footnotesize these regions\\\footnotesize correspond \\ \footnotesize to colliding $(\theta_1,\theta_2)$};
-            \draw[thick,->] (5.5,-1) -- (3,-1.2);
-            }
-        \end{tikzpicture}
-    }
-        \end{center}
+    \begin{center}
+        \includegraphics[width=\linewidth]{visibilitygraph}
+    \end{center}
 
-\onslide<2->
-    Each $q$ is a point in a $k$-dimensional space called the
-    \textbf{configuration space} $C$ of the robot.
-
-    \onslide<3>
-    We can map as well obstacles to \emph{configuration space obstacles} $O$.
-
-    The \emph{free space} (where the robot is safe to move) is then $F = C - O$.
-
-\end{frame}
-
-\begin{frame}{Graphs}
-
-    Maps used by robots can be seen as interconnected nodes.
-
-    Areas with paths between them are represented as \textbf{graphs.}
-
-    \begin{itemize}
-        \item In maths, the paths are called edges, the areas are called
-            nodes.
-    \end{itemize}
-
-    \pause
-
-    For example: a \textbf{visibility graph}
-
-    \begin{columns}
-        \begin{column}{0.5\linewidth}
-            \begin{center}
-                \includegraphics[width=\linewidth]{visibilitygraph}
-            \end{center}
-
-        \end{column}
-        \begin{column}{0.5\linewidth}
-            Edges between nodes are the lines of sight from each corner to an
-            obstacle to every other visible corner.
-        \end{column}
-    \end{columns}
-
+    Edges between nodes are the lines of sight from each corner to an
+    obstacle to every other visible corner.
 
 \end{frame}
 
@@ -963,7 +953,7 @@ Possible algorithms:
 }
 \end{frame}
 
-\begin{frame}{Graphs: representing}
+\begin{frame}{Representing graphs}
 
 \begin{itemize}
 \item How is a graph represented in a computer? Graphical representation is
@@ -1026,6 +1016,23 @@ Many different search algorithms exist
 
 \end{frame}
 
+\begin{frame}{Dijkstra's algorithm: illustration}
+
+    \begin{center}
+        \video[1]{0.4\linewidth}{figs/part6/dijkstra.mp4}
+
+        \source{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Wikipedia}
+    \end{center}
+
+    Dijkstra search between start (red) and goal (green)
+    positions.
+
+    Note how Dijkstra is expanding its search out from the
+    starting position, without knowledge about which nodes could bring it
+    closer to the goal.
+
+\end{frame}
+
 \begin{frame}[fragile]{Searching graphs - Dijkstra}
 
 \begin{pythoncode*}{frame=none,escapeinside=||}
@@ -1055,35 +1062,19 @@ def dijkstra(graph, weights, start_node):
 
 \begin{frame}[fragile]{Searching graphs -- Dijkstra}
 
-Reading out shortest path from the start node to to $t$:
+    Reading out shortest path from the start node to goal \python{end_node}:
 
 \begin{pythoncode}
 path = []
-node = t # goal
+node = end_node # goal
 while node in previous:
-    path = [node] + path # append at the front of our path
-    node = previous[node]
+path = [node] + path # append at the front of our path
+node = previous[node]
 \end{pythoncode}
 
-Returns the shortest path (if there are more than one, only one is returned).
-Return empty if no path exists.
+    Returns the shortest path (if there are more than one, only one is returned).
 
-\end{frame}
-
-\begin{frame}{Dijkstra's algorithm: illustration}
-
-    \begin{center}
-        \video[1]{0.4\linewidth}{figs/part6/dijkstra.mp4}
-
-        \source{http://en.wikipedia.org/wiki/Dijkstra's_algorithm}{Wikipedia}
-    \end{center}
-
-    Dijkstra search between start (red) and goal (green)
-    positions.
-
-    Note how Dijkstra is expanding its search out from the
-    starting position, without knowledge about which nodes could bring it
-    closer to the goal.
+    Returns empty if no path exists.
 
 \end{frame}
 
