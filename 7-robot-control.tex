@@ -1,0 +1,513 @@
+%!TEX program = xelatex
+
+\documentclass[compress]{beamer}
+%--------------------------------------------------------------------------
+% Common packages
+%--------------------------------------------------------------------------
+
+\definecolor{links}{HTML}{663000}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usepackage[english]{babel}
+\usepackage{pgfpages} % required for notes on second screen
+\usepackage{graphicx}
+
+\usepackage{multicol}
+
+
+\usepackage{tabularx,ragged2e}
+\usepackage{booktabs}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+\usetheme{hri}
+
+\usepackage{remreset}% tiny package containing just the \@removefromreset command
+\makeatletter
+\@removefromreset{subsection}{section}
+\makeatother
+\setcounter{subsection}{1}
+
+\newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,backgrounds,positioning,calc}
+
+\graphicspath{{figs/part7/}}
+
+\title{ROCO318 \newline Mobile and Humanoid Robots}
+\subtitle{Part 7 -- Robot Control}
+\date{}
+\author{Séverin Lemaignan}
+\institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
+
+\begin{document}
+
+\licenseframe{github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+\maketitle
+
+\begin{frame}[plain]{}
+
+    \Large
+
+    \centering
+    How hard might it be?
+
+\end{frame}
+
+\videoframe[0.56]{figs/part7/cowriter.mp4}
+
+\imageframe[color=black]{ranger-side}
+\imageframe[scale=0.9]{ranger}
+\imageframe[scale=0.8]{croquignole-expe}
+
+\section{Control paradigms: Finite State Machines}
+
+\imageframe[scale=0.8]{cowriter-fsm}
+
+\section{Control paradigms: Event-based Programming}
+
+\begin{frame}[fragile]{Event-oriented programming}
+\begin{overprint}
+    \onslide<1>
+\begin{pythoncode*}{frame=none}
+
+with Ranger() as robot:
+
+    robot.background_blink()
+    robot.look_at_touches()
+
+    robot.whenever("dummy", becomes = True)
+                                .do(on_dummy)
+    robot.whenever("dummy", becomes = False)
+                                .do(on_dummy_removed)
+    robot.whenever("scale", increase = 0.3).do(on_toy)
+    robot.whenever("bumper", becomes = True).do(on_bumper)
+
+    while True:
+        time.sleep(0.1)
+\end{pythoncode*}
+
+    
+    
+    \onslide<2>
+    \begin{columns}
+        \begin{column}{0.45\linewidth}
+            \begin{pythoncode*}{frame=none}
+def on_dummy(robot):
+    robot.look_at_dummy()
+    robot.blink()
+    sleep = robot.fall_asleep()
+    robot.lightbar(RAINBOW).wait()
+    sleep.wait()
+
+def on_dummy_removed(robot):
+    robot.light_bar(colors.rand())
+    robot.wakeup().wait()
+    robot.move(0.4, v = 0.8).wait()
+    robot.idle().wait()
+
+\end{pythoncode*}
+\end{column}
+        \begin{column}{0.55\linewidth}
+\begin{pythoncode*}{frame=none}
+def on_bumper(robot):
+    pulse = robot.pulse_row(0)
+    while abs(robot.state.v) > 0.01:
+        robot.sleep(0.2)
+    pulse.cancel()
+
+def on_toy(robot):
+    robot.playsound(SOUNDS["toy_in"])
+    robot.lightbar(RAINBOW).wait()
+\end{pythoncode*}
+        \end{column}
+    \end{columns}
+\end{overprint}
+\end{frame}
+
+\section{Control paradigms: Probabilistic Control}
+
+\section{Middlewares}
+
+\begin{frame}{Talking Nodes}
+
+\begin{center}
+\begin{tikzpicture}[
+                    >=latex,
+                    every edge/.style={->, draw, very thick},
+                    service/.style={->, draw, very thick,dashed},
+                    rosnode/.style={draw, font=\sf, node distance=0.5, rounded
+                    corners, align=center, inner sep=5pt,fill=hriSec2Dark!50},
+                    topic/.style={font=\tt, node distance=0.5, align=center, inner sep=5pt},
+                    pic/.style={fill=none,draw=none}
+                ]
+
+    \path[use as bounding box] (-6,1) rectangle (6,-5);
+    \node [rosnode] at (0,0) (node1) {node 1};
+    \node [rosnode] at (4,-2) (node2) {node 2};
+    \node [rosnode] at (-5,-4) (node3) {node 3};
+
+    \uncover<2-> {
+        \node [topic] at (1,-2) (topic1) {/topic1};
+        \node [topic] at (-1,-3) (topic2) {/topic2};
+        \node [topic] at (-4,-2) (topic3) {/topic3};
+        \path (node1) edge[bend left] node[label,right] {\only<2-3>{publishes}} (topic1);
+        \path (node1) edge[bend right] node[label,left] {\only<2-3>{publishes}} (topic2);
+        \path (node3) edge[bend left] node[label,left] {\only<2-3>{publishes}} (topic3);
+    }
+    \uncover<3-> {
+        \path (topic1) edge[bend right] node[label,below left] {\only<3>{subscribes}} (node2);
+        \path (topic2) edge[bend left] node[label,below] {\only<3>{subscribes}} (node3);
+        \path (topic2) edge[bend right] (node2);
+    }
+    \only<4-5> {
+        \path[->, dashed] ([yshift=2pt]node1.east) edge[bend left] node[label,above right] {service (RPC)} ([xshift=2pt]node2.north) ;
+    }
+    \only<5> {
+        \path[->, dashed] ([xshift=-2pt]node2.north) edge[bend right] ([yshift=-2pt]node1.east);
+
+    }
+
+    \uncover<6-> {
+        \path[->, dashed] ([yshift=2pt]node1.east) edge[bend left] node[label,above right] {\only<6,7>{action goal}} ([xshift=2pt]node2.north) ;
+    }
+    \uncover<7-> {
+        \path[->, dashed] ([xshift=-2pt]node2.north) edge[bend right] node[label,below left] {\only<7>{result}} ([yshift=-2pt]node1.east);
+
+    }
+
+    \only<8> {
+        \node [rosnode,fill=hriSec3!50] at (-5,0) (roscore) {roscore};
+        \path[dashed] (node1) edge[<->,very thin, bend right] node[label,above] {\tiny XML-RPC} (roscore);
+        \path[dashed] (node2) edge[<->,very thin, bend right] node[label,above] {\tiny XML-RPC} (roscore);
+        \path[dashed] (node3) edge[<->,very thin, bend left] node[label,above right] {\tiny XML-RPC} (roscore);
+
+    }
+
+\end{tikzpicture}
+\only<5>{Services: \bf synchronous}
+\only<7>{Actions: \bf asynchronous}
+\only<8>{\tt ROS\_MASTER\_URI=http://<host>:<port>}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{ROS}
+    \begin{itemize}
+        \item<1-> A fairly simple peer-to-peer message passing system designed with robotics in
+            mind
+        \item<2-> An API to this system (in several languages -- C++ and Python are
+            1st tier)
+        \item<3-> A set of standard message types that facilitate interoperability between modules
+        \item<4> \bf{A middleware?}
+        \item<5-> A set of conventions to write and package robotic softwares
+        \item<6-> Deep integration of a few key open-source libraries (OpenCV, PCL, tf)
+        \item<7-> A set of tools to run and monitor the nodes
+        \item<8-> Engagement of a large academic community, leading to a library of thousands of nodes
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{ROS Ecosystem}
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+        \vspace*{4cm}
+        \begin{tikzpicture}
+
+            \path[small mindmap,
+                  level 1 concept/.append style={sibling angle=360/5}, 
+                  level 2 concept/.append style={sibling angle=60}, 
+                  concept color=hriWarmGreyLight,text=hriWarmGreyDark]
+
+            node[concept] {\bf ROS}
+            [clockwise from=-180]
+            child[concept color=hriSec1Dark,text=white] { node[concept]{Middleware} 
+                [clockwise from=-120]
+                child[concept color=hriSec1CompDark,text=white] { node[concept]{Standard Interfaces} }
+                child[concept color=hriSec3CompDark,text=white] { node[concept]{Nodes Management} }
+                child[concept color=hriSec2Dark,text=white] { node[concept]{IPC} }
+            }
+            child[concept color=hriSec3Comp,text=white] { node[concept] {Standards and Conventions} }
+            child[concept color=hriSec2CompDark,text=white] { node[concept]{Community}
+                [clockwise from=90]
+                child[concept color=hriSec2Comp,text=white] { node[concept]{Software engineering infrastructure} }
+                child[concept color=hriSec1,text=white] { node[concept] {REPs} }
+                child[concept color=hriSec3,text=white] { node[concept] {ROSCon} }
+            }
+            child[concept color=hriSec3Dark,text=white] { node[concept] {Large software library} 
+                [clockwise from=0]
+                child[concept color=hriSec2Dark,text=white] { node[concept] {Satellite libraries} }
+            }
+            child[concept color=hriSec3CompDark,text=white] { node[concept] {Tooling} };
+        \end{tikzpicture}
+    }
+\end{frame}
+
+\begin{frame}{Example: a simple image processing pipeline}
+
+\begin{center}
+\begin{tikzpicture}[
+                    >=latex,
+                    every edge/.style={->, draw, very thick},
+                    service/.style={->, draw, very thick,dashed},
+                    rosnode/.style={draw, font=\sf, node distance=0.5, rounded
+                    corners, align=center, inner sep=5pt,fill=hriSec2Dark!50},
+                    topic/.style={font=\tt, node distance=0.5, align=center, inner sep=5pt},
+                    pic/.style={fill=none,draw=none}
+                ]
+
+    \node [rosnode] at (-4,0) (node1) {image acquisition};
+    \node [rosnode] at (0,-2) (node2) {image processor};
+    \node [rosnode] at (4,-4) (node3) {next processing};
+
+        \node [topic] at (-4,-1.5) (topic3) {/image};
+        \node [topic] at (-1,-3.5) (topic1) {/processed\_image};
+        \path (node1) edge[bend right] (node2);
+        \path (node2) edge[bend right] (node3);
+
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[containsverbatim]{}
+
+\begin{pythoncode}
+import sys, cv2, rospy
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+
+def on_image(image):
+    cv_image = bridge.imgmsg_to_cv2(image, "bgr8")
+    (rows,cols,channels) = cv_image.shape
+    cv2.circle(cv_image, (cols/2,rows/2), 50,(0,0,255), -1)
+    cv2.imshow("Image window", cv_image)
+    cv2.waitKey(3)
+    image_pub.publish(bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+
+rospy.init_node('image_processor')
+bridge = CvBridge()
+image_sub = rospy.Subscriber("image",Image, on_image)
+image_pub = rospy.Publisher("processed_image",Image)
+
+while not rospy.is_shutdown():
+    rospy.spin()
+\end{pythoncode}
+
+\end{frame}
+
+\begin{frame}[containsverbatim]{}
+
+\begin{shcode}
+$ roslaunch gscam v4l.launch
+$ python image_processor.py image:=/v4l/camera/image_raw
+$ rosrun image_view image_view image:=/processed_image
+\end{shcode}
+
+\end{frame}
+
+\section{System Architectures}
+
+\begin{frame}{Symbolic architectures for interaction}
+
+\resizebox{\paperwidth}{!}{%
+
+\tikzset{subpart/.style={draw, font=\scriptsize, fill opacity=0.5, text opacity=1, fill=white!50}}
+\begin{tikzpicture}[
+    >=latex,
+    every edge/.style={draw, very thick},
+    skill/.style={draw, rounded corners, align=center, inner sep=5pt, fill=black!20},
+    stmt/.style={align=center, font=\bf},
+    label/.style={midway, align=center, font=\scriptsize, fill=white}]
+
+  %%% LOWLEVEL
+ \uncover<+->{
+  \node [skill] (lowlevel) {%
+      \begin{tikzpicture}
+        \node at (0,0) (sensori) {Sensorimotor layer};
+        %\node [subpart, below=0.2 of sensori.south west, anchor=north west, align=left] (perception) {{\bf Perception} \\ 2D markers, RGB-D, motion capture};
+        %\node [subpart, align=right, right=0.2 of perception] {{\bf Actuation} \\ Head's pan-tilt unit, grippers, arms, wheels};
+      \end{tikzpicture}
+  };
+}
+
+ \uncover<+->{
+  %%% SITUATION ASSESSMENT
+  \node [skill, above=2 of lowlevel, fill=hriSec3!50] (spark) {%
+      \begin{tikzpicture}
+          \node at (0,0) (geom) {{\bf Situation Assessment} -- geometric \& temporal reasoning};
+        \node [subpart, below=0.2 of geom.south west, anchor=north west] (world-update) {Sensors fusion};
+        \node [subpart, right=0.2 of world-update] (geom-model) {Geometric model of the environment};
+        \node [subpart, right=0.2 of geom-model] (fact-prod) {Symbolic facts production};
+      \end{tikzpicture}
+    };
+
+    \path (lowlevel) edge [->] (spark);
+  }
+
+
+ \uncover<+->{
+  %%% KB
+    \node [skill, above=3 of spark.west, fill=hriSec2Dark!50] (oro) {{\bf Memory} knowledge base(s)\\ \footnotesize typically a symbolic blackboard};
+    \path (spark.100) edge [->, bend right] node[label] (symfact) {symbolic \\ facts} (oro);
+    }
+
+ \uncover<+->{
+   %%% SUPERVISION
+  \node [skill, above=6 of spark,fill=hriSec1Comp!50] (shary) {%
+      \begin{tikzpicture}
+          \node at (0,0) (exec) {\bf Supervision (Execution Controller)};
+        \node [subpart, below=0.2 of exec.south west, anchor=north west] (plans) {Goal \& Plans \\ management};
+        \node [subpart, right=0.2 of plans] (sit-asses) {Situation assessment \\ and context management};
+        \node [subpart, right=0.2 of sit-asses] {Action instantiation, \\ execution and monitoring};
+      \end{tikzpicture}
+    };
+  \path (shary) edge [<->, bend left] node[label] (evts) {events, \\ world model and \\ agents beliefs} (oro);
+  \path (shary) edge [<->, bend left] node[label] {action monitoring \\ and management of \\ position hypotheses} (spark);
+  \path (lowlevel.east) edge [<-, bend right=80, looseness=1.5] node[label] {atomic\\actions} (shary.east);
+ }
+  
+
+ \uncover<+->{
+  %%% HATP
+    \node [skill, left=5 of shary.south west,fill=hriSec1!50] (hatp) {{\bf Task planner}\\ \footnotesize ideally human-aware};
+
+  %%% MHP
+    \node [skill, below=3 of shary.east,fill=hriSec3CompDark!50] (mhp) {Motion and manipulation \\ planning};
+  \path (shary.340) edge [<->, bend left] node[label] {motion plan \\ requests} (mhp);
+  \path (shary.west) edge [<->, bend right] node[label] {shared \\ plans} (hatp);
+  \path (hatp) edge [<->, bend right] node[label] (domain) {world model and \\ agents beliefs} (oro.170);
+  \path (spark.5) edge [->, bend right] node[label] {environment\\model} (mhp);
+
+ }
+
+ \uncover<+->{
+  %%% DIALOGS
+    \node [skill, left=3 of spark,fill=hriSec3Dark!50] (dialogs) {{\bf Multi-modal communication}\\NLP, back-channel,...};
+    \path (dialogs) edge [<->, bend left] node[label] (nlp) {natural language \\ grounding} (oro.190);
+
+  }
+ 
+
+  %%% Separation between deliberative layer and sensori-motor layer
+  \coordinate (mid) at ($(lowlevel)!0.5!(spark)$);
+  \draw[dotted, thick] (dialogs.west |- mid) -- (mhp.east |- mid);
+
+  \only<7>{
+      \fill[fill opacity=.7,white] (current bounding box.north west) rectangle (current bounding box.south east);
+      \node[stmt] at (symfact) {isOn(bottle, table)\\lookAt(human1, bottle)};
+      \node[stmt] at (nlp) {lookAt(human1, ?obj)\\desires(human1, PickUp, bottle)};
+      \node[stmt] at (domain) {isAvailable(?gripper)\\ $\wedge$ isA(?gripper, Gripper)\\isOn(bottle, ?obj)};
+      \node[stmt] at (evts) {isA(action23425, PickUp)\\ $\wedge$ currentlyPerforming(action23425)};
+  }
+\end{tikzpicture}
+}
+\end{frame}
+
+
+\section{Cognitive Architectures}
+
+\begin{frame}{Investigating robot cognition}
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{cogarch}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Architectures to model human cognition}
+
+\resizebox{!}{0.7\paperheight}{%
+\tikzset{subpart/.style={draw, font=\scriptsize, fill opacity=0.5, text opacity=1, fill=white!50}}
+\begin{tikzpicture}[
+    >=latex,
+    node distance=1.5,
+    every edge/.style={draw, very thick},
+    skill/.style={draw, rounded corners, align=center, inner sep=5pt, fill=black!20},
+    stmt/.style={align=center, font=\bf},
+    label/.style={midway, align=center, font=\scriptsize, fill=white}]
+
+    \node at (0,0)[skill, fill=hriSec2!50] (a1) {Shared Plan Elaboration};
+
+    \node [skill, fill=hriSec2!50,above=of a1] (a2) {Intention Prediction};
+    \node [skill, fill=hriSec2!50,left=of a1] (a3) {Mental State Management};
+    \node [skill, fill=hriSec2!50,right=of a1] (a4) {Communication for\\Joint Action};
+    \node [skill, fill=hriSec2!50,below=of a1] (a5) {Shared Plan Achievement};
+    \node [skill, fill=hriSec2!50,left=of a5] (a6) {Situation Assessment};
+
+
+    \node [skill, fill=hriSec3!50,below left=of a5,anchor=north] (a7) {Action Achievement};
+    \node [skill, fill=hriSec3!50,below right=of a5,anchor=north] (a8) {Human Action Monitoring};
+  
+    \node[below=3.7 of a5] (a14) {Human-aware geometric and task planners, real-time controllers, sensors...};
+
+  \coordinate[below=3 of a6] (a9);
+
+  \node[rotate=90,left=0.7 of a3.west] (distal) {\bf\large DISTAL};
+  \node[rotate=90] at (distal |- a7.south) {\bf\large PROXIMAL};
+  \node[rotate=90] at (distal |- a14) {\bf\large MOTOR};
+
+  \coordinate (a11) at (a9 -| distal.north);
+  \coordinate (a12) at (a9 -| a4.east);
+  \draw[dotted, thick] (a11) -- (a12);
+
+
+  \coordinate (a13) at ($(a5)!0.5!(a7)$);
+  \draw[dotted, thick] (a13 -| distal.north) -- (a13 -| a4.east);
+
+
+  %%% Relations between components
+  \path (a2) edge [->] node[label] {goal to execute} (a1);
+  \path (a1) edge [->] node[label] {plan} (a5);
+  \path (a2) edge [<-] node[label] {goal (order)} (a4);
+
+  \path (a3) edge [<->, bend left=40, looseness=1.2] node[label,pos=0.1] {mental state information} (a4);
+  \path (a3) edge [<->] (a2);
+  \path (a3) edge [<->] (a1);
+  \path (a3) edge [<->] (a5);
+
+  \path (a6) edge [->] node[label] {conceptual\\world state} (a3);
+
+  \path (a5) edge [<->] node[label] {coordination} (a4);
+
+  \path (a5) edge [<->] node[label,right=0.5] {anchoring of actions} (a7);
+  \path (a5) edge [<->] (a8);
+
+  \path (a9) edge [->] node[label] {sensors} (a6);
+
+  \coordinate (a10) at (a9 -| a7);
+  \path (a10) edge [<->] node[label] {planning and control} (a7);
+
+  \coordinate (a10) at (a9 -| a8);
+  \path (a10) edge [<->] node[label] {sensors} (a8);
+
+  \path (a7) edge [<->] node[label] {coordination} (a8);
+ 
+\end{tikzpicture}
+}
+
+\source{}{Sandra Devin}
+\end{frame}
+
+
+
+\begin{frame}{}
+    \begin{center}
+        \Large
+        That's all, folks!\\[2em]
+        \normalsize
+        Questions:\\
+        Portland Square A216 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
+
+        Slides:\\ \href{https://github.com/severin-lemaignan/module-mobile-and-humanoid-robots}{\small github.com/severin-lemaignan/module-mobile-and-humanoid-robots}
+
+    \end{center}
+\end{frame}
+
+
+
+\end{document}
