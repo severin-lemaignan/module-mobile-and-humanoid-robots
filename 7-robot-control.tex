@@ -32,6 +32,7 @@
 \setcounter{subsection}{1}
 
 \newcommand{\source}[2]{{\tiny\it Source: \href{#1}{#2}}}
+\newcommand{\stmt}[1]{{\footnotesize \tt  #1}}
 
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning,calc}
@@ -241,9 +242,216 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Model-Plan-Act}
+
+    \begin{center}
+        \resizebox{\linewidth}{!}{
+            \begin{tikzpicture}[>=latex,
+                                every node/.style={minimum width=2cm}]
+                \node[minimum width=2cm,align=center] at (0,0) (env) {\bf Environment};
+                \node[draw,rotate=90,align=center,right=3 of env] (per) {Perceive};
+                \node[draw,rotate=90,align=center,right=of per] (mod) {Model};
+                \node[draw,rotate=90,align=center,right=of mod] (pla) {Plan};
+                \node[draw,rotate=90,align=center,right=of pla] (act) {Act};
+                \node[minimum width=2cm,align=center, right=3 of act] (env2) {\bf Environment};
+
+                \draw[->] (env)--node[anchor=south, midway]{sensors}(per);
+                \draw[->] (act)--node[anchor=south, midway]{actuators}(env2);
+            \end{tikzpicture}
+        }
+    \end{center}
+
 \end{frame}
 
 \videoframe[0.7]{figs/part7/clean-table.webm}
+
+\begin{frame}[plain]{}
+\centering
+\resizebox{!}{0.9\paperheight}{%
+\begin{tikzpicture}[
+        >=latex,
+        every edge/.style={draw, ultra thick, ->},
+        every node/.style={align=center},
+        robot/.style={fill=hriSec2Comp!50},
+        plan/.style={draw,
+                     thick,  
+                     circle, 
+                     font=\sf,
+                     align=center,
+                     fill=hriSec3CompDark!50, 
+                     minimum size=1cm, 
+                     inner sep=0.1cm}
+        ]
+
+        \coordinate<1> (figbottom) at (-0.5, -28.5);
+        \coordinate<2-5> (figbottom) at (-0.5, -10.5);
+        \node<2-5> at (0,5) {};
+        \node<2-5> at ($(figbottom) + (0,-5)$) {};
+
+
+        \fill[gray!10!white] (4.6,.5) rectangle (figbottom);
+
+        \path (-0.5,0) edge (figbottom) node[sloped, above left, rotate=90] {\large\bf time};
+
+        \node at (2,0) (percept) {\bf Perception};
+            \node[below=0.5 of percept.south west, anchor=mid] {camera};
+            \node[below=0.5 of percept.south east, anchor=mid] {3D model};
+
+        \node[right=4 of percept, minimum width=2.5cm] (kb) {\bf Knowledge};
+            \node[below=0.5 of kb.south west, anchor=mid east] (kbr) {robot};
+            \node[below=0.5 of kb.south east, anchor=mid west] (kbh) {human};
+            \draw[dotted] (kbr) to (figbottom -| kbr);
+            \draw[dotted] (kbh) to (figbottom -| kbh);
+
+        \fill[gray!10!white] (12,.5) rectangle (17,0 |- figbottom);
+        \node[right=4.5 of kb] (plan) {\bf Plan};
+            \node[below=0.5 of plan.south west, anchor=mid east] (probot) {robot};
+            \node[below=0.5 of plan.south east, anchor=mid west] (phuman) {human};
+            \draw[dotted] (probot) to (figbottom -| probot);
+            \draw[dotted] (phuman) to (figbottom -| phuman);
+
+        \node[right=5 of plan] (action) {\bf Actions};
+            \node[below=0.5 of action.south west, anchor=mid east] (arobot) {robot};
+            \node[below=0.5 of action.south east, anchor=west] (ahuman) {human\\(monitoring)};
+            \draw[dotted] (arobot) to (figbottom -| arobot);
+            \draw[dotted] (ahuman) to (figbottom -| ahuman);
+
+        \draw[dashed] (-0.6,-1.2) --(24, -1.2);
+
+        \node<1,2>[anchor=east] at (-0.5, -3) (t1) {\Large $t_1$};
+        \node<1,2>[anchor=east, below=6 of t1] (t2) {\Large $t_2$};
+        \node<3>[anchor=east] at (-0.5, -3) (t2) {\Large $t_2$};
+        \node<1,3>[anchor=east, below=6 of t2] (t3) {\Large $t_3$};
+        \node<4>[anchor=east] at (-0.5, -3) (t3) {\Large $t_3$};
+        \node<1,4>[anchor=east, below=4 of t3] (t4) {\Large $t_4$};
+        \node<5>[anchor=east] at (-0.5, -3) (t4) {\Large $t_4$};
+        \node<1,5>[anchor=east, below=5 of t4] (t5) {\Large $t_5$};
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% PERCEPTIONS
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        \node<1,2> at (t1 -| percept) (cam1) {\includegraphics[height=2cm]{cleantable/manip_run_cam1.png}};
+        \node<1,3> at (t2 -| percept) (cam2) {\includegraphics[height=2cm]{cleantable/manip_run_cam2.png}};
+        \node<1,4> at (t3 -| percept) (cam3) {\includegraphics[height=2cm]{cleantable/manip_run_cam3.png}};
+        \node<1,5> at (t4 -| percept) (cam4) {\includegraphics[height=2cm]{cleantable/manip_run_cam4.png}};
+        \node<1,5> at (t5 -| percept) (cam5) {\includegraphics[height=2cm]{cleantable/manip_run_cam5.png}};
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% KNOWLEDGE
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        \node<1,2>[fill=white,align=left] at (cam1 -| kbr) (kb1) {\stmt{TAPE isVisible true}\\
+                                                        \stmt{TAPE isReachable true}\\
+                                                        \stmt{TAPE isOn TABLE}\\
+                                                        \stmt{BIN isVisible true}\\
+                                                        \stmt{BIN isReachable false}};
+
+        \node<1,2>[fill=white,align=left] at (cam1 -| kbh) {\stmt{TAPE isVisible true}\\
+                                                        \stmt{TAPE isReachable false}\\
+                                                        \stmt{TAPE isOn TABLE}\\
+                                                        \stmt{BIN isVisible true}\\
+                                                        \stmt{BIN isReachable true}};
+
+        \node<1,3>[fill=white,align=left] at (cam2 -| kbr) (kb2) {\stmt{ROBOT hasInHand TAPE}};
+
+
+        \node<1,4>[fill=white,align=left] at (cam3 -| kbr) {\stmt{TAPE isReachable true}\\
+                                            \stmt{TAPE isVisible true} \\
+                                            \stmt{TAPE isOn TABLE}};
+
+        \node<1,4>[fill=white,align=left ] at (cam3 -| kbh) (kb3) {\stmt{TAPE isReachable true}\\
+                                             \stmt{TAPE isVisible true}};
+
+        \node<1,5>[fill=white,align=left] at (cam4 -| kbh) (kb4) {\stmt{HUMAN hasInHand TAPE}};
+
+        \node<1,5>[fill=white,align=left] at (cam5 -| kbr)  {\stmt{TAPE isIn BIN}};
+        \node<1,5>[fill=white,align=left] at (cam5 -| kbh) (kb5) {\stmt{TAPE isIn BIN}};
+
+        %%%%%%%%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% PLANS
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        \node<1,2>[fill=gray!10!white,below=1 of plan] (incoming) {\bf \Large Incoming goal \\ \it Clean the table!};
+
+        \node<1,2>[anchor=north, plan, robot] at (cam1.south -| probot) (pr1) {\bf TAKE\\TAPE\\TABLE};
+        \node<1,3>[anchor=north, plan, robot] at (cam2.south -| probot)  (pr2) {\bf PUTRV\\TAPE\\TABLE} edge[<-] (pr1);
+        \node<1,4>[anchor=north, plan] at (cam3.south -| phuman) (ph1) {\bf TAKE\\TAPE\\TABLE} edge[<-] (pr2);
+        \node<1,5>[anchor=north, plan]  at (cam4.south -| phuman) (ph2) {\bf PUT\\TAPE\\BIN} edge[<-] (ph1);
+
+        \node<1,5>[fill=gray!10!white,anchor=north] at (cam5.south -| plan) (done) {\bf \Large Goal completed};
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% ACTIONS
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        \only<1,2>{
+        \node[fill=white] at (pr1 -| arobot) (ep1) {\it evaluate pre-conditions};
+
+        \node[below=0.1 of ep1] (mhp1) {%
+            \begin{tikzpicture}
+                \node[fill=white] (title) {\bf motion planning};
+                \node[below=0.1 of title.south west, label=below:{\tt PICK\_GOTO}] (mapg) {\includegraphics{cleantable/MHP_ARM_PICK_GOTO}};
+                \node[fill=white,right=of mapg, label=below:{\tt TAKE\_TO\_FREE}] (mattf) {\includegraphics{cleantable/MHP_ARM_TAKE_TO_FREE}} edge[<-] (mapg);
+            \end{tikzpicture}
+        };
+        \node[fill=white,below=0.1 of mhp1] (me1) {\bf motion execution};
+        \node[fill=white,below=0.1 of me1] (ae1) {\it assess post-conditions};
+        }
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \only<1,3>{
+        \node[fill=white] at (pr2 -| arobot) (ep2) {\it evaluate pre-conditions};
+
+        \node[below=0.1 of ep2] (mhp2) {%
+            \begin{tikzpicture}
+                \node[fill=white] (title) {\bf motion planning};
+                \node[fill=white,below=0.1 of title, label=below:{\tt ESCAPE}] (maeo) {\includegraphics{cleantable/MHP_ARM_ESCAPE_OBJECT}};
+                \node[left=of maeo, label=below:{\tt PLACE\_FROM\_FREE}] (mapff) {\includegraphics{cleantable/MHP_ARM_PLACE_FROM_FREE}} edge (maeo);
+                \node[fill=white,right=of maeo, label=below:{\tt TO\_FREE}] (maf) {\includegraphics{cleantable/MHP_ARM_FREE}} edge[<-] (maeo);
+            \end{tikzpicture}
+        };
+        \node[fill=white,below=0.1 of mhp2] (me2) {\bf motion execution};
+        \node[fill=white,below=0.1 of me2] (ae2) {\it assess post-conditions};
+        }
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        \node<1,4>[anchor=north] at (ph1 -| ahuman) (wait1) {%
+            \begin{tikzpicture}
+                \node[fill=white] (title) {\it wait for pick\\ {\tt TAPE} \it from {\tt TABLE}};
+                \node[below=0.1 of title] {\includegraphics{cleantable/wait_for_pick}};
+            \end{tikzpicture}
+        };
+
+        \node<1,5>[anchor=north] at (ph2 -| ahuman) (wait2) {%
+            \begin{tikzpicture}
+                \node[fill=white] (title) {\it wait for put\\ {\tt TAPE} \it into {\tt BIN}};
+                \node[below=0.1 of title] {\includegraphics{cleantable/wait_for_throw}};
+            \end{tikzpicture}
+        };
+
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%% FLOW
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \draw<1,2>[dotted, ->, in=45, out=180] (incoming.west) to (kb1);
+        \draw<1,2>[dotted, ->, bend right] (kb1) to (pr1);
+        \draw<1,2>[dotted, ->, bend left] (pr1) to (ep1);
+        \draw<1,2>[dotted, ->, in=45, out=180] (ae1.west) to (kb2);
+        \draw<1,3>[dotted, ->, bend right] (kb2) to (pr2);
+        \draw<1,3>[dotted, ->, bend left] (pr2) to (ep2);
+        \draw<1>[dotted, ->, in=45, out=180] (ae2.west) to (kb3);
+        \draw<1,4>[dotted, ->, bend right] (kb3) to (ph1);
+        \draw<1,4>[dotted, ->, bend left] (ph1) to (wait1);
+        \draw<1>[dotted, ->, in=-20, out=180] (wait1.west) to (kb4.east);
+        \draw<1,5>[dotted, ->, bend right] (kb4) to (ph2);
+        \draw<1,5>[dotted, ->, bend left] (ph2) to (wait2);
+        \draw<1,5>[dotted, ->, in=20, out=180] (wait2.west) to (kb5);
+        \draw<1,5>[dotted, ->, bend left] (kb5.east) to (done.north);
+
+
+ \end{tikzpicture}
+ }
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
