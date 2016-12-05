@@ -59,17 +59,193 @@
 
 \end{frame}
 
-\videoframe[0.56]{figs/part7/cowriter.mp4}
 
 \imageframe[color=black]{ranger-side}
 \imageframe[scale=0.9]{ranger}
 \imageframe[scale=0.8]{croquignole-expe}
 
-\section{Control paradigms: Finite State Machines}
+\section{Control paradigms}
 
+\begin{frame}{Control paradigms}
+
+    \begin{itemize}
+        \item Behavioural (reactive) control
+        \item Finite-state Machines
+        \item Model-Plan-Act
+        \item Event-based programming
+        \item Probabilistic methods
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Behavioural (or reactive) control}
+
+    {\bf Behaviours} are small programs that read sensors and control
+    actuators. Each behaviour does \textbf{one simple thing}; it typically has
+    access to all sensors/actuators.
+
+
+
+    \begin{center}
+        \only<1>{
+        \resizebox{0.5\linewidth}{!}{
+            \begin{tikzpicture}[>=latex]
+                \node[draw, minimum width=2cm,align=center] at (0,0) (stim) {Stimulus};
+                \node[draw, minimum width=2cm,align=center,right=of stim] (reac) {Reaction};
+                \path (stim) edge[bend right,->] (reac);
+                \path (reac) edge[bend right,->] (stim);
+            \end{tikzpicture}
+            }
+        }
+        \only<2>{
+        \resizebox{\linewidth}{!}{
+            \begin{tikzpicture}[>=latex]
+                \node[minimum width=2cm,align=center] at (0,0) (env) {\bf Environment};
+                \node[draw, minimum width=2cm,align=center,right=3 of env] (b1) {Behaviour 2};
+                \node[draw, minimum width=2cm,align=center,above=of b1] (b2) {Behaviour 1};
+                \node[draw, minimum width=2cm,align=center,below=of b1] (b3) {Behaviour 3};
+                \node[minimum width=2cm,align=center, right=3 of b1] (env2) {\bf Environment};
+                \coordinate[left=0.4 of b1] (a);
+                \coordinate[right=0.4 of b1] (b);
+
+                \draw[->] (env)--node[anchor=south, midway]{sensors}(b1);
+                \draw[->] (b1)--node[anchor=south, midway]{actuators}(env2);
+                \draw[->] (a) |- (b2);
+                \draw[->] (a) |- (b3);
+                \draw (b) |- (b2);
+                \draw (b) |- (b3);
+            \end{tikzpicture}
+            }
+
+            We only want one behaviour at a time! Need to \textbf{prioritise}:
+            behaviours can \emph{override} or \textbf{subsume} less important
+            ones.
+
+        }
+    \end{center}
+    
+\end{frame}
+
+\begin{frame}{Extreme case: Braitenberg machines}
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+
+            \begin{itemize}
+                \item Motion directly controlled by sensors (typically photocells)
+                \item Yet the resulting behaviour may appear complex or even intelligent
+                \item<1-2> Can you guess the behaviours of vehicles 2a and 2b?
+                \item<3-> Complex behaviours emerge (typically with non-linear control functions).
+            \end{itemize}
+
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \includegraphics<1>[width=0.7\linewidth]{Braitenberg_Vehicle_2ab-blind}
+                \includegraphics<2->[width=0.7\linewidth]{Braitenberg_Vehicle_2ab}
+
+                \onslide<3>{
+                \includegraphics[width=0.7\linewidth]{Braitenberg_Vehicle_4a}
+                }
+
+                \source{https://en.wikipedia.org/wiki/Braitenberg_vehicle}{Wikipedia}
+            \end{center}
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+\begin{frame}{Combining behaviours: example}
+
+    \only<1>{
+
+        Three behaviours:
+
+        \begin{itemize}
+            \item {\bf Follow a robot}
+                \begin{itemize}
+                    \item Sensor: IR communication
+                    \item Behaviour: follow another robot
+                \end{itemize}
+            \item {\bf Avoid obstacle}
+                \begin{itemize}
+                    \item Sensors: bumpers
+                    \item Behaviour: move away from the wall
+                \end{itemize}
+            \item {\bf Wander}
+                \begin{itemize}
+                    \item Sensors: encoders
+                    \item Behaviour: move forward and turn
+                \end{itemize}
+        \end{itemize}
+
+        Which behaviour should have the highest priority? the lowest?
+    }
+    \only<2->{
+        \begin{center}
+            \resizebox{0.6\linewidth}{!}{
+                \begin{tikzpicture}[>=latex,
+                                    every node/.style={draw,minimum width=2cm}]
+                    \node at (0,0) (fol) {Follow a robot};
+                    \node[below=1 of fol] (wander) {Wander};
+                    \node[above=1 of fol] (avoid) {Avoid obstacle};
+
+                    \node[left=1 of fol,anchor=center,rotate=90,minimum width=4cm] (sensors) {Sensors};
+
+                    \draw[thick,->] (sensors) -- (fol);
+                    \draw[thick,->] (sensors.south |- wander) -- (wander);
+                    \draw[thick,->] (sensors.south |- avoid) -- (avoid);
+
+                    \coordinate[right=1 of fol] (s1);
+                    \coordinate[right=2 of wander] (s2);
+                    \node[circle,ultra thick,fill=hriSec2Dark,minimum size=5mm] at (s1) (ss1) {\bf S};
+                    \node[circle,ultra thick,fill=hriSec2Dark,minimum size=5mm] at (s2) (ss2) {\bf S};
+
+                    \draw[<-] (ss1) -- ($(ss1) + (70:2cm)$) node[draw=none,align=center,above,color=hriSec1Dark] {\small\it subsumption\\ \small\it operator};
+
+                    \draw[thick] (fol) -- (ss1);
+                    \draw[thick,->] (avoid) -| (ss1);
+                    \draw[thick] (wander) -- (ss2);
+                    \draw[thick,->] (ss1) -| (ss2);
+
+                    \node[right=3 of fol,anchor=center,rotate=-90,minimum width=4cm] (act) {Actuators};
+
+                    \draw[thick,->] (ss2) -- (act.south |- ss2);
+
+                    \node[draw=none, above=0.5 of avoid] {\small\emph{highest priority}};
+                    \node[draw=none, below=0.5 of wander] {\small\emph{lowest priority}};
+
+                \end{tikzpicture}
+            }
+        \end{center}
+
+        We combine behaviours by {\bf subsuming} lower-priority behaviours
+        whenever a higher-priority behaviour becomes active.
+
+        \onslide<3>{
+            $\rightarrow$ \textbf{subsumption architecture}
+        }
+
+    }
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Finite state machines}
+
+\end{frame}
+
+\videoframe[0.56]{figs/part7/cowriter.mp4}
 \imageframe[scale=0.8]{cowriter-fsm}
 
-\section{Control paradigms: Event-based Programming}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Model-Plan-Act}
+\end{frame}
+
+\videoframe[0.7]{figs/part7/clean-table.webm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]{Event-oriented programming}
 \begin{overprint}
@@ -130,7 +306,11 @@ def on_toy(robot):
 \end{overprint}
 \end{frame}
 
-\section{Control paradigms: Probabilistic Control}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Probabilistic control}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Middlewares}
 
@@ -313,6 +493,102 @@ $ rosrun image_view image_view image:=/processed_image
 \end{frame}
 
 \section{System Architectures}
+
+\begin{frame}{Architectures}
+    \begin{itemize}
+        \item Subsumption architectures
+        \item Layered architectures
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Subsumption architecture}
+
+        \begin{center}
+            \resizebox{0.9\linewidth}{!}{
+                \begin{tikzpicture}[>=latex,
+                                    every node/.style={draw,minimum width=2cm}]
+                    \node at (0,0) (l0) {level 0};
+                    \node[above=1 of l0] (l1) {level 1};
+                    \node[above=1 of l1] (l2) {level 2};
+                    \node[above=1 of l2] (l3) {level 3};
+                    \coordinate[above=1 of l3] (l4);
+
+                    \node[left=2 of l0,draw=none] (sensors) {\bf Sensors};
+
+                    \draw[->] (sensors) -- (l0);
+
+                    \coordinate[left=1 of l0] (s0);
+                    \draw[->] (s0) |- (l1);
+                    \draw[->] (s0) |- (l2);
+                    \draw[->] (s0) |- (l3);
+                    \draw[dashed] (s0 |- l3) |- +(0,1);
+
+                    \coordinate[right=3 of l0] (s1);
+                    \coordinate[right=2 of l1] (s2);
+                    \coordinate[right=1 of l2] (s3);
+
+
+                    \node[circle,ultra thick,fill=hriSec2Dark,minimum size=5mm] at (s1) (ss1) {\bf S};
+                    \draw[->] (l0) -- (ss1);
+                    \draw[->] (l1) -| (ss1);
+                    \node[circle,ultra thick,fill=hriSec2Dark,minimum size=5mm] at (s2) (ss2) {\bf S};
+                    \draw[->] (l2) -| (ss2);
+                    \node[circle,ultra thick,fill=hriSec2Dark,minimum size=5mm] at (s3) (ss3) {\bf S};
+                    \draw[->] (l3) -| (ss3);
+
+                    \draw[dashed] (l3 -| s3) |- +(0,1);
+
+                    \node[right=5 of l0,draw=none] (act) {\bf Actuators};
+
+                    \draw[->] (ss1) -- (act);
+
+
+                \end{tikzpicture}
+            }
+        \end{center}
+
+
+        \source{http://dspace.mit.edu/bitstream/handle/1721.1/6432/AIM-864.pdf}{Brooks, A robust layered control system for a mobile robot, 1986}
+\end{frame}
+
+\imageframe[caption={Level 0: obstacle avoidance}]{subsumption-arch-1}
+\imageframe[caption={Level 1: wander around aimlessly}]{subsumption-arch-2}
+\imageframe[caption={Level 2: exploratory behaviour}]{subsumption-arch-3}
+
+\begin{frame}{Example: the MIT Genghis robot}
+
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+
+            MIT Genghis: Rodney Brooks in 1989
+
+            Really simple hardware
+
+
+            \begin{itemize}
+
+                \item 6 legs, 2 motors per leg
+                    \begin{itemize}
+                        \item motor for forward/back, motor for up/down
+                    \end{itemize}
+                \item 2 bump sensors (feelers)
+                \item 2 ground detection sensors (switches)
+                \item 6 heat sensors (but they weren’t used for walking)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+
+            \begin{center}
+                \includegraphics[width=\linewidth]{genghis}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\videoframe[0.7]{figs/part7/genghis-short2.mov}
+
+\imageframe[caption={In total, 57 FSMs}]{genghis-subsumption}
 
 \begin{frame}{Symbolic architectures for interaction}
 
