@@ -35,7 +35,7 @@
 \newcommand{\stmt}[1]{{\footnotesize \tt  #1}}
 
 \usepackage{tikz}
-\usetikzlibrary{mindmap,backgrounds,positioning,calc}
+\usetikzlibrary{mindmap,backgrounds,positioning,calc,matrix}
 
 \graphicspath{{figs/part7/}}
 
@@ -61,22 +61,45 @@
 \end{frame}
 
 
-\imageframe[color=black]{ranger-side}
-\imageframe[scale=0.9]{ranger}
-\imageframe[scale=0.8]{croquignole-expe}
+\begin{frame}{Let's thinker a little...}
+
+    Let's imagine you want to build a robot that {\bf fetches beers from the fridge}
+    and bring them back to you whenever you ask. It should {\bf not kill the cat},
+    and it should {\bf politely greet your mum} whenever it sees her.
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+
+            You have:
+            \begin{itemize}
+                \item a map with the important landmarks like {\tt fridge}
+                \item the following modules:
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{center}
+                \resizebox{\linewidth}{!}{
+                    \begin{tikzpicture}[>=latex,every node/.style={draw,font=\tt}]
+
+                        \node at (0.5,2) {follow\_path\_to};
+                        \node at (2.5,4) {open\_fridge};
+                        \node at (-0.7,4) {speech\_synthesis};
+                        \node at (0,0) {process\_verbal\_commands};
+                        \node at (3,1) {detect\_mum};
+                        \node at (2.7,3) {detect\_cat};
+                        \node at (0.5,1) {plan\_to};
+                        \node at (0,3) {pick\_up\_beer};
+                    \end{tikzpicture}
+                }
+            \end{center}
+        \end{column}
+    \end{columns}
+
+    Can you draw a control architecture that achieves just that?
+\end{frame}
+
 
 \section{Control paradigms}
-
-\begin{frame}{Control paradigms}
-
-    \begin{itemize}
-        \item Behavioural (reactive) control
-        \item Finite-state Machines
-        \item Model-Plan-Act
-        \item Event-based programming
-        \item Probabilistic methods
-    \end{itemize}
-\end{frame}
 
 \begin{frame}{Behavioural (or reactive) control}
 
@@ -254,9 +277,16 @@
 
 \end{frame}
 
+\begin{frame}{Event-oriented programming: example of Ranger}
+
+    Ranger is a `box on wheels' developed at EPFL
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{ranger}
+    \end{center}
+\end{frame}
 
 \imageframe[color=black]{ranger-side}
-
 
 \begin{frame}[fragile]{Event-oriented programming}
 
@@ -322,6 +352,8 @@ def on_toy(robot):
 \end{overprint}
 \end{frame}
 
+\imageframe[scale=0.8]{croquignole-expe}
+
 \begin{frame}{}
 
     \begin{center}
@@ -329,100 +361,6 @@ def on_toy(robot):
 
         Note that this is a example of {\bf aimless, purely reactive}, behaviour.
     \end{center}
-
-\end{frame}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Finite state machines}
-
-    \begin{center}
-        \resizebox{\linewidth}{!}{
-            \begin{tikzpicture}[>=latex,
-                    every node/.style={thick,font=\bf},
-                    every edge/.style={->,draw,thick,nodes={font=\scriptsize}}]
-
-                \coordinate (origin) at (0,0);
-                \node[minimum size=0.3cm, label={reset},fill,circle] at (origin) {};
-                \node[draw,below right=of origin] (wait) {waiting};
-                \node[draw,right=2 of wait] (blink) {blink red};
-                \path (origin) edge[bend right]  (wait) 
-                        (wait) edge node[above]{button press} (blink)
-                               edge[loop below] node{no press} (wait);
-
-                
-
-                    \draw[<-,hriSec1Dark,ultra thick] (wait) -- ($(wait) + (80:1cm)$) node[draw=none,align=center,above,color=hriSec1Dark] {state};
-                    \draw[<-,hriSec1Dark,ultra thick] (0.5,-1) -- +(250:1cm) node[draw=none,align=center,below,color=hriSec1Dark] {reset\\transition};
-                    \draw[<-,hriSec1Dark,ultra thick] ($(wait.east) + (0.1,0)$) -- +(70:2cm) node[draw=none,align=center,above,color=hriSec1Dark] {transition};
-                    \draw[<-,hriSec1Dark,ultra thick] ($(wait.east) + (1,0.5)$) -- +(50:1cm) node[draw=none,align=center,right,color=hriSec1Dark] {transition\\condition};
-
-            \end{tikzpicture}
-        }
-    \end{center}
-\end{frame}
-
-\begin{frame}{Finite State Machine: wall avoidance example}
-    \begin{center}
-        \resizebox{0.7\linewidth}{!}{
-            \begin{tikzpicture}[>=latex,
-                every node/.style={thick,align=center,font=\bf},
-                    every edge/.style={->,draw,ultra thick,nodes={align=center,font=\scriptsize}},
-                    state/.style={draw,fill=hriSec2Comp!50,minimum width=2cm}
-                    ]
-
-                \path[use as bounding box] (-0.5, 3) rectangle (10, -6); % need to manually set the bb as the bezier curves used for the transition have control points far out
-
-                \coordinate (origin) at (0,0);
-                \node[minimum size=0.3cm, label={reset},fill,circle] at (origin) {};
-                \node[state,below right=of origin] (move) {move\\forward};
-                \node<2>[state] at ($(move) + (4,2)$) (right) {?};
-                \node<3->[state] at ($(move) + (4,2)$) (right) {rotate\\right};
-                \node<2>[state] at ($(move) + (4,-2)$) (left) {?};
-                \node<3->[state] at ($(move) + (4,-2)$) (left) {rotate\\left};
-
-                \path (origin) edge[bend right]  (move);
-                 \path<2> (move.east) edge[out=0,in=180] (right)
-                                      edge[out=0,in=180] (left)
-                                      edge[out=0,in=-90,looseness=3] (move.south);
-                 \path<3-> (move.east) edge[out=0,in=180] node[right]{left sensor\\detect wall} (right)
-                                       edge[out=0,in=180] node[right]{right sensor\\detect wall} (left)
-                                       edge[out=0,in=-90,looseness=4] node[below]{no wall} (move.south);
-
-                 \path<4> (right.east) edge[out=0,in=-90,looseness=4] node[right]{?} (right.south)
-                                       edge[out=30,in=90,looseness=2] node[above]{?} (move.north)
-                           (left.east) edge[out=0,in=90,looseness=4] node[right]{?} (left.north)
-                                       edge[out=-30,in=-90,looseness=2] node[below]{?} (move.south);
-                 \path<5-> (right.east) edge[out=0,in=-90,looseness=4] node[right]{$|angle| < \pi/2$} (right.south)
-                                       edge[out=30,in=90,looseness=2] node[above]{$|angle| \geq \pi/2$} (move.north)
-                           (left.east) edge[out=0,in=90,looseness=4] node[right]{$|angle| < \pi/2$} (left.north)
-                                       edge[out=-30,in=-90,looseness=2] node[below]{$|angle| \geq \pi/2$} (move.south);
-
-            \end{tikzpicture}
-        }
-    \end{center}
-    \source{https://www.clear.rice.edu/engi128/Handouts/Lec17-Robotics.pdf}{example borrowed from Rice University ENGI128}
-\end{frame}
-
-\imageframe{fsm-pr2-charging}
-\videoframe[0.56]{figs/part7/cowriter.mp4}
-\imageframe[scale=0.8]{cowriter-fsm}
-
-\begin{frame}{Finite State Machine: strengths/weaknesses}
-
-    {\bf Strengths}
-
-    \begin{itemize}
-        \item Behaviour formally provable
-        \item Easier to design goal-directed behaviours
-    \end{itemize}
-
-    {\bf Weaknesses}
-
-    \begin{itemize}
-        \item Less modular than behavioural approaches
-        \item Difficult to deal with unexpected events: not well suited for dynamic environments
-    \end{itemize}
-
 
 \end{frame}
 
@@ -453,6 +391,91 @@ def on_toy(robot):
             \end{tikzpicture}
         }
     \end{center}
+
+\end{frame}
+
+
+\begin{frame}{Task planning}
+
+    \only<1-4>{
+
+    Turn a high-level goal (\emph{bring me a beer!}) into `simple'
+    \textbf{primitive} actions.
+
+    A standard approach relies on \textbf{Hierarchical task networks}
+    (\textbf{HTN}): uses partial-order contraints to \emph{decompose actions}
+    into \emph{primitive operators}.
+
+    \begin{center}
+            \begin{tikzpicture}[scale=0.3,>=latex,
+                                ampersand replacement=\&, % needed when inside beamer frames
+                                every node/.style={draw,solid},
+                                every edge/.style={solid,ultra thick,<-,draw}]
+
+                \node[draw=none] at (0,0) {}; % just to ensure a constant size for beamer
+                \node[draw=none] at (0,-10) {}; % just to ensure a constant size for beamer
+
+                \node<2-> (a1) {Bring me a beer!};
+
+                \matrix<3->[dotted,below=of a1, matrix of nodes,column sep=4mm] (g1){
+                        Go to fridge \& Open fridge \& Pick up beer \& Go back \\
+                };
+
+                \matrix<4->[dotted,below=of g1, matrix of nodes,column sep=4mm] (g2){
+                    Localise beer \& Compute grasp \& Perform grasp \& Store beer \\
+                };
+
+                \draw<3->[dashed,->] (a1) -- (g1) node[draw=none,midway,right] {\footnotesize decomposes into};
+                \draw<4->[dashed,->] (g1-1-3) -- (g2) node[draw=none,midway,right] {\footnotesize decomposes into};
+            \end{tikzpicture}
+    \end{center}
+    }
+
+    \only<5>{
+        What \emph{primitive action} means is system-dependent: what an agent
+        considers as primitive can be another agent’s plans.
+    }
+
+\end{frame}
+
+\begin{frame}[fragile]{Task planning: actions}
+
+    An action has \textbf{pre-conditions} and \textbf{post-conditions} (or \emph{effects}).
+
+\begin{verbatim}
+Action <action name>
+{
+    preconditions {...};
+    effects{...};
+    cost{<cost_function_name>};
+    duration{<duration_function_name>};
+}
+\end{verbatim}
+
+\pause
+
+\begin{verbatim}
+Action open_fridge
+{
+    preconditions {facing_fridge AND fridge_door.closed};
+    effects {facing_fridge AND fridge_door.open};
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}{Example: Shakey the robot}
+
+    Shakey the robot (Stanford, 1968), using the \textbf{STRIPS} planner
+
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+                \includegraphics[width=0.8\linewidth]{shakey}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+                \includegraphics[width=\linewidth]{shakey-strips}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
@@ -504,7 +527,7 @@ def on_toy(robot):
 \end{frame}
 
 
-\begin{frame}[plain]{}
+\begin{frame}[plain,label=cleantaskdiagram]{}
 \centering
 \resizebox{!}{0.9\paperheight}{%
 \begin{tikzpicture}[
@@ -697,8 +720,133 @@ def on_toy(robot):
     {\bf Strengths}
 
     \begin{itemize}
+        \item High-level goals are explicit
+        \item Scale well with task complexity
+        \item Easy to switch from one task to the other (planning domain is
+            symbolic and explicit)
+
+    \end{itemize}
+
+    {\bf Weaknesses}
+
+    \begin{itemize}
+        \item Modeling and planning might be (very) computationally expensive
+        \item Difficult to deal with unexpected events: not well suited for
+            dynamic environments (often requires replanning)
+
+    \end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Finite state machines}
+
+    \begin{center}
+        \resizebox{\linewidth}{!}{
+            \begin{tikzpicture}[>=latex,
+                    every node/.style={thick,font=\bf},
+                    every edge/.style={->,draw,thick,nodes={font=\scriptsize}}]
+
+                \coordinate (origin) at (0,0);
+                \node[minimum size=0.3cm, label={reset},fill,circle] at (origin) {};
+                \node[draw,below right=of origin] (wait) {waiting};
+                \node[draw,right=2 of wait] (blink) {blink red};
+                \path (origin) edge[bend right]  (wait) 
+                        (wait) edge node[above]{button press} (blink)
+                               edge[loop below] node{no press} (wait);
+
+                
+
+                    \draw[<-,hriSec1Dark,ultra thick] (wait) -- ($(wait) + (80:1cm)$) node[draw=none,align=center,above,color=hriSec1Dark] {state};
+                    \draw[<-,hriSec1Dark,ultra thick] (0.5,-1) -- +(250:1cm) node[draw=none,align=center,below,color=hriSec1Dark] {reset\\transition};
+                    \draw[<-,hriSec1Dark,ultra thick] ($(wait.east) + (0.1,0)$) -- +(70:2cm) node[draw=none,align=center,above,color=hriSec1Dark] {transition};
+                    \draw[<-,hriSec1Dark,ultra thick] ($(wait.east) + (1,0.5)$) -- +(50:1cm) node[draw=none,align=center,right,color=hriSec1Dark] {transition\\condition};
+
+            \end{tikzpicture}
+        }
+    \end{center}
+\end{frame}
+
+\begin{frame}{Finite State Machine: wall avoidance example}
+    \begin{center}
+        \resizebox{0.7\linewidth}{!}{
+            \begin{tikzpicture}[>=latex,
+                every node/.style={thick,align=center,font=\bf},
+                    every edge/.style={->,draw,ultra thick,nodes={align=center,font=\scriptsize}},
+                    state/.style={draw,fill=hriSec2Comp!50,minimum width=2cm}
+                    ]
+
+                \path[use as bounding box] (-0.5, 3) rectangle (10, -6); % need to manually set the bb as the bezier curves used for the transition have control points far out
+
+                \coordinate (origin) at (0,0);
+                \node[minimum size=0.3cm, label={reset},fill,circle] at (origin) {};
+                \node[state,below right=of origin] (move) {move\\forward};
+                \node<2>[state] at ($(move) + (4,2)$) (right) {?};
+                \node<3->[state] at ($(move) + (4,2)$) (right) {rotate\\right};
+                \node<2>[state] at ($(move) + (4,-2)$) (left) {?};
+                \node<3->[state] at ($(move) + (4,-2)$) (left) {rotate\\left};
+
+                \path (origin) edge[bend right]  (move);
+                 \path<2> (move.east) edge[out=0,in=180] (right)
+                                      edge[out=0,in=180] (left)
+                                      edge[out=0,in=-90,looseness=3] (move.south);
+                 \path<3-> (move.east) edge[out=0,in=180] node[right]{left sensor\\detect wall} (right)
+                                       edge[out=0,in=180] node[right]{right sensor\\detect wall} (left)
+                                       edge[out=0,in=-90,looseness=4] node[below]{no wall} (move.south);
+
+                 \path<4> (right.east) edge[out=0,in=-90,looseness=4] node[right]{?} (right.south)
+                                       edge[out=30,in=90,looseness=2] node[above]{?} (move.north)
+                           (left.east) edge[out=0,in=90,looseness=4] node[right]{?} (left.north)
+                                       edge[out=-30,in=-90,looseness=2] node[below]{?} (move.south);
+                 \path<5-> (right.east) edge[out=0,in=-90,looseness=4] node[right]{$|angle| < \pi/2$} (right.south)
+                                       edge[out=30,in=90,looseness=2] node[above]{$|angle| \geq \pi/2$} (move.north)
+                           (left.east) edge[out=0,in=90,looseness=4] node[right]{$|angle| < \pi/2$} (left.north)
+                                       edge[out=-30,in=-90,looseness=2] node[below]{$|angle| \geq \pi/2$} (move.south);
+
+            \end{tikzpicture}
+        }
+    \end{center}
+    \source{https://www.clear.rice.edu/engi128/Handouts/Lec17-Robotics.pdf}{example borrowed from Rice University ENGI128}
+\end{frame}
+
+\imageframe{fsm-pr2-charging}
+\videoframe[0.56]{figs/part7/cowriter.mp4}
+\imageframe[scale=0.8]{cowriter-fsm}
+
+\begin{frame}{FSM with ROS: the SMACH package}
+    \href{http://wiki.ros.org/smach}{\textbf{SMACH}} is a ROS-independent (but very weill integrated with ROS!) Python library to build state machines
+
+    \begin{itemize}
+        \item support for hierarchical (\ie nested) state machines
+        \item provides support for concurrency as well
+    \end{itemize}
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{smach}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{Relation to behavioural/deliberative paradigms}
+
+    Finite State Machines are \textbf{not a control paradigm} per-se.
+
+    Instead, they are a mathematical formalism to describe states and transitions.
+
+    States themselves might be behavioural components, deliberative components,
+    or \textbf{nested state machines}.
+
+\end{frame}
+
+\begin{frame}{Finite State Machine: strengths/weaknesses}
+
+    {\bf Strengths}
+
+    \begin{itemize}
         \item Behaviour formally provable
-        \item Easier to design goal-directed behaviours
+        \item Easier to debug: control flow is explicit
     \end{itemize}
 
     {\bf Weaknesses}
@@ -708,23 +856,44 @@ def on_toy(robot):
         \item Difficult to deal with unexpected events: not well suited for dynamic environments
     \end{itemize}
 
+
 \end{frame}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Probabilistic control}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{System Architectures}
+\section{Control Architectures}
 
-\begin{frame}{Architectures}
+\begin{frame}<1-2>[label=ctrlstrategies]{Control strategies so far}
+
+    {\bf Behavioural} or reactive
+
     \begin{itemize}
-        \item Subsumption architectures
-        \item Layered architectures
+        \item \emph{bottom-up} approach
+        \item lots of independent modules executing concurrently,
+            monitoring sensor values, triggering actions and possibly inhibiting each-others
+        \item hard to organize into complex behaviours; gets messy quickly
     \end{itemize}
+
+    \pause
+
+    {\bf Hierarchical}: classic model/plan/act
+
+    \begin{itemize}
+        \item \emph{top-down} approach
+        \item starts with high-level goals, decompose into sub-tasks
+        \item not very agile
+    \end{itemize}
+
+    \pause
+
+    {\bf Hybrid approaches?}
+
+    \begin{itemize}
+        \item Deliberative at high level, reactive at low level
+    \end{itemize}
+
 \end{frame}
 
 \begin{frame}{Subsumption architecture}
@@ -816,7 +985,63 @@ def on_toy(robot):
 
 \imageframe[caption={In total, 57 FSMs}]{genghis-subsumption}
 
+\againframe<3>{ctrlstrategies}
+
+\begin{frame}{Levels of control}
+    Control problems are usually split into three levels:
+
+    \begin{itemize}
+        \item<1-> \textbf{Low-level control}
+            \begin{itemize}
+                \item Example: where to place a leg as robot takes its next step
+                \item Generally, continuous-valued problems
+                \item Short time scale (under a second); high frequency loop
+            \end{itemize}
+        \item<2-> \textbf{Intermediate level control}
+            \begin{itemize}
+                \item Navigating to a destination, or picking up an object
+                \item Continuous or discrete valued problems
+                \item Time scale of a few seconds
+            \end{itemize}
+        \item<3-> \textbf{High level control}
+            \begin{itemize}
+                \item What is the plan for moving these boxes out of the room?
+                \item Discrete problems, long time scale (minutes)
+            \end{itemize}
+    \end{itemize}
+
+    \source{https://www.cs.cmu.edu/afs/cs/academic/class/15494-s11/lectures/architectures.pdf}{CMU lecture on Cognitive Robotics}
+\end{frame}
+
+\begin{frame}{Layered Architectures}
+    \begin{center}
+        %\resizebox{\linewidth}{!}{
+            \begin{tikzpicture}[>=latex,every node/.style={minimum width=4cm,align=center}]
+                
+                \node (low) {\bf Low-level layer\\Functional layer};
+                \node[above=of low] (mid) {\bf Intermediate layer\\Executive layer} edge[ultra thick,->] (low);
+                \node[above=of mid] (hig) {\bf High-level layer\\Deliberative/decisional layer} edge[ultra thick,->] (mid);
+
+            \end{tikzpicture}
+        %}
+    \end{center}
+
+    Each layer has different time constraints (from real-time to possibly `slow'); they typically use different control paradigms
+\end{frame}
+
+
 \begin{frame}{Deliberative architecture for interaction}
+
+    One example: the LAAS deliberative architecture for interaction
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{clean-table}
+    \end{center}
+\end{frame}
+
+\againframe<1>[plain]{cleantaskdiagram}
+
+\begin{frame}<1-6>[label=laasarch]{Deliberative architecture for interaction}
 
 \resizebox{\paperwidth}{!}{%
 
@@ -912,95 +1137,142 @@ def on_toy(robot):
 }
 \end{frame}
 
+\begin{frame}{}
+
+    How do modules actually communicate with each other?
+
+\end{frame}
+
+\againframe<7>{laasarch}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Cognitive Architectures}
-
-\begin{frame}{Investigating robot cognition}
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{cogarch}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Architectures to model human cognition}
-
-\resizebox{!}{0.7\paperheight}{%
-\tikzset{subpart/.style={draw, font=\scriptsize, fill opacity=0.5, text opacity=1, fill=white!50}}
-\begin{tikzpicture}[
-    >=latex,
-    node distance=1.5,
-    every edge/.style={draw, very thick},
-    skill/.style={draw, rounded corners, align=center, inner sep=5pt, fill=black!20},
-    stmt/.style={align=center, font=\bf},
-    label/.style={midway, align=center, font=\scriptsize, fill=white}]
-
-    \node at (0,0)[skill, fill=hriSec2!50] (a1) {Shared Plan Elaboration};
-
-    \node [skill, fill=hriSec2!50,above=of a1] (a2) {Intention Prediction};
-    \node [skill, fill=hriSec2!50,left=of a1] (a3) {Mental State Management};
-    \node [skill, fill=hriSec2!50,right=of a1] (a4) {Communication for\\Joint Action};
-    \node [skill, fill=hriSec2!50,below=of a1] (a5) {Shared Plan Achievement};
-    \node [skill, fill=hriSec2!50,left=of a5] (a6) {Situation Assessment};
-
-
-    \node [skill, fill=hriSec3!50,below left=of a5,anchor=north] (a7) {Action Achievement};
-    \node [skill, fill=hriSec3!50,below right=of a5,anchor=north] (a8) {Human Action Monitoring};
-  
-    \node[below=3.7 of a5] (a14) {Human-aware geometric and task planners, real-time controllers, sensors...};
-
-  \coordinate[below=3 of a6] (a9);
-
-  \node[rotate=90,left=0.7 of a3.west] (distal) {\bf\large DISTAL};
-  \node[rotate=90] at (distal |- a7.south) {\bf\large PROXIMAL};
-  \node[rotate=90] at (distal |- a14) {\bf\large MOTOR};
-
-  \coordinate (a11) at (a9 -| distal.north);
-  \coordinate (a12) at (a9 -| a4.east);
-  \draw[dotted, thick] (a11) -- (a12);
-
-
-  \coordinate (a13) at ($(a5)!0.5!(a7)$);
-  \draw[dotted, thick] (a13 -| distal.north) -- (a13 -| a4.east);
-
-
-  %%% Relations between components
-  \path (a2) edge [->] node[label] {goal to execute} (a1);
-  \path (a1) edge [->] node[label] {plan} (a5);
-  \path (a2) edge [<-] node[label] {goal (order)} (a4);
-
-  \path (a3) edge [<->, bend left=40, looseness=1.2] node[label,pos=0.1] {mental state information} (a4);
-  \path (a3) edge [<->] (a2);
-  \path (a3) edge [<->] (a1);
-  \path (a3) edge [<->] (a5);
-
-  \path (a6) edge [->] node[label] {conceptual\\world state} (a3);
-
-  \path (a5) edge [<->] node[label] {coordination} (a4);
-
-  \path (a5) edge [<->] node[label,right=0.5] {anchoring of actions} (a7);
-  \path (a5) edge [<->] (a8);
-
-  \path (a9) edge [->] node[label] {sensors} (a6);
-
-  \coordinate (a10) at (a9 -| a7);
-  \path (a10) edge [<->] node[label] {planning and control} (a7);
-
-  \coordinate (a10) at (a9 -| a8);
-  \path (a10) edge [<->] node[label] {sensors} (a8);
-
-  \path (a7) edge [<->] node[label] {coordination} (a8);
- 
-\end{tikzpicture}
-}
-
-\source{}{Sandra Devin}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Cognitive Architectures}
+%
+%\begin{frame}{Investigating robot cognition}
+%    \begin{center}
+%        \includegraphics[width=0.8\linewidth]{cogarch}
+%    \end{center}
+%\end{frame}
+%
+%\begin{frame}{Architectures to model human cognition}
+%
+%\resizebox{!}{0.7\paperheight}{%
+%\tikzset{subpart/.style={draw, font=\scriptsize, fill opacity=0.5, text opacity=1, fill=white!50}}
+%\begin{tikzpicture}[
+%    >=latex,
+%    node distance=1.5,
+%    every edge/.style={draw, very thick},
+%    skill/.style={draw, rounded corners, align=center, inner sep=5pt, fill=black!20},
+%    stmt/.style={align=center, font=\bf},
+%    label/.style={midway, align=center, font=\scriptsize, fill=white}]
+%
+%    \node at (0,0)[skill, fill=hriSec2!50] (a1) {Shared Plan Elaboration};
+%
+%    \node [skill, fill=hriSec2!50,above=of a1] (a2) {Intention Prediction};
+%    \node [skill, fill=hriSec2!50,left=of a1] (a3) {Mental State Management};
+%    \node [skill, fill=hriSec2!50,right=of a1] (a4) {Communication for\\Joint Action};
+%    \node [skill, fill=hriSec2!50,below=of a1] (a5) {Shared Plan Achievement};
+%    \node [skill, fill=hriSec2!50,left=of a5] (a6) {Situation Assessment};
+%
+%
+%    \node [skill, fill=hriSec3!50,below left=of a5,anchor=north] (a7) {Action Achievement};
+%    \node [skill, fill=hriSec3!50,below right=of a5,anchor=north] (a8) {Human Action Monitoring};
+%  
+%    \node[below=3.7 of a5] (a14) {Human-aware geometric and task planners, real-time controllers, sensors...};
+%
+%  \coordinate[below=3 of a6] (a9);
+%
+%  \node[rotate=90,left=0.7 of a3.west] (distal) {\bf\large DISTAL};
+%  \node[rotate=90] at (distal |- a7.south) {\bf\large PROXIMAL};
+%  \node[rotate=90] at (distal |- a14) {\bf\large MOTOR};
+%
+%  \coordinate (a11) at (a9 -| distal.north);
+%  \coordinate (a12) at (a9 -| a4.east);
+%  \draw[dotted, thick] (a11) -- (a12);
+%
+%
+%  \coordinate (a13) at ($(a5)!0.5!(a7)$);
+%  \draw[dotted, thick] (a13 -| distal.north) -- (a13 -| a4.east);
+%
+%
+%  %%% Relations between components
+%  \path (a2) edge [->] node[label] {goal to execute} (a1);
+%  \path (a1) edge [->] node[label] {plan} (a5);
+%  \path (a2) edge [<-] node[label] {goal (order)} (a4);
+%
+%  \path (a3) edge [<->, bend left=40, looseness=1.2] node[label,pos=0.1] {mental state information} (a4);
+%  \path (a3) edge [<->] (a2);
+%  \path (a3) edge [<->] (a1);
+%  \path (a3) edge [<->] (a5);
+%
+%  \path (a6) edge [->] node[label] {conceptual\\world state} (a3);
+%
+%  \path (a5) edge [<->] node[label] {coordination} (a4);
+%
+%  \path (a5) edge [<->] node[label,right=0.5] {anchoring of actions} (a7);
+%  \path (a5) edge [<->] (a8);
+%
+%  \path (a9) edge [->] node[label] {sensors} (a6);
+%
+%  \coordinate (a10) at (a9 -| a7);
+%  \path (a10) edge [<->] node[label] {planning and control} (a7);
+%
+%  \coordinate (a10) at (a9 -| a8);
+%  \path (a10) edge [<->] node[label] {sensors} (a8);
+%
+%  \path (a7) edge [<->] node[label] {coordination} (a8);
+% 
+%\end{tikzpicture}
+%}
+%
+%\source{}{Sandra Devin}
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Middlewares}
+
+\begin{frame}{Robotic middlewares}
+ The core role of a \textbf{middleware} is to \textbf{provide a set of abstractions to ease the development of robotic software components}.
+
+    \begin{itemize}
+        \item<+-> It \textbf{abstracts away the hardware platform} (uniform driver interfaces)
+        \item<+-> It abstracts away where computations are physically performed (by providing
+            \textbf{distributed computation/network transparency})
+
+        \item<+-> It supports \textbf{modularity}/\textbf{reusability} (\textbf{standard interfaces}: modules which
+            implement these interfaces can be easily swapped)
+        \item<+-> It help with debugging (by providing \textbf{introspection} mechanisms)
+
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Middlewares in a broader sense}
+    \begin{center}
+        \includegraphics[width=\linewidth]{ros_equation}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Existing middlewares}
+    \begin{itemize}
+        \item OROCOS (Europe)
+        \item YARP (Europe)
+        \item OpenRTM (Korea)
+        \item \textbf<2>{ROS} -- Robot Operating System (originally US)
+        \item OpenRAVE (US)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{ROS}
+
+    \begin{center}
+        \includegraphics[width=\linewidth]{ros_structure}
+    \end{center}
+\end{frame}
 
 \begin{frame}{Talking Nodes}
 
