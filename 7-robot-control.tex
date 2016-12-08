@@ -1267,14 +1267,66 @@ Action open_fridge
     \end{itemize}
 \end{frame}
 
+
 \begin{frame}{ROS}
+    \begin{itemize}
+        \item<1-> A fairly simple peer-to-peer message passing system designed with robotics in
+            mind
+        \item<2-> An API to this system (in several languages -- C++ and Python are
+            1st tier)
+        \item<3-> A set of standard message types that facilitate interoperability between modules
+        \item<4> \bf{$\rightarrow$ a middleware}
+        \item<5-> A set of conventions to write and package robotic softwares
+        \item<6-> Deep integration of a few key open-source libraries (OpenCV, PCL, tf)
+        \item<7-> A set of tools to run and monitor the nodes
+        \item<8-> Engagement of a large academic community, leading to a library of thousands of nodes
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{ROS structure}
 
     \begin{center}
         \includegraphics[width=\linewidth]{ros_structure}
     \end{center}
 \end{frame}
 
-\begin{frame}{Talking Nodes}
+
+\begin{frame}{ROS Ecosystem}
+    \centering
+    \resizebox{0.9\textwidth}{!}{%
+        \vspace*{4cm}
+        \begin{tikzpicture}
+
+            \path[small mindmap,
+                  level 1 concept/.append style={sibling angle=360/5}, 
+                  level 2 concept/.append style={sibling angle=60}, 
+                  concept color=hriWarmGreyLight,text=hriWarmGreyDark]
+
+            node[concept] {\bf ROS}
+            [clockwise from=-180]
+            child[concept color=hriSec1Dark,text=white] { node[concept]{Middleware} 
+                [clockwise from=-120]
+                child[concept color=hriSec1CompDark,text=white] { node[concept]{Standard Interfaces} }
+                child[concept color=hriSec3CompDark,text=white] { node[concept]{Nodes Management} }
+                child[concept color=hriSec2Dark,text=white] { node[concept]{IPC} }
+            }
+            child[concept color=hriSec3Comp,text=white] { node[concept] {Standards and Conventions} }
+            child[concept color=hriSec2CompDark,text=white] { node[concept]{Community}
+                [clockwise from=90]
+                child[concept color=hriSec2Comp,text=white] { node[concept]{Software engineering infrastructure} }
+                child[concept color=hriSec1,text=white] { node[concept] {REPs} }
+                child[concept color=hriSec3,text=white] { node[concept] {ROSCon} }
+            }
+            child[concept color=hriSec3Dark,text=white] { node[concept] {Large software library} 
+                [clockwise from=0]
+                child[concept color=hriSec2Dark,text=white] { node[concept] {Satellite libraries} }
+            }
+            child[concept color=hriSec3CompDark,text=white] { node[concept] {Tooling} };
+        \end{tikzpicture}
+    }
+\end{frame}
+
+\begin{frame}{Middlewares' core principle: Talking Nodes}
 
 \begin{center}
 \begin{tikzpicture}[
@@ -1337,56 +1389,69 @@ Action open_fridge
 
 \end{frame}
 
+\begin{frame}[containsverbatim]{Middlewares: interface definitions}
 
-\begin{frame}{ROS}
-    \begin{itemize}
-        \item<1-> A fairly simple peer-to-peer message passing system designed with robotics in
-            mind
-        \item<2-> An API to this system (in several languages -- C++ and Python are
-            1st tier)
-        \item<3-> A set of standard message types that facilitate interoperability between modules
-        \item<4> \bf{A middleware?}
-        \item<5-> A set of conventions to write and package robotic softwares
-        \item<6-> Deep integration of a few key open-source libraries (OpenCV, PCL, tf)
-        \item<7-> A set of tools to run and monitor the nodes
-        \item<8-> Engagement of a large academic community, leading to a library of thousands of nodes
-    \end{itemize}
+Interfaces are called \textbf{message} in ROS.
+
+\textbf{Message definitions} are the interface definitions in ROS. For example,
+a 6D pose:
+
+\begin{shcode}
+$ rosmsg show geometry_msgs/Pose
+geometry_msgs/Point position
+  float64 x
+  float64 y
+  float64 z
+geometry_msgs/Quaternion orientation
+  float64 x
+  float64 y
+  float64 z
+  float64 w
+\end{shcode}
 \end{frame}
 
-\begin{frame}{ROS Ecosystem}
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-        \vspace*{4cm}
-        \begin{tikzpicture}
+\begin{frame}[containsverbatim]{Middlewares: interface definitions}
 
-            \path[small mindmap,
-                  level 1 concept/.append style={sibling angle=360/5}, 
-                  level 2 concept/.append style={sibling angle=60}, 
-                  concept color=hriWarmGreyLight,text=hriWarmGreyDark]
+An image:
 
-            node[concept] {\bf ROS}
-            [clockwise from=-180]
-            child[concept color=hriSec1Dark,text=white] { node[concept]{Middleware} 
-                [clockwise from=-120]
-                child[concept color=hriSec1CompDark,text=white] { node[concept]{Standard Interfaces} }
-                child[concept color=hriSec3CompDark,text=white] { node[concept]{Nodes Management} }
-                child[concept color=hriSec2Dark,text=white] { node[concept]{IPC} }
-            }
-            child[concept color=hriSec3Comp,text=white] { node[concept] {Standards and Conventions} }
-            child[concept color=hriSec2CompDark,text=white] { node[concept]{Community}
-                [clockwise from=90]
-                child[concept color=hriSec2Comp,text=white] { node[concept]{Software engineering infrastructure} }
-                child[concept color=hriSec1,text=white] { node[concept] {REPs} }
-                child[concept color=hriSec3,text=white] { node[concept] {ROSCon} }
-            }
-            child[concept color=hriSec3Dark,text=white] { node[concept] {Large software library} 
-                [clockwise from=0]
-                child[concept color=hriSec2Dark,text=white] { node[concept] {Satellite libraries} }
-            }
-            child[concept color=hriSec3CompDark,text=white] { node[concept] {Tooling} };
-        \end{tikzpicture}
-    }
+\begin{shcode}
+$ rosmsg show sensor_msgs/Image 
+std_msgs/Header header
+    uint32 seq
+    time stamp
+    string frame_id
+uint32 height
+uint32 width
+string encoding
+uint8 is_bigendian
+uint32 step
+uint8[] data
+\end{shcode}
+
 \end{frame}
+
+\begin{frame}[containsverbatim]{Middlewares: interface instantiation}
+
+At run-time, messages are \textbf{instantiated} and \textbf{published over
+topics}:
+
+\begin{shcode}
+$ rostopic echo /camera/image_raw 
+header: 
+    seq: 56
+    stamp: 
+      secs: 1449243166
+      nsecs: 415330019
+    frame_id: /camera_frame
+height: 720
+width: 1280
+encoding: rgb8
+is_bigendian: 0
+step: 3840
+data: [32, 57, 51, 36, 61, 55, 41, 63, 60,...
+\end{shcode}
+\end{frame}
+
 
 \begin{frame}{Example: a simple image processing pipeline}
 
@@ -1452,7 +1517,7 @@ $ rosrun image_view image_view image:=/processed_image
 
 \end{frame}
 
-
+\imageframe{image_processor}
 
 \begin{frame}{}
     \begin{center}
