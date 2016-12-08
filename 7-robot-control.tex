@@ -485,7 +485,7 @@ Action open_fridge
 
     \centering
 
-        \includegraphics[width=0.7\linewidth]{clean-table}
+        \includegraphics[width=0.7\linewidth]{cleantable/manip_run_cam3}
 
     \resizebox{0.9\linewidth}{!}{%
         \begin{tikzpicture}[
@@ -1000,6 +1000,7 @@ Action open_fridge
         \item<2-> \textbf{Intermediate level control}
             \begin{itemize}
                 \item Navigating to a destination, or picking up an object
+                    $\rightarrow$ \emph{capabilities}
                 \item Continuous or discrete valued problems
                 \item Time scale of a few seconds
             \end{itemize}
@@ -1097,7 +1098,7 @@ Action open_fridge
     };
   \path (shary) edge [<->, bend left] node[label] (evts) {events, \\ world model and \\ agents beliefs} (oro);
   \path (shary) edge [<->, bend left] node[label] {action monitoring \\ and management of \\ position hypotheses} (spark);
-  \path (lowlevel.east) edge [<-, bend right=80, looseness=1.5] node[label] {atomic\\actions} (shary.east);
+  \path (lowlevel.east) edge [<-, bend right=80, looseness=1.5] node[label] {primitive\\actions} (shary.east);
  }
   
 
@@ -1124,7 +1125,8 @@ Action open_fridge
 
   %%% Separation between deliberative layer and sensori-motor layer
   \coordinate (mid) at ($(lowlevel)!0.5!(spark)$);
-  \draw[dotted, thick] (dialogs.west |- mid) -- (mhp.east |- mid);
+  \draw[dotted, thick] (dialogs.west |- mid) -- (mhp.east |- mid) node[at start,above,align=left,draw=none] {\bf Deliberative/executive layers} 
+                                                                  node[at start,below,align=left,draw=none] {\bf Functional layer};
 
   \only<7>{
       \fill[fill opacity=.7,white] (current bounding box.north west) rectangle (current bounding box.south east);
@@ -1257,12 +1259,15 @@ Action open_fridge
     \end{center}
 \end{frame}
 
-\begin{frame}{Existing middlewares}
+\begin{frame}{Many existing middlewares}
+
+    Major ones:
+
     \begin{itemize}
         \item OROCOS (Europe)
         \item YARP (Europe)
         \item OpenRTM (Korea)
-        \item \textbf<2>{ROS} -- Robot Operating System (originally US)
+        \item \textbf<2>{ROS} -- Robot Operating System (originally US, now very much international)
         \item OpenRAVE (US)
     \end{itemize}
 \end{frame}
@@ -1328,6 +1333,11 @@ Action open_fridge
 
 \begin{frame}{Middlewares' core principle: Talking Nodes}
 
+    \only<1>{
+        \textbf{Nodes} are software components which realise a function (can be a
+         simple behaviour, a data filter, a complex FSM, or anything else really)
+    }
+
 \begin{center}
 \begin{tikzpicture}[
                     >=latex,
@@ -1391,10 +1401,11 @@ Action open_fridge
 
 \begin{frame}[containsverbatim]{Middlewares: interface definitions}
 
-Interfaces are called \textbf{message} in ROS.
+Interfaces are called \textbf{messages} in ROS.
 
-\textbf{Message definitions} are the interface definitions in ROS. For example,
-a 6D pose:
+\textbf{Message definitions} are the interface definitions in ROS.
+
+For example, a 6D pose:
 
 \begin{shcode}
 $ rosmsg show geometry_msgs/Pose
