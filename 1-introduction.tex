@@ -36,12 +36,12 @@
 \usepackage{tikz}
 \usetikzlibrary{mindmap,backgrounds,positioning}
 
-\graphicspath{{figs/}}
+\graphicspath{{figs/part1/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
-\subtitle{Part 1 -- Introduction}
+\subtitle{Introduction}
 \date{}
-\author{Tony Belpaeme and Séverin Lemaignan}
+\author{Séverin Lemaignan}
 \institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
 
 \begin{document}
@@ -50,11 +50,193 @@
 
 \maketitle
 
+
+\section{Module Overview \& Practicalities}
+\begin{frame}{Module overview}
+
+\begin{itemize}
+\item Sensors for mobile and humanoid robots
+\item Computer vision \emph{(Philip Culverhouse)}
+\item Localisation
+\item Planning and navigation
+\item Bipedal robots
+\item Robot control
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Availability}
+
+    \begin{itemize}
+        \item I have lots of time (2 hours) to deal with your queries in the laboratory sessions
+        \item  Otherwise, the best thing to do is to email me first and see if I can sort out your query. If not then I will arrange a time to meet up with you.
+        \item Don't forget – if you have any problems, or even if you are not sure about something - just email me
+
+    \end{itemize}
+
+    \begin{center}
+        \texttt{severin.lemaignan@plymouth.ac.uk}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Registration}
+        \centering
+        \includegraphics[width=0.4\linewidth]{registration1}
+        \includegraphics[width=0.4\linewidth]{registration2}
+\end{frame}
+
+\begin{frame}{Special needs}
+
+    \begin{itemize}
+
+    \item Anyone with dyslexia or any other special needs that requires any form
+        of support during examinations and tests should email me immediately.
+
+    \item Please do not ASSUME that I know of your condition. It takes the
+        University some weeks to process data and forward it to the correct
+            members of staff.
+
+    \item Even if you are currently undergoing assessment, it is advisable to
+        contact me and I will organize suitable support for you during your
+            tests and exams.
+
+    \item Contact me if any issues relating to harassment, inclusivity or if
+        language/cultural difficulties arise.
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{This module: robotics syllabus}
+
+\begin{itemize}
+    \item<+-> \textbf{Week 1} -- Introduction
+    \item<+-> \textbf{Week 2} -- Bipedal robots \emph{(with Martin Stoelen)}
+    \item<+-> \textbf{Week 3} -- Sensors I
+    \item<+-> \textbf{Week 4} -- Sensors II
+    \item<+-> \textbf{Week 5} -- Kalman filtering
+    \item<+-> \textbf{Week 6} -- Invited lecture: Brain-Computer Interfaces \emph{(with Dr. Claire Braboszcz)}
+    \item<+-> \textbf{Week 7} -- \emph{no lecture}
+    \item<+-> \textbf{Week 8} -- Wheeled locomotion
+    \item<+-> \textbf{Week 9} -- Localisation and planning
+    \item<+-> \textbf{Week 10} -- Robot control, ROS
+    \item<+-> \textbf{Week 11} -- \emph{open!}
+    \item<+-> \textbf{Week 12} -- Exam revision
+\end{itemize}
+
+\end{frame}
+
 \imageframe[color=black, caption=github.com/severin-lemaignan/module-mobile-and-humanoid-robots]{github}
+
+\begin{frame}{Robotics Labs -- from 02/10 to 03/11 (next 5 weeks)}
+    \begin{alertblock}{Timetable mess-up}
+        On Mondays: group 1 \\
+        On Tuesdays: group 2 \\
+        On Fridays: \textbf{everyone!}
+    \end{alertblock}
+
+          \begin{tabular}{@{}llll@{}}
+                \toprule
+                Day?                & Time? & Where?   & Who? \\ \midrule
+                Monday -- Lab 3/\textbf{01} & 11:00--14:00     & SMB \textbf{302}  & Emmanuel \& Jake            \\
+                Tuesday -- Lab 3/\textbf{02} & 09:00--12:00     & SMB 303b  & Emmanuel \& Jake          \\ \midrule
+                Friday -- Lab 1 & 12:00--15:00     & SMB 303b  & myself \& Jake          \\ \bottomrule
+            \end{tabular}
+
+
+\end{frame}
+
+\begin{frame}{Robotics Labs -- from 02/10 to 03/11 (next 5 weeks)}
+
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        \bf Week           & \bf When      & \bf What \\ \midrule
+        \bf 02/10 -- 06/10 & Mon/Tue    & \textcolor{hriSec1Dark}{\tt Humanoid robots}           \\
+                           & Fri    & \textcolor{hriSec3Comp}{\tt Sensors project}           \\
+        \bf 09/10 -- 13/10 & Mon/Tue    & \textcolor{hriSec1Dark}{\tt Humanoid robots}           \\
+                           & Fri    & --           \\
+        \bf 16/10 -- 20/10 & Mon/Tue    & \textcolor{hriSec1Dark}{\tt Humanoid robots}           \\
+                           & Fri    & \textcolor{hriSec3Comp}{\tt Sensors project}           \\
+        \bf 23/10 -- 27/10 & Mon/Tue    & \textcolor{hriSec3Comp}{\tt Sensors project}           \\
+                           & Fri    & \textcolor{hriSec3Comp}{\tt Sensors project}           \\
+        \bf 30/10 -- 03/11 & Mon/Tue    & \textcolor{hriSec3Comp}{\tt Sensors project}           \\
+                           & Fri    & \textcolor{hriSec3Comp}{\tt Sensor demonstrations}           \\
+    \end{tabular}
+
+
+\end{frame}
+
+
+\begin{frame}{Computer Vision Labs -- from 06/11 to 13/12}
+
+          \begin{tabular}{@{}llll@{}}
+                \toprule
+                Day?                & Time? & Where?   & Who? \\ \midrule
+                Wednesday -- Lab 2 & 09:00--11:00     & SMB 303b  & Phil           \\ \bottomrule
+            \end{tabular}
+
+
+\end{frame}
+
+
+
+\begin{frame}{Assessment}
+
+    \large
+    \begin{itemize}
+        \item Written exam: 70\%
+        \item Coursework: 30\%
+            \begin{itemize}
+                \item 60\%: sensors project
+                \item 40\%: computer vision project
+            \end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{And what do I do?}
+
+\begin{multicols}{2}
+
+    \textbf{Cognitive robotics}
+
+  Building robots and their artificial intelligence inspired on natural
+  systems, such as developing children
+
+    \textbf{Human-Robot Interaction}
+
+  Building robots that can work alongside people, using social cues that
+  people use to communicate
+
+    \begin{center}
+        \includegraphics[width=0.8\linewidth]{cowriter}
+    \end{center}
+
+\end{multicols}
+\end{frame}
+
+\section[]{"Homework"}
+
+
+\begin{frame}{"Homework"}
+    \begin{itemize}
+        \item<+-> Thinker with hardware and software!
+        \item<+-> \textbf{Write code}, a lot of code -- preferably Python and C++ \\
+                I am happy to answer code-related questions
+        \item<+-> Invest \textsterling 30 and get a Arduino/RaspberryPI starter kit (like the \href{https://www.amazon.co.uk/s?merchant=A3DM8VCGJL5PKR&fallThrough=1}{Freenove ones})
+        \item<+-> \textbf{Make it fun}: come up with \textbf{small, rewarding projects} -- Tetris anyone?
+        \item<+-> \textbf{Install Linux} (and use it!) -- alongside Windows as a dualboot, or inside a VM
+        \item<+-> Get involved in an \textbf{open-source project}
+
+    \end{itemize}
+\end{frame}
+
+
+\section[]{That being said...}
 
 \imageframe[scale=1]{pepper-robot}
 
-\section{What have we seen so far?}
+\section[Pepper demo]{What have we seen so far?}
 
 \begin{frame}[plain]
 
@@ -167,302 +349,7 @@
 \end{frame}
 
 
-\videoframe[0.56]{figs/NISSAN-ProPILOT-chair.mp4}
-
-
-\section{Module Overview}
-\begin{frame}{This module}
-
-\begin{itemize}
-\item Sensors for mobile and humanoid robots
-\item Computer vision \emph{(Philip Culverhouse)}
-\item Localisation
-\item Planning and navigation
-\item Bipedal robots
-\item Robot control
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{This module}
-
-    How to build intelligent mobile/humanoid robots?\\
-    $\neq$ industrial automation!
-
-    \begin{multicols}{2}
-
-        \begin{center}
-            \includegraphics[height=4.5cm]{no-industrial}
-
-            \includegraphics[height=4.5cm]{yes-humanoid}
-        \end{center}
-
-    \end{multicols}
-
-    \pause
-
-    \begin{itemize}
-        \item \textbf{Hardware issues}: sensors, actuators, drive mechanisms, \ldots{}
-        \item \textbf{Software issues}: robot control, computer vision, learning robots, \ldots{}
-    \end{itemize}
-
-\end{frame}
-
-\section{How Widespread?}
-
-\imageframe{industrial-robots-statistics}
-
-\begin{frame}[plain]{}
-    But...
-\end{frame}
-
-\imageframe{service-robots-stats}
-
-
-\section{Domains of Robotics}
-
-\begin{frame}{Service/domestic robots}
-
-
-    \begin{multicols}{2}
-
-        \textbf{Service robots}
-
-        \begin{itemize}
-            \item
-                iRobot Roomba, 12M units sold.
-            \item
-                Samsung, LG, Dyson
-        \end{itemize}
-        \vfill
-        \columnbreak
-
-        \begin{center}
-            \includegraphics[width=0.5\linewidth]{roomba}
-            \includegraphics[width=0.5\linewidth]{dyson}
-        \end{center}
-    \end{multicols}
-
-
-    \begin{multicols}{2}
-
-
-        \textbf{Edutainment robots}
-
-        \begin{itemize}
-            \item \eg KeepOn, 
-            \item Lego Mindstorms (original, NXT, EV3),
-            \item RoboSapiens
-        \end{itemize}
-        \vfill
-        \columnbreak
-        \begin{center}
-
-            \includegraphics[width=0.6\linewidth]{keepon}
-
-            \includegraphics[width=0.5\linewidth]{lego-nxt}
-            \includegraphics[width=0.5\linewidth]{robosapiens}
-        \end{center}
-    \end{multicols}
-\end{frame}
-
-\begin{frame}{Flying robots}
-
-    \begin{multicols}{2}
-
-Very popular research field and tremendous interest from the military,
-some civilian uses (e.g. aerial videoing).
-
-Challenges: autonomy (control of flight parameters), localisation,
-energy autonomy, robustness.
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{drone}
-    \end{center}
-
-    \end{multicols}
-\begin{itemize}
-    \item Raffaello D'Andrea's \href{https://www.youtube.com/watch?v=w2itwFJCgFQ}{drone acrobatics}
-\item
-  \href{http://youtu.be/YQIMGV5vtd4}{U. Pennsylvania, Vijay Kumar's nano
-        quadrotors} (see also \href{http://youtu.be/4ErEBkj_3PY}{TED talk})
-\item
-  EPFL's \href{http://youtu.be/n_qRuHkD5lc}{flying wing robot}.
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Space exploration}
-
-    \begin{columns}
-        \begin{column}{0.6\linewidth}
-
-        Three Mars rovers:
-
-        \begin{itemize}
-
-            \item
-                \href{https://en.wikipedia.org/wiki/Sojourner_(rover)}{Sojourner}
-                touched down in summer 1997
-
-            \item \href{http://en.wikipedia.org/wiki/Spirit_rover}{Spirit} and
-                \href{http://en.wikipedia.org/wiki/Opportunity_rover}{Opportunity}
-                landed in January 2004
-
-            \item \href{http://mars.jpl.nasa.gov/msl/mission/overview/}{Curiosity}
-                touched down 5 August 2012
-
-        \end{itemize}
-
-        All are fully teleoperated from earth.  However, the sensors
-        and software allow for autonomous obstacle detection and
-        navigation.
-
-        Have survived 30x longer than planned;
-        \href{http://marsrovers.nasa.gov/}{marsrovers.nasa.gov}
-
-        \end{column}
-
-        \begin{column}{0.4\linewidth}
-        \begin{center}
-            \includegraphics[width=0.6\linewidth]{space-robot-sojourner}
-
-            \includegraphics[width=0.6\linewidth]{space-robot-spirit}
-
-            \includegraphics[width=0.6\linewidth]{space-robot-curiosity}
-        \end{center}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Military robots}
-
-Best selling ``professional service'' robot: 6500 units in 2011, 6100 in
-2012, 9500 in 2013.
-
-    \begin{center}
-        \includegraphics[width=0.6\linewidth]{defence-robot}
-
-        \footnotesize \href{https://en.wikipedia.org/wiki/Modular_Advanced_Armed_Robotic_System}{Modular Advanced Armed Robotic System (MAARS)}
-    \end{center}
-
-    Video: \href{http://youtu.be/eaP0waiz43w}{iRobot packbot}
-
-\end{frame}
-
-\begin{frame}{Autonomous cars}
-
-    \centering
-    \only<1>{
-        \textbf{2005}: Darpa Grand Challenge; $>$200km race in Mojave/Nevada desert
-
-        \includegraphics[width=0.8\linewidth]{darpa-grand-challenge}
-
-        \source{https://commons.wikimedia.org/wiki/File:DARPA-2005.jpg}{Wikipedia}
-    }
-    \only<2>{
-        \textbf{2007}: Darpa Urban Challenge; 100km in urban environment, must obey all traffic regulations
-
-        \includegraphics[height=4cm]{darpa-urban-challenge}
-        \includegraphics[height=4cm]{darpa-urban-challenge2}
-
-        \source{https://en.wikipedia.org/wiki/File:UrbanChallenge_StandfordRacingandVictorTango.JPG}{Wikipedia}
-        \hspace{15em}
-        \source{https://en.wikipedia.org/wiki/File:ElementBlack2.jpg}{Wikipedia}
-    }
-    \only<3>{
-
-        \textbf{Google Driverless cars} 
-
-        \includegraphics[height=3cm]{google-selfdriving-cars}
-        \includegraphics[height=3cm]{google-selfdriving-cars-3dview}
-
-        \source{https://www.engadget.com/2015/07/07/google-self-driving-tests-austin-texas/}{Engadget}
-        \hspace{15em}
-        \source{http://spectrum.ieee.org/automaton/robotics/artificial-intelligence/how-google-self-driving-car-works}{IEEE Spectrum}
-
-    24 Lexus + 34 'Google Cars'; between 2009 and August 2016, autonomously driven $\approx$ 2 000 000 miles
-}
-    \only<4>{
-
-        \textbf{Uber autonomous taxis} 
-
-        \includegraphics[width=0.7\linewidth]{uber-autonomous-cars}
-
-        \source{http://www.bloomberg.com/news/features/2016-08-18/uber-s-first-self-driving-fleet-arrives-in-pittsburgh-this-month-is06r7on}{Bloomberg}
-
-        100 Volvo cars ...already driving in Pittsburg's streets! (with human supervision)
-
-}
-
-
-
-%
-%Video
-%
-%\begin{itemize}
-%\item
-%  \href{http://youtu.be/M2AcMnfzpNg}{Overview of 2nd DARPA Grand
-%  Challenge 2005}
-%\item
-%  \href{http://youtu.be/cdgQpa1pUUE}{Google Car promo video}
-%\end{itemize}
-
-\end{frame}
-
-{\fullbackground{nao}
-
-\begin{frame}{Humanoids}
-
-Human-like robots.
-
-Tremendously challenging:
-
-    \begin{itemize}
-        \item Power, 
-        \item actuations, 
-        \item artificial intelligence, 
-        \item perception, 
-        \item control,
-        \item walking, \ldots{}
-    \end{itemize}
-
-
-\begin{itemize}
-\item
-  \href{http://youtu.be/yND4k4NM0qU}{Honda Asimo latest version}
-\item
-  \href{http://youtu.be/aqCmX5dMYHg}{Boston Dynamics Petman prototype}
-  and \href{http://youtu.be/FFGfq0pRczY}{obstacle negotiation}.
-\item
-  \href{https://www.youtube.com/watch?v=g0TaYhjpOfo}{DARPA Robotics
-  challenge 2015 outtakes}
-\end{itemize}
-
-\end{frame}
-}
-
-\begin{frame}{And what do I do?}
-
-\begin{multicols}{2}
-
-    \textbf{Cognitive robotics}
-
-  Building robots and their artificial intelligence inspired on natural
-  systems, such as developing children
-
-    \textbf{Human-Robot Interaction}
-
-  Building robots that can work alongside people, using social cues that
-  people use to communicate
-
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{cowriter}
-    \end{center}
-
-\end{multicols}
-\end{frame}
+\videoframe[0.56]{figs/part1/NISSAN-ProPILOT-chair.mp4}
 
 
 \begin{frame}{}
@@ -470,7 +357,7 @@ Tremendously challenging:
         \Large
         That's all, folks!\\[2em]
         \normalsize
-        See you on Friday, 13:00, for the first lab\\[1em]
+        See you on Friday, 12:00\\[1em]
         Questions:\\
         Portland Square B316 or \url{severin.lemaignan@plymouth.ac.uk} \\[1em]
 
