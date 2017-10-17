@@ -116,9 +116,9 @@
     \begin{itemize}
 
         \item
-              emit their proper energy and measure the reaction
+              emit their own energy and measure the reaction
         \item
-              better performance, but some influence on envrionment
+              better performance, but might influence the envrionment
     \end{itemize}
 
 \end{frame}
@@ -137,7 +137,7 @@
                                                                                                                                       & Potentiometers                   & PC       & P      \\
                                                                                                                                       & Synchros, resolvers              & PC       & A      \\
                                                                                                                                       & Optical encoders                 & PC       & A      \\
-                                                                                                                                      & Magnetic encoders                &          & A      \\
+                                                                                                                                      & Magnetic encoders                & PC       & A      \\
                                                                                                                                       & Inductive encoders               & PC       & A      \\
                                                                                                                                       & Capacitive encoders              & PC       & A      \\ \midrule
         \multirow{3}{\linewidth}{{\it Heading sensors}\newline \tiny orientation of the robot in relation to a fixed reference frame} & Compass                          & EC       & P      \\
@@ -204,7 +204,7 @@
                   \item<3->
                   \eg voltage measurement from 1 millivolt to 20 volts
                   \[
-                      20\cdot\log_{10}\frac{I_{upper}}{I_{lower}}=20\cdot\log_{10}\frac{20V}{0.001V}=86dB
+                      20\cdot\log_{10}\frac{V_{upper}}{V_{lower}}=20\cdot\log_{10}\frac{20V}{0.001V}=86dB
                   \]
               \end{itemize}
 
@@ -238,7 +238,7 @@
                   \item
                         variation of output signal as function of the input signal
                   \item
-                        linearity is less important when signal is after treated with a
+                        linearity is less important when signal is post-processed with a
                         computer
               \end{itemize}
 
@@ -318,7 +318,7 @@
         \item
               however, they can be described probabilistically
         \item
-              \eg hue instability of camera, black level noise of camera\ldots
+              \eg hue instability of camera, black level noise of camera
     \end{itemize}
 
 \end{frame}
@@ -713,10 +713,10 @@
 
         \emph{Quality}: 0.1° over 6 hours
 
-    If the spinning axis is aligned with the north-south meridian, the
+    If the spinning axis is aligned with the North-South meridian, the
     earth's rotation has no effect on the gyro's horizontal axis
 
-    If it points east-west, the horizontal axis reads the
+    If it points East-West, the horizontal axis reads the
     earth rotation
     }
 
@@ -728,10 +728,10 @@
 
     Same basic arrangement shown as regular mechanical gyros
 
-    But: gimble(s) are restrained by a torsional spring
+    But: gimbal(s) are restrained by a torsional spring
 
     \begin{exampleblock}{}
-        enables to measure angular speeds instead of the orientation.
+        allows to measure angular speeds instead of the orientation.
     \end{exampleblock}
 
 \end{frame}
@@ -953,7 +953,7 @@
 
     \begin{itemize}
 
-        \item Single axis: only measure a in one direction.
+        \item Single axis: only measure $\vec{a}$ in one direction.
         \item Multi axis: measures in multiple direction, 3 axis is sufficient.
         \item Measured in $\frac{m}{s^2}$ or in $g = 9.81\cdot\frac{m}{s^2}$.
     \end{itemize}
@@ -1773,9 +1773,6 @@
     \draw[<->] (2.5,0.5) -- (2.5,-1) node[left,midway] {$L$};
     \draw[<->] (3,1) -- (10,1) node[above,midway] {$D$};
 
-    \node[align=left, anchor=west] at (5,-1) {$\lambda = \frac{c}{f}$};
-    \node[align=left, anchor=west] at (5,-1.6) {$D' = L + 2\cdot D = L + \frac{\theta}{2 \pi} \cdot \lambda$};
-
 \end{tikzpicture}
     }
 
@@ -1807,23 +1804,30 @@
         \draw[<->] (0,-1.2) -- (pi,-1.2) node[label,above,midway] {$\lambda$};
         \draw (pi, 0) -- (pi,-1.3);
         \node[label] at(-0.2,0) {0};
-        \node[label] at(0.25,-0.2) {$\theta$};
+        \node[label] at(0.25,-0.2) {$\varphi$};
         \node[label,anchor=south] at(0,1.1) {amplitude (V)};
         \node[label,anchor=south] at(pi + 0.5,0) {phase (m)};
 \end{tikzpicture}
 
             \end{column}
             \begin{column}{0.5\linewidth}
-    \only<2>{
+    \only<2-3>{
+
+        $\lambda = \frac{c}{f}$\hspace{1em} $D=\frac{1}{2} c\cdot t$ \hspace{1em} $t=\frac{\varphi}{2 \pi f}$
+    }
+                \only<2>{
+
+        \vspace{1em}
+        \small
         where $c$ is the speed of light; $f$ the
-        modulating frequency; $D'$ the total distance covered by the emitted light;
-        $\theta$ the (measured) phase shift.
+        modulating frequency; $\varphi$ the (measured) phase shift.
     }
     \only<3>{
 
-        \[
-        \Rightarrow D = \frac{\lambda}{4\pi}\theta
-        \]
+    \begin{align*}
+        D &= \frac{\lambda}{4\pi}\varphi \\
+        \Rightarrow D' &= L + 2 \cdot D = L + \frac{\varphi}{2 \pi} \cdot \lambda \\
+    \end{align*}
     }
             \end{column}
         \end{columns}
@@ -1831,14 +1835,16 @@
     }
     \only<4>{
 
-        For $f$ = 5 Mhz, $\lambda$ = 60 meters.
+        For $f$ = 5 MHz\bubblemark{wavelength}, $\lambda$ = 60 meters.
 
         Theoretically, \emph{ambiguous range estimates} are possible. For example if
         $\lambda$ = 60m, a target at a range of 5m $\equiv$ target at 35m (same
-        $\theta$).
+        $\varphi$).
 
         Usually not an issue as the range of the sensor is typically smaller
         than $\lambda$ due to attenuation.
+
+        \bubble<4>[-30][3cm]{wavelength}{Not the light frequency! The laser \emph{power modulation} (ie pulses) frequency}
     }
     \only<5>{
 
@@ -1846,7 +1852,7 @@
         proportional to the square of the received signal amplitude}.
 
         Hence \emph{dark, distant objects will not produce such good range
-        estimates} as closer brighter objects \ldots{}
+        estimates} as closer brighter objects.
 
     }
 \end{frame}
