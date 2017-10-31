@@ -52,9 +52,9 @@
 \graphicspath{{figs/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
-\subtitle{Part 3 - Kalman filters}
+\subtitle{Kalman filters}
 \date{}
-\author{Tony Belpaeme and Séverin Lemaignan}
+\author{Séverin Lemaignan}
 \institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
 
 \begin{document}
@@ -63,7 +63,7 @@
 
 \maketitle
 
-\begin{frame}{Part 3 -- Kalman filters}
+\begin{frame}{Kalman filters}
 
     For further reading, see:
     \begin{itemize}
@@ -290,12 +290,13 @@ A linear equation is a sum of input variables
                     x_1 \\
                     \vdots \\ 
                     x_n
-                \end{bmatrix}) \sim \mathcal{N}_n(\mu, \Sigma\bubblemark[-2ex]{cov}):
+                \end{bmatrix}) \sim \mathcal{N}_n(\mathbf{\mu}, \Sigma\bubblemark[-2ex]{cov}):
             \]
 
         \[
             p(\mathbf{x}) =
-                \frac{1}{\sqrt{(2\pi)^{n}|\Sigma|}} e^{-\frac{1}{2}(x_n-\mu)^\mathrm{T}\Sigma^{-1}(x_n-\mu)}
+                \frac{1}{\sqrt{(2\pi)^{n}|\Sigma|}}
+                e^{-\frac{1}{2}(\mathbf{x}-\mu)^\mathrm{T}\Sigma^{-1}(\mathbf{x}-\mu)}
             \]
     }
         \end{column}
@@ -451,7 +452,7 @@ A linear equation is a sum of input variables
 
 \only<1>{
     If $cov(X,Y) > 0$, then $X$ and $Y$ tend move together. \\
-    If $cov(X,Y) < 0$ then $X$ and $Y$ have an opposite effect on eachother. \\
+    If $cov(X,Y) < 0$ then $X$ and $Y$ have an opposite effect on each other. \\
     And $cov(X,Y) = 0$?
 
     }
@@ -710,7 +711,7 @@ at $t$ (is the car braking or accelerating) and system dynamics
     $\mathbf{P}_{k\mid\bubblemark[0pt]{up11}k} = (I - \mathbf{K}_k\cdot \mathbf{H})\cdot \mathbf{P}_{k\mid k-1}$
 
 
-    \bubble<1>[130][0.5][4cm]{up6}{The \textbf{Kalman gain}, this needs to calculated first}
+    \bubble<1>[130][0.5][4cm]{up6}{The \textbf{Kalman gain}, this needs to be calculated first}
 
     \bubble<1>[130][0.5][3cm]{up7}{The \emph{a posteriori} estimated state}
     \bubble<1>[130][0.5][4cm]{up11}{The \emph{a posteriori} estimated covariance of our state}
