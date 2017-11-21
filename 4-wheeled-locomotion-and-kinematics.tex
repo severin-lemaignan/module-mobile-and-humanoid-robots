@@ -41,7 +41,7 @@
 \graphicspath{{figs/part4/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
-\subtitle{Part 4 - Wheeled locomotion and kinematics}
+\subtitle{Wheeled locomotion and kinematics}
 
 
 \date{}
@@ -54,7 +54,7 @@
 
 \maketitle
 
-\begin{frame}{Part 4 -- Wheeled locomotion and kinematics}
+\begin{frame}{Wheeled locomotion and kinematics}
 
 For further reading, see:
     
@@ -229,7 +229,7 @@ For further reading, see:
 }
 
 \only<4>{
-    Standard wheels are most used, but have a \textbf{non-holonomic velocity
+    Standard wheels are very common, but have a \textbf{non-holonomic velocity
 constraint}.
 
 \begin{itemize}
@@ -268,7 +268,7 @@ Omnidirectional wheel (= Swedish or Mecanum wheel).
     \only<2>{
 \begin{itemize}
     \item The wheel is designed to let a vehicle move in any direction.
-    \item Rollers are mounted at 0$^\circ$ or 45$^\circ$ angles to a line along the plane of
+    \item Rollers are mounted at 0$^\circ$ or 45$^\circ$ to a line laying on the plane of
   the wheel.
 \end{itemize}
 
@@ -572,7 +572,7 @@ In order for all wheels of a vehicle to \textbf{roll without
     \begin{columns}
         \begin{column}{0.6\linewidth}
 
-            Most used wheeled robot configuration
+            Most common wheeled robot configuration
 
             \begin{itemize}
                 \item Cheap (two motor on two drive wheels, one support wheel).
@@ -662,13 +662,11 @@ In order for all wheels of a vehicle to \textbf{roll without
 \begin{itemize}
     \item Only for indoor robots.
     \item Very precise and excellent dead reckoning capabilities.
-    \item Example: PR2 from Willow Garage, B12, B21 robots by Real World
+    \item Example: B12, B21 robots by Real World
   Interfaces, popular in the research labs.
 \end{itemize}
 
     \begin{center}
-        \includegraphics[height=0.4\paperheight]{pr2}
-        \hspace{1em}
         \includegraphics[height=0.4\paperheight]{synchrodrive_ex1}
         \hspace{1em}
         \includegraphics[height=0.4\paperheight]{b21}
@@ -1239,7 +1237,8 @@ If these constraints are not met, our calculations will be off.
 
     \begin{columns}
         \begin{column}{0.5\linewidth}
-The robot will pivot around the other wheel and the instantaneous
+            The robot will pivot around the other wheel and the
+            \emph{instantaneous}
             contribution of the rotating wheel will be that point $C$ has a
             speed $v_C$.
 
