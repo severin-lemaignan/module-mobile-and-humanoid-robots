@@ -48,10 +48,10 @@
 \graphicspath{{figs/part6/}}
 
 \title{ROCO318 \newline Mobile and Humanoid Robots}
-\subtitle{Part 6 -- Localisation and Planning}
+\subtitle{Localisation and Planning}
 
 \date{}
-\author{Tony Belpaeme and Séverin Lemaignan}
+\author{Séverin Lemaignan}
 \institute{Centre for Neural Systems and Robotics\\{\bf Plymouth University}}
 
 \begin{document}
@@ -404,7 +404,7 @@ while True:
 \end{frame}
 
 \begin{frame}{Likelihood function}
-    How is \python{likelihood(z, x, m)} implemented?
+    How is \sh{likelihood(z, x, m)} implemented?
 
     \begin{itemize}
         \item \python{z}: the actual range measurements (sensor reading)
@@ -431,12 +431,12 @@ def likelihood(z, x, m):
     p = 1 # likelihood
 
     for obs_range in z:
-        map_range = raycast(x, bearing(z), m)
+        expected_range = raycast(x, bearing(z), m)
 
         pz = 0.0
 
         # good, but noisy, hit -> normal distribution
-        err = obs_range - map_range
+        err = obs_range - expected_range
         pz += z_hit * exp(-err|$^2$| / (2 * sigma_hit|$^2$|))
 
         # + other types of measurement errors:
