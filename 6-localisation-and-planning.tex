@@ -1036,40 +1036,76 @@ Many different search algorithms exist
 \begin{frame}[fragile]{Searching graphs - Dijkstra}
 
 \begin{pythoncode*}{frame=none,escapeinside=||}
-def dijkstra(graph, weights, start_node):
+def dijkstra(graph, weights, start):
 
-  dist = {} # maps nodes to distance to 'start_node'
-  previous = {} # needed to reconstruct shortest path
+  cost_to = {} # maps nodes to cost to 'start'
+  come_from = {} # needed to reconstruct shortest path
 
   for node in graph:
-    dist[node] = math.inf # initial dist. from 'start_node' to 'node'
+    cost_to[node] = math.inf # initial cost from 'start' to 'node'
 
-  dist[start_node] = 0
+  cost_to[start] = 0
 
-  Q = graph.nodes() # unvisited nodes
-  while not Q.empty():
-    u = pop_min(Q) # remove best node
+  frontier = PriorityQueue()
+  frontier.put(graph.start, 0)
+
+  while not frontier.empty():
+    u = frontier.get_cheapest() # remove best node
 
     for v in u.neighbours: # iterate over nodes connected to u
-      if dist[u] + weights(u, v) < dist[v]: # new shorter path to v!
-        dist[v] = dist[u] + weights(u, v)
-        previous[v] = u
+      if cost_to[u] + weights(u, v) < cost_to[v]: # new shorter path to v!
+        cost_to[v] = cost_to[u] + weights(u, v)
+        frontier.put(v, cost_to[v])
+        come_from[v] = u
 
-  return dist, previous
+  return cost_to, come_from
 \end{pythoncode*}
+\end{frame}
+
+
+\begin{frame}[fragile]{Priority Queue}
+
+This \python{PriorityQueue} is based on a \emph{heap}.
+
+Heaps are binary trees for which every parent node has a value less than or
+equal to any of its children.
+
+\begin{pythoncode*}{frame=none,escapeinside=||}
+
+class PriorityQueue:
+    """ Simple priority queue: get_cheapest always returns
+    the node with the lowest 'priority' value.
+
+    Implementation taken from
+    https://www.redblobgames.com/pathfinding/a-star/implementation.html
+    """
+    def __init__(self):
+        self.elements = []
+    
+    def empty(self):
+        return len(self.elements) == 0
+    
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
+    
+    def get_cheapest(self):
+        return heapq.heappop(self.elements)[1]
+\end{pythoncode*}
+
+
 \end{frame}
 
 
 \begin{frame}[fragile]{Searching graphs -- Dijkstra}
 
-    Reading out shortest path from the start node to goal \python{end_node}:
+    Reading out shortest path from the start node to goal:
 
 \begin{pythoncode}
 path = []
-node = end_node # goal
-while node in previous:
-path = [node] + path # append at the front of our path
-node = previous[node]
+node = goal
+while node in come_from:
+  path = [node] + path # append at the front of our path
+  node = come_from[node]
 \end{pythoncode}
 
     Returns the shortest path (if there are more than one, only one is returned).
@@ -1083,8 +1119,9 @@ node = previous[node]
 Maps can be huge
 
 \begin{itemize}
-    \item For example, 10,000 $m^2$ shopping mall ($\sim$ Marshmills' Sainsburys), with a 10x10cm map
-    resolution, requires $10^{10}$ = 10 billion nodes on the graph!
+    \item For example, 10,000 $m^2$ shopping mall ($\sim$ Marshmills'
+        Sainsburys), with a 10x10cm map resolution, requires $10^{10}$ = 10
+        billion nodes on the graph!
 \end{itemize}
 
 Search time can be problematic:
@@ -1092,7 +1129,7 @@ Search time can be problematic:
 \begin{itemize}
 \item Dijkstra has a complexity of $O(N+V^2)$. For example, for a map with
     $10^7$ nodes and $10^8$ vertices, it can take $10^7+10^{2\times 8} \sim
-        10^{16}$ calculations to
+        10^{16}\bubblemark{longtime}$ calculations to
   find a shortest path between two points.
 \item Some implementations are much more efficient. A* search is at worst
   the same as Dijkstra, but can be polynomial in the number of nodes
@@ -1100,6 +1137,7 @@ Search time can be problematic:
   choose between two nodes to explore, take the node closer to the goal.
 \end{itemize}
 
+    \bubble<2>{longtime}{$10^{16}$ sums $\approx$ 50h on a modern i7 @3.4GHz}
 \end{frame}
 
 \begin{frame}{A* algorithm - illustration}
@@ -1117,6 +1155,56 @@ Search time can be problematic:
     the solution in less time.
 
 \end{frame}
+
+\begin{frame}[fragile]{Searching graphs - A*}
+
+\begin{pythoncode*}{frame=none,escapeinside=||}
+
+def a_star(graph, weights, start):
+
+  cost_to = {} # maps nodes to distance to 'start_node'
+  come_from = {} # needed to reconstruct shortest path
+
+  for node in graph:
+    dist[node] = math.inf # initial cost from 'start' to 'node'
+
+  cost_to[start] = 0
+
+  frontier = PriorityQueue()
+  frontier.put(start, 0)
+
+  while not frontier.empty():
+    u = frontier.get_cheapest()
+
+    for v in u.neighbours:
+      if cost_to[u] + weights(u, v) < cost_to[v]: # new shorter path to v!
+        cost_to[v] = cost_to[u] + weights(u, v)
+        frontier.put(v, cost_to[v] + heuristic(v, goal))
+        come_from[v] = u
+
+  return came_from, cost_so_far
+\end{pythoncode*}
+\end{frame}
+
+\begin{frame}[fragile]{A* heuristics}
+
+The heuristic is task-specific. If the map is known, a simple L1 distance
+is a common choice:
+
+\begin{pythoncode*}{frame=none,escapeinside=||}
+def heuristic(a, b):
+    (x1, y1) = a
+    (x2, y2) = b
+    return abs(x1 - x2) + abs(y1 - y2)
+\end{pythoncode*}
+
+    You can read more on
+    \href{http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html}{A*
+    heuristics here}.
+
+\end{frame}
+
+
 
 \section{Potential field path planning}
 
