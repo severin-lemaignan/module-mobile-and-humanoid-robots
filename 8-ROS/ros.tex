@@ -1032,14 +1032,14 @@ The source code of ROS nodes is usually organised into a \emph{package}.
 \begin{shcode}
 > cd my_package
 > ls
-CMakeLists.txt
-cfg/
-include/
-launch/
-msgs/
-nodes/
-package.xml
-src/
+CMakeLists.txt  # describes the build process
+cfg/  # node specific configurations
+include/  # C/C++ public headers
+launch/  # ROS launch files
+msgs/  # custom datatypes (messages)
+scripts/  # executable scripts, typically Python ROS nodes
+package.xml  # package manifest
+src/  # source code of your node
 > rosrun my_package my_node
 \end{shcode}
 
@@ -1064,7 +1064,9 @@ A new package template can be created easily:
 }
 \end{frame}
 
-\begin{frame}[fragile]{Let's create a proper ROS package}
+\begin{frame}[fragile]{Creating a ROS package, step by step}
+
+Let's turn the initial 'image processing' example into a proper ROS package.
 
 \begin{shcode}
 > cd $HOME
@@ -1082,46 +1084,47 @@ CMakeLists.txt  package.xml  src
 \begin{frame}[fragile]{First, add some code}
 
 \begin{shcode}
-> cd imgproc
-> mkdir -p src/imgproc && cd src/imgproc
+> cd imgproc  # we now are in $HOME/src/imgproc
+> mkdir -p src/imgproc
+> cd src/imgproc # we now are in $HOME/src/imgproc/src/imgproc
 > touch __init__.py # required to create a Python module
-> gedit recognition.py
+> gedit processing.py
 \end{shcode}
 \pause
 
-Just a simple stub for a Python module:
+Initially, we simply create a stub of our Python module for image processing:
 
 \begin{pythoncode}
-def run(dataset):
-    print('Dataset: ' + dataset)
+def process(image):
+    print('Image to be processed: ' + image)
 \end{pythoncode}
 
 \end{frame}
 
 \begin{frame}[fragile]{First, add some initial code}
 
-Create as well an executable (our future ROS node) in \texttt{scripts/}:
+We create as well an executable (our future ROS node) in \texttt{scripts/}:
 
 \begin{shcode}
-> cd ../..
+> cd ../..  # we now are back to $HOME/src/imgproc
 > mkdir -p scripts && cd scripts
-> gedit reco
+> gedit process_node
 \end{shcode}
 \pause
 
 \begin{pythoncode}
 #! /usr/bin/env python
 
-import imgproc.reco
+import imgproc.processing
 
-if __name__ == '__main__':
-    imgproc.reco.run("my_faces")
+imgproc.processing.process("my_image")
 \end{pythoncode}
 
 \pause
 
+Finally, we make our script executable:
 \begin{shcode}
-> chmod +x reco
+> chmod +x process_node
 \end{shcode}
 \end{frame}
 
@@ -1141,7 +1144,7 @@ catkin_python_setup()
 catkin_package()
 
 install(PROGRAMS
-   scripts/reco
+   scripts/process_node
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
@@ -1173,7 +1176,7 @@ setup(**setup_args)
     We can now install our node:
 
 \begin{shcode}
-> cd ..
+> cd $HOME/src/imgproc  # back to the root of our ROS pkg
 > mkdir -p build && cd build
 > cmake -DCMAKE_INSTALL_PREFIX=<install prefix> ..
 > make install
@@ -1185,29 +1188,31 @@ Assuming ROS is correctly installed, we can run our node:
 
 \begin{shcode}
 > export ROS_PACKAGE_PATH=<prefix>/share:$ROS_PACKAGE_PATH
-> rosrun imgproc reco
-Dataset: my_faces
+> rosrun imgproc process_node
+Dataset: my_image
 \end{shcode}
 
+Add the \sh{export ROS_PACKAGE_PATH...} line to the end of your
+\sh{~/.bashrc} file, so that you do not have to type it everytime.
 
 \end{frame}
 
 \begin{frame}[fragile]{Image processing}
 Let's update the node \texttt{reco} and the library (Python \emph{module})
-    \texttt{recognition.py} to perform simple image processing:
+    \texttt{processing.py} to perform simple image processing:
 
-\texttt{recognition.py}:
+\texttt{processing.py}:
 \begin{pythoncode}
 import cv2
 
-def run(image):
+def process(image):
     rows, cols, channels = image.shape
     cv2.circle(image, (cols/2, rows/2), 50, (0,0,255), -1)
 \end{pythoncode}
 \end{frame}
 
 \begin{frame}[fragile]{Image processing}
-\texttt{reco}:
+\texttt{process\_node}:
 \begin{pythoncode}
 #! /usr/bin/env python
 
@@ -1215,11 +1220,11 @@ import sys, rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
-import imgproc.reco
+import imgproc.processing
 
 def on_image(image):
     cv_image = bridge.imgmsg_to_cv2(image, "bgr8")
-    imgproc.reco.run(cv_image)
+    imgproc.processing.process(cv_image)
     image_pub.publish(bridge.cv2_to_imgmsg(cv_image, "bgr8"))
 
 if __name__ == '__main__':
@@ -1243,7 +1248,7 @@ if __name__ == '__main__':
 
 
 \begin{shcode}
-> rosrun imgproc reco image:=/usb_cam/image_raw
+> rosrun imgproc process_node image:=/usb_cam/image_raw
 \end{shcode}
 
 
