@@ -312,10 +312,26 @@
 \renewcommand{\theFancyVerbLine}{
   \sffamily\textcolor[rgb]{0.5,0.5,0.5}{\scriptsize\arabic{FancyVerbLine}}}
 
-\newminted{cpp}{frame=none,
+\newminted{cmake}{frame=none,
+                 linenos=false,
+                 fontsize=\footnotesize,
+                 xleftmargin=1.8em}
+
+\newmintinline[cmake]{cmake}{fontsize=\small}
+
+
+\newminted{asm}{frame=none,
                  linenos=false,
                  fontsize=\small,
                  xleftmargin=1.8em}
+
+\newmintinline[asm]{asm}{fontsize=\small}
+
+
+\newminted{cpp}{frame=none,
+                 linenos=false,
+                 fontsize=\scriptsize,
+                 xleftmargin=1em}
 
 \newmintinline[cpp]{cpp}{fontsize=\small}
 
@@ -329,7 +345,7 @@
 \newminted{sh}{frame=lines,
                  linenos=false,
                  fontsize=\small,
-                 xleftmargin=1.8em}
+                 xleftmargin=0.5em}
 
 \newmintinline[sh]{sh}{fontsize=\small}
 
@@ -552,11 +568,22 @@ at (#5) {#6};
 \NewDocumentCommand{\bubblemark}{O{-0.5ex} m}{%
 \tikz[overlay,remember picture,baseline=#1] \node (#2) {};
 }
+
 %%%%%%%%% Highlight (math) text by putting it in a red colorbox
 
 \NewDocumentCommand{\highlight}{r<> m}{%
 \alt<#1>{\colorbox{red!50}{$#2$}}{#2}
 }
+
+
+\setbeamercolor{highlightCol}{bg=hriSec3,fg=white}
+\newcommand{\highlightbox}[1]{%
+    \vspace{1em}%
+    \begin{beamercolorbox}[wd=\linewidth,ht=2ex,dp=0.7ex]{highlightCol}%
+    \centering #1%
+    \end{beamercolorbox}%
+    \vspace{1em}%
+}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
